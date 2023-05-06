@@ -1,0 +1,58 @@
+enum VestingType {
+  LINEAR,
+  CLIFF
+}
+
+type PresaleFactory @entity {
+  id: ID!
+  salesCount: Int!
+}
+
+type LinearVesting @entity {
+  id: ID!
+  endTime: BigInt!
+}
+
+type CliffPeriod @entity {
+  id: ID!
+  claimTime: BigInt!
+  percentage: Int!
+}
+
+type TokenSale @entity {
+  id: ID!
+  presaleId: Bytes!
+  metadataURI: String!
+  funder: Bytes!
+  salePrice: BigInt!
+  paymentToken: Token!
+  saleToken: Token!
+  startTime: BigInt!
+  endTime: BigInt!
+  minTotalPayment: BigInt!
+  maxTotalPayment: BigInt!
+  withdrawDelay: Int!
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+  vestingType: VestingType
+  linearVesting: LinearVesting
+  cliffPeriod: [CliffPeriod!]
+  totalPaymentMade: BigInt!
+  contributions: [Contribution!]! @derivedFrom(field: "tokenSale")
+}
+
+type Token @entity {
+  id: ID!
+  name: String!
+  decimals: BigInt!
+  symbol: String!
+  totalSupply: BigInt!
+}
+
+type Contribution @entity {
+  id: ID!
+  user: Bytes!
+  tokenSale: TokenSale!
+  amount: BigInt!
+}
