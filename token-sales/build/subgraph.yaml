@@ -1,6 +1,6 @@
 specVersion: 0.0.5
 schema:
-  file: ./schema.graphql
+  file: schema.graphql
 dataSources:
   - kind: ethereum
     name: PresaleFactory
@@ -18,14 +18,14 @@ dataSources:
         - Token
       abis:
         - name: PresaleFactory
-          file: ./abis/PresaleFactory.json
+          file: PresaleFactory/abis/PresaleFactory.json
         - name: ERC20
-          file: ./abis/ERC20.json
+          file: PresaleFactory/abis/ERC20.json
       eventHandlers:
-        - event: PresaleCreated(indexed address,string,address,uint256,indexed
-            address,indexed address,uint256,uint256,uint256,uint256,uint24)
+        - event: PresaleCreated(indexed address,string,address,uint256,indexed address,indexed
+            address,uint256,uint256,uint256,uint256,uint24)
           handler: handlePresaleCreated
-      file: ./mappings/factory.ts
+      file: PresaleFactory/PresaleFactory.wasm
 templates:
   - kind: ethereum
     name: Presale
@@ -41,9 +41,9 @@ templates:
         - Contribution
       abis:
         - name: Presale
-          file: ./abis/Presale.json
+          file: Presale/abis/Presale.json
         - name: PresaleFactory
-          file: ./abis/PresaleFactory.json
+          file: Presale/abis/PresaleFactory.json
       eventHandlers:
         - event: Purchase(indexed address,uint256)
           handler: handlePurchase
@@ -55,4 +55,4 @@ templates:
           handler: handleSetLinearVestingEndTime
         - event: SetCliffVestingPeriod((indexed uint256,uint8)[])
           handler: handleSetCliffVestingPeriod
-      file: ./mappings/core.ts
+      file: templates/Presale/Presale.wasm

@@ -4,15 +4,15 @@
   "scripts": {
     "codegen": "graph codegen",
     "build": "graph build",
-    "deploy": "graph deploy --node https://api.thegraph.com/deploy/ vefi/token-sales",
-    "create-local": "graph create --node http://localhost:8020/ vefi/token-sales",
+    "deploy-remote-goerli": "graph deploy --ipfs http://146.190.187.199/ipfs/api/v0/ --node http://146.190.187.199/base/admin/ sparkfi/token-sales",
+    "create-remote-goerli": "graph create --node http://146.190.187.199/base/admin/ sparkfi/token-sales",
     "remove-local": "graph remove --node http://localhost:8020/ vefi/token-sales",
     "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 vefi/token-sales",
     "test": "graph test"
   },
   "dependencies": {
-    "@graphprotocol/graph-cli": "0.48.0",
-    "@graphprotocol/graph-ts": "0.28.1"
+    "@graphprotocol/graph-cli": "^0.51.1",
+    "@graphprotocol/graph-ts": "^0.31.0"
   },
   "devDependencies": {
     "matchstick-as": "0.5.0"

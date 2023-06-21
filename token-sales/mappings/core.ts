@@ -1,4 +1,4 @@
-import { Address, BigInt, ethereum } from "@graphprotocol/graph-ts";
+import { Address, BigInt, Bytes, ethereum } from "@graphprotocol/graph-ts";
 import { CliffPeriod, Contribution, LinearVesting, TokenSale } from "../generated/schema";
 import {
   Purchase as PurchaseEvent,
@@ -12,7 +12,7 @@ import { ZERO_BI } from "./constants";
 
 export function handlePurchase(event: PurchaseEvent): void {
   const tokenSale = TokenSale.load(event.address.toHex()) as TokenSale;
-  const decimals = fetchTokenDecimals(Address.fromHexString(tokenSale.paymentToken)) as BigInt;
+  const decimals = fetchTokenDecimals(Address.fromBytes(Bytes.fromHexString(tokenSale.paymentToken))) as BigInt;
   const amount = event.params.paymentAmount.div(BigInt.fromI32(10).pow(decimals.toI32() as u8));
   tokenSale.totalPaymentMade = tokenSale.totalPaymentMade.plus(amount);
   tokenSale.save();
@@ -33,7 +33,7 @@ export function handlePurchase(event: PurchaseEvent): void {
 
 export function handleSetMinTotalPayment(event: SetMinTotalPaymentEvent): void {
   const tokenSale = TokenSale.load(event.address.toHex()) as TokenSale;
-  const decimals = fetchTokenDecimals(Address.fromHexString(tokenSale.paymentToken)) as BigInt;
+  const decimals = fetchTokenDecimals(Address.fromBytes(Bytes.fromHexString(tokenSale.paymentToken))) as BigInt;
 
   tokenSale.minTotalPayment = event.params.minTotalPayment.div(BigInt.fromI32(10).pow(decimals.toI32() as u8));
   tokenSale.save();
@@ -73,7 +73,7 @@ export function handleSetCliffVestingPeriod(event: SetCliffVestingPeriodEvent): 
 
   const cliffs: string[] = [];
 
-  const tuples = ethereum.Value.fromBytes(event.params.cliffPeriod).toTupleArray();
+  const tuples = ethereum.Value.fromBytes(event.params.cliffPeriod).toTupleArray<ethereum.Tuple>();
 
   for (let i = 0; i < tuples.length; i++) {
     const tuple = tuples[i];
