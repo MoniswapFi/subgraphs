@@ -44,6 +44,8 @@ templates:
           file: ./abis/Presale.json
         - name: PresaleFactory
           file: ./abis/PresaleFactory.json
+        - name: ERC20
+          file: ./abis/ERC20.json
       eventHandlers:
         - event: Purchase(indexed address,uint256)
           handler: handlePurchase
