@@ -23,8 +23,8 @@ type TokenSale @entity {
   id: ID!
   presaleId: Bytes!
   metadataURI: String!
-  funder: Bytes!
   salePrice: BigInt!
+  totalAvailableSaleTokens: BigInt!
   paymentToken: Token!
   saleToken: Token!
   startTime: BigInt!

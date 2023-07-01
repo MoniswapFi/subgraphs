@@ -72,7 +72,6 @@ export function handlePresaleCreated(event: PresaleCreatedEvent): void {
   const entity = new TokenSale(event.params.presaleId.toHex());
   entity.presaleId = event.params.presaleId;
   entity.metadataURI = event.params.metadataURI;
-  entity.funder = event.params.funder;
   entity.salePrice = event.params.salePrice.div(BigInt.fromI32(10).pow(paymentToken.decimals.toI32() as u8));
   entity.paymentToken = event.params.paymentToken.toHex();
   entity.saleToken = event.params.saleToken.toHex();
@@ -89,6 +88,7 @@ export function handlePresaleCreated(event: PresaleCreatedEvent): void {
   entity.cliffPeriod = [];
   entity.linearVesting = null;
   entity.totalPaymentMade = ZERO_BI;
+  entity.totalAvailableSaleTokens = ZERO_BI;
 
   entity.save();
 

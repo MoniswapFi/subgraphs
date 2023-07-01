@@ -6,8 +6,9 @@ dataSources:
     name: PresaleFactory
     network: goerli
     source:
-      address: "0x64FAF984Bf60dE19e24238521814cA98574E3b00"
+      address: "0x4603b254ca806aDAFd52A35f5a8c5a97743df342"
       abi: PresaleFactory
+      startBlock: 6517867
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -49,6 +50,8 @@ templates:
       eventHandlers:
         - event: Purchase(indexed address,uint256)
           handler: handlePurchase
+        - event: Fund(indexed address,uint256)
+          handler: handleFund
         - event: SetMinTotalPayment(indexed uint256)
           handler: handleSetMinTotalPayment
         - event: EmergencyWithdrawal(indexed address)

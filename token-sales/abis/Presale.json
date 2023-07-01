@@ -193,19 +193,6 @@
       {
         "indexed": true,
         "internalType": "address",
-        "name": "casher",
-        "type": "address"
-      }
-    ],
-    "name": "RemoveCasher",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": true,
-        "internalType": "address",
         "name": "whitelistSetter",
         "type": "address"
       }
@@ -331,6 +318,19 @@
     "inputs": [
       {
         "indexed": true,
+        "internalType": "address",
+        "name": "funder",
+        "type": "address"
+      }
+    ],
+    "name": "SetFunder",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
         "internalType": "uint256",
         "name": "linearVestingEndTime",
         "type": "uint256"
@@ -412,33 +412,7 @@
   },
   {
     "inputs": [],
-    "name": "CASHER_ROLE",
-    "outputs": [
-      {
-        "internalType": "bytes32",
-        "name": "",
-        "type": "bytes32"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
     "name": "DEFAULT_ADMIN_ROLE",
-    "outputs": [
-      {
-        "internalType": "bytes32",
-        "name": "",
-        "type": "bytes32"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "FUNDER_ROLE",
     "outputs": [
       {
         "internalType": "bytes32",
@@ -1025,6 +999,19 @@
       }
     ],
     "name": "setCliffPeriod",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_funder",
+        "type": "address"
+      }
+    ],
+    "name": "setFunder",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"

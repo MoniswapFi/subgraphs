@@ -6,6 +6,7 @@ import {
   EmergencyWithdrawal as EmergencyWithdrawalEvent,
   SetLinearVestingEndTime as SetLinearVestingEndTimeEvent,
   SetCliffVestingPeriod as SetCliffVestingPeriodEvent,
+  Fund as FundEvent,
 } from "../generated/templates/Presale/Presale";
 import { fetchTokenDecimals } from "./utils/erc20";
 import { ZERO_BI } from "./constants";
@@ -29,6 +30,14 @@ export function handlePurchase(event: PurchaseEvent): void {
 
   contribution.amount = contribution.amount.plus(amount);
   contribution.save();
+}
+
+export function handleFund(event: FundEvent): void {
+  const tokenSale = TokenSale.load(event.address.toHex()) as TokenSale;
+  const decimals = fetchTokenDecimals(Address.fromBytes(Bytes.fromHexString(tokenSale.saleToken))) as BigInt;
+  const amount = event.params.amount.div(BigInt.fromI32(10).pow(decimals.toI32() as u8));
+  tokenSale.totalAvailableSaleTokens = tokenSale.totalAvailableSaleTokens.plus(amount);
+  tokenSale.save();
 }
 
 export function handleSetMinTotalPayment(event: SetMinTotalPaymentEvent): void {
