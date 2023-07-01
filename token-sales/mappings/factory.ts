@@ -72,7 +72,11 @@ export function handlePresaleCreated(event: PresaleCreatedEvent): void {
   const entity = new TokenSale(event.params.presaleId.toHex());
   entity.presaleId = event.params.presaleId;
   entity.metadataURI = event.params.metadataURI;
-  entity.salePrice = event.params.salePrice.div(BigInt.fromI32(10).pow(paymentToken.decimals.toI32() as u8)).toBigDecimal();
+  entity.salePrice = event.params.salePrice.toBigDecimal().div(
+    BigInt.fromI32(10)
+      .pow(paymentToken.decimals.toI32() as u8)
+      .toBigDecimal()
+  );
   entity.paymentToken = event.params.paymentToken.toHex();
   entity.saleToken = event.params.saleToken.toHex();
   entity.startTime = event.params.startTime;
