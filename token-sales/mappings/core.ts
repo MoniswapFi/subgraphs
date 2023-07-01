@@ -9,12 +9,16 @@ import {
   Fund as FundEvent,
 } from "../generated/templates/Presale/Presale";
 import { fetchTokenDecimals } from "./utils/erc20";
-import { ZERO_BI } from "./constants";
+import { ZERO_BD } from "./constants";
 
 export function handlePurchase(event: PurchaseEvent): void {
   const tokenSale = TokenSale.load(event.address.toHex()) as TokenSale;
   const decimals = fetchTokenDecimals(Address.fromBytes(Bytes.fromHexString(tokenSale.paymentToken))) as BigInt;
-  const amount = event.params.paymentAmount.div(BigInt.fromI32(10).pow(decimals.toI32() as u8));
+  const amount = event.params.paymentAmount.toBigDecimal().div(
+    BigInt.fromI32(10)
+      .pow(decimals.toI32() as u8)
+      .toBigDecimal()
+  );
   tokenSale.totalPaymentMade = tokenSale.totalPaymentMade.plus(amount);
   tokenSale.save();
 
@@ -23,7 +27,7 @@ export function handlePurchase(event: PurchaseEvent): void {
 
   if (contribution === null) {
     contribution = new Contribution(contributionId);
-    contribution.amount = ZERO_BI;
+    contribution.amount = ZERO_BD;
     contribution.user = event.params.sender;
     contribution.tokenSale = tokenSale.id;
   }
@@ -35,7 +39,11 @@ export function handlePurchase(event: PurchaseEvent): void {
 export function handleFund(event: FundEvent): void {
   const tokenSale = TokenSale.load(event.address.toHex()) as TokenSale;
   const decimals = fetchTokenDecimals(Address.fromBytes(Bytes.fromHexString(tokenSale.saleToken))) as BigInt;
-  const amount = event.params.amount.div(BigInt.fromI32(10).pow(decimals.toI32() as u8));
+  const amount = event.params.amount.toBigDecimal().div(
+    BigInt.fromI32(10)
+      .pow(decimals.toI32() as u8)
+      .toBigDecimal()
+  );
   tokenSale.totalAvailableSaleTokens = tokenSale.totalAvailableSaleTokens.plus(amount);
   tokenSale.save();
 }
@@ -44,7 +52,11 @@ export function handleSetMinTotalPayment(event: SetMinTotalPaymentEvent): void {
   const tokenSale = TokenSale.load(event.address.toHex()) as TokenSale;
   const decimals = fetchTokenDecimals(Address.fromBytes(Bytes.fromHexString(tokenSale.paymentToken))) as BigInt;
 
-  tokenSale.minTotalPayment = event.params.minTotalPayment.div(BigInt.fromI32(10).pow(decimals.toI32() as u8));
+  tokenSale.minTotalPayment = event.params.minTotalPayment.toBigDecimal().div(
+    BigInt.fromI32(10)
+      .pow(decimals.toI32() as u8)
+      .toBigDecimal()
+  );
   tokenSale.save();
 }
 
@@ -55,7 +67,7 @@ export function handleEmergencyWithdrawal(event: EmergencyWithdrawalEvent): void
   tokenSale.totalPaymentMade = tokenSale.totalPaymentMade.minus(contribution.amount);
   tokenSale.save();
 
-  contribution.amount = ZERO_BI;
+  contribution.amount = ZERO_BD;
   contribution.save();
 }
 

@@ -1,9 +1,9 @@
-import { BigInt, log } from "@graphprotocol/graph-ts";
+import { BigDecimal, BigInt, log } from "@graphprotocol/graph-ts";
 import { PresaleCreated as PresaleCreatedEvent } from "../generated/PresaleFactory/PresaleFactory";
 import { TokenSale, Token, PresaleFactory } from "../generated/schema";
 import { Presale as TokenSaleTemplate } from "../generated/templates";
 import { fetchTokenName, fetchTokenSymbol, fetchTokenDecimals, fetchTokenTotalSupply } from "./utils/erc20";
-import { FACTORY_ADDRESS, ZERO_BI } from "./constants";
+import { FACTORY_ADDRESS, ZERO_BD } from "./constants";
 
 export function handlePresaleCreated(event: PresaleCreatedEvent): void {
   let factory = PresaleFactory.load(FACTORY_ADDRESS);
@@ -72,13 +72,21 @@ export function handlePresaleCreated(event: PresaleCreatedEvent): void {
   const entity = new TokenSale(event.params.presaleId.toHex());
   entity.presaleId = event.params.presaleId;
   entity.metadataURI = event.params.metadataURI;
-  entity.salePrice = event.params.salePrice.div(BigInt.fromI32(10).pow(paymentToken.decimals.toI32() as u8));
+  entity.salePrice = event.params.salePrice.div(BigInt.fromI32(10).pow(paymentToken.decimals.toI32() as u8)).toBigDecimal();
   entity.paymentToken = event.params.paymentToken.toHex();
   entity.saleToken = event.params.saleToken.toHex();
   entity.startTime = event.params.startTime;
   entity.endTime = event.params.endTime;
-  entity.minTotalPayment = event.params.minTotalPayment.div(BigInt.fromI32(10).pow(paymentToken.decimals.toI32() as u8));
-  entity.maxTotalPayment = event.params.maxTotalPayment.div(BigInt.fromI32(10).pow(paymentToken.decimals.toI32() as u8));
+  entity.minTotalPayment = event.params.minTotalPayment.toBigDecimal().div(
+    BigInt.fromI32(10)
+      .pow(paymentToken.decimals.toI32() as u8)
+      .toBigDecimal()
+  );
+  entity.maxTotalPayment = event.params.maxTotalPayment.toBigDecimal().div(
+    BigInt.fromI32(10)
+      .pow(paymentToken.decimals.toI32() as u8)
+      .toBigDecimal()
+  );
   entity.withdrawDelay = event.params.withdrawDelay;
 
   entity.blockNumber = event.block.number;
@@ -87,8 +95,8 @@ export function handlePresaleCreated(event: PresaleCreatedEvent): void {
   entity.vestingType = null;
   entity.cliffPeriod = [];
   entity.linearVesting = null;
-  entity.totalPaymentMade = ZERO_BI;
-  entity.totalAvailableSaleTokens = ZERO_BI;
+  entity.totalPaymentMade = ZERO_BD;
+  entity.totalAvailableSaleTokens = ZERO_BD;
 
   entity.save();
 

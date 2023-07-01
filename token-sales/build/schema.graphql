@@ -23,14 +23,14 @@ type TokenSale @entity {
   id: ID!
   presaleId: Bytes!
   metadataURI: String!
-  salePrice: BigInt!
-  totalAvailableSaleTokens: BigInt!
+  salePrice: BigDecimal!
+  totalAvailableSaleTokens: BigDecimal!
   paymentToken: Token!
   saleToken: Token!
   startTime: BigInt!
   endTime: BigInt!
-  minTotalPayment: BigInt!
-  maxTotalPayment: BigInt!
+  minTotalPayment: BigDecimal!
+  maxTotalPayment: BigDecimal!
   withdrawDelay: Int!
   blockNumber: BigInt!
   blockTimestamp: BigInt!
@@ -38,7 +38,7 @@ type TokenSale @entity {
   vestingType: VestingType
   linearVesting: LinearVesting
   cliffPeriod: [CliffPeriod!]
-  totalPaymentMade: BigInt!
+  totalPaymentMade: BigDecimal!
   contributions: [Contribution!]! @derivedFrom(field: "tokenSale")
 }
 
@@ -54,5 +54,5 @@ type Contribution @entity {
   id: ID!
   user: Bytes!
   tokenSale: TokenSale!
-  amount: BigInt!
+  amount: BigDecimal!
 }
