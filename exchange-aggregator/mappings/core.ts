@@ -6,12 +6,12 @@ import { fetchTokenDecimals, fetchTokenSymbol, fetchTokenTotalSupply } from "./u
 import { getTokenPriceInUSDFromAdapterQuery } from "./pricing";
 import { updatePairDayData, updatePairHourData, updateTokenDayData } from "./day_updates";
 
-export function handleAdapterSwap(event: AdapterSwapEvent) {
+export function handleAdapterSwap(event: AdapterSwapEvent): void {
   const adapter = Adapter.load(event.address.toHex()) as Adapter;
   let tokenIn = Token.load(event.params.tokenIn.toHex());
   let tokenOut = Token.load(event.params.tokenOut.toHex());
 
-  if (tokenIn == null) {
+  if (tokenIn === null) {
     tokenIn = new Token(event.params.tokenIn.toHex());
     tokenIn.txCount = ZERO_BI;
     tokenIn.tradeVolumeUSD = ZERO_BD;
@@ -19,21 +19,21 @@ export function handleAdapterSwap(event: AdapterSwapEvent) {
 
     const symbol = fetchTokenSymbol(event.params.tokenIn);
 
-    if (symbol == null) {
+    if (symbol === null) {
       log.debug("could not fetch symbol", []);
       return;
     }
 
     const totalSupply = fetchTokenTotalSupply(event.params.tokenIn);
 
-    if (totalSupply == null) {
+    if (totalSupply === null) {
       log.debug("could not fetch total supply", []);
       return;
     }
 
     const decimals = fetchTokenDecimals(event.params.tokenIn);
 
-    if (decimals == null) {
+    if (decimals === null) {
       log.debug("could not fetch decimmals", []);
       return;
     }
@@ -43,7 +43,7 @@ export function handleAdapterSwap(event: AdapterSwapEvent) {
     tokenIn.totalSupply = totalSupply.div(BigInt.fromI32(10).pow(decimals.toI32() as u8));
   }
 
-  if (tokenOut == null) {
+  if (tokenOut === null) {
     tokenOut = new Token(event.params.tokenOut.toHex());
     tokenOut.txCount = ZERO_BI;
     tokenOut.tradeVolumeUSD = ZERO_BD;
@@ -51,21 +51,21 @@ export function handleAdapterSwap(event: AdapterSwapEvent) {
 
     const symbol = fetchTokenSymbol(event.params.tokenOut);
 
-    if (symbol == null) {
+    if (symbol === null) {
       log.debug("could not fetch symbol", []);
       return;
     }
 
     const totalSupply = fetchTokenTotalSupply(event.params.tokenOut);
 
-    if (totalSupply == null) {
+    if (totalSupply === null) {
       log.debug("could not fetch total supply", []);
       return;
     }
 
     const decimals = fetchTokenDecimals(event.params.tokenOut);
 
-    if (decimals == null) {
+    if (decimals === null) {
       log.debug("could not fetch decimals", []);
       return;
     }

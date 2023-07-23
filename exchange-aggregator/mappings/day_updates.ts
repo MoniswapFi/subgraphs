@@ -3,7 +3,7 @@ import { PairDayData, PairHourData, Token, TokenDayData } from "../generated/sch
 import { getTokenPriceInUSDFromAdapterQuery } from "./pricing";
 import { ONE_BI, ZERO_BD, ZERO_BI } from "./constants";
 
-export function updateTokenDayData(token: Token, event: ethereum.Event) {
+export function updateTokenDayData(token: Token, event: ethereum.Event): TokenDayData {
   const timestamp = event.block.timestamp.toI32();
   const dayID = timestamp / 86400;
   const dayStartTimestamp = dayID * 86400;
@@ -25,7 +25,7 @@ export function updateTokenDayData(token: Token, event: ethereum.Event) {
   return tokenDayData;
 }
 
-export function updatePairHourData(tokenA: Token, tokenB: Token, event: ethereum.Event) {
+export function updatePairHourData(tokenA: Token, tokenB: Token, event: ethereum.Event): PairHourData {
   const timestamp = event.block.timestamp.toI32();
   const hourID = timestamp / 3600;
   const hourStartTimeStamp = hourID * 3600;
@@ -34,7 +34,7 @@ export function updatePairHourData(tokenA: Token, tokenB: Token, event: ethereum
 
   let pairHourData = PairHourData.load(pairHourID);
 
-  if (pairHourData == null) {
+  if (pairHourData === null) {
     pairHourData = new PairHourData(pairHourID);
     pairHourData.date = hourStartTimeStamp;
     pairHourData.hourlyVolumeUSD = ZERO_BD;
@@ -48,7 +48,7 @@ export function updatePairHourData(tokenA: Token, tokenB: Token, event: ethereum
   return pairHourData;
 }
 
-export function updatePairDayData(tokenA: Token, tokenB: Token, event: ethereum.Event) {
+export function updatePairDayData(tokenA: Token, tokenB: Token, event: ethereum.Event): PairDayData {
   const timestamp = event.block.timestamp.toI32();
   const dayID = timestamp / 86400;
   const dayStartTimeStamp = dayID * 86400;
@@ -57,7 +57,7 @@ export function updatePairDayData(tokenA: Token, tokenB: Token, event: ethereum.
 
   let pairDayData = PairDayData.load(pairDayId);
 
-  if (pairDayData == null) {
+  if (pairDayData === null) {
     pairDayData = new PairDayData(pairDayId);
     pairDayData.date = dayStartTimeStamp;
     pairDayData.dailyVolumeToken1 = ZERO_BD;
