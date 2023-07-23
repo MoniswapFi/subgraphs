@@ -1,19 +1,40 @@
 [
   {
+    "anonymous": false,
     "inputs": [
       {
-        "internalType": "uint16",
-        "name": "_salePercentageForEcosystem",
-        "type": "uint16"
+        "indexed": true,
+        "internalType": "address",
+        "name": "tokenIn",
+        "type": "address"
       },
       {
+        "indexed": true,
         "internalType": "address",
-        "name": "_feeCollector",
+        "name": "tokenOut",
         "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "to",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "amountIn",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "amountOut",
+        "type": "uint256"
       }
     ],
-    "stateMutability": "nonpayable",
-    "type": "constructor"
+    "name": "AdapterSwap",
+    "type": "event"
   },
   {
     "anonymous": false,
@@ -32,79 +53,6 @@
       }
     ],
     "name": "OwnershipTransferred",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": true,
-        "internalType": "address",
-        "name": "presaleId",
-        "type": "address"
-      },
-      {
-        "indexed": false,
-        "internalType": "string",
-        "name": "metadataURI",
-        "type": "string"
-      },
-      {
-        "indexed": false,
-        "internalType": "address",
-        "name": "funder",
-        "type": "address"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "salePrice",
-        "type": "uint256"
-      },
-      {
-        "indexed": true,
-        "internalType": "address",
-        "name": "paymentToken",
-        "type": "address"
-      },
-      {
-        "indexed": true,
-        "internalType": "address",
-        "name": "saleToken",
-        "type": "address"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "startTime",
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "endTime",
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "minTotalPayment",
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "maxTotalPayment",
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint24",
-        "name": "withdrawDelay",
-        "type": "uint24"
-      }
-    ],
-    "name": "PresaleCreated",
     "type": "event"
   },
   {
@@ -184,122 +132,12 @@
   },
   {
     "inputs": [],
-    "name": "ADMIN_ROLE",
-    "outputs": [
-      {
-        "internalType": "bytes32",
-        "name": "",
-        "type": "bytes32"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
     "name": "DEFAULT_ADMIN_ROLE",
     "outputs": [
       {
         "internalType": "bytes32",
         "name": "",
         "type": "bytes32"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "string",
-        "name": "metadataURI",
-        "type": "string"
-      },
-      {
-        "internalType": "address",
-        "name": "newOwner",
-        "type": "address"
-      },
-      {
-        "internalType": "address",
-        "name": "casher",
-        "type": "address"
-      },
-      {
-        "internalType": "address",
-        "name": "funder",
-        "type": "address"
-      },
-      {
-        "internalType": "uint256",
-        "name": "salePrice",
-        "type": "uint256"
-      },
-      {
-        "internalType": "address",
-        "name": "paymentToken",
-        "type": "address"
-      },
-      {
-        "internalType": "address",
-        "name": "saleToken",
-        "type": "address"
-      },
-      {
-        "internalType": "uint256",
-        "name": "startTime",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint16",
-        "name": "daysToLast",
-        "type": "uint16"
-      },
-      {
-        "internalType": "uint256",
-        "name": "minTotalPayment",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "maxTotalPayment",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256[]",
-        "name": "claimTimes",
-        "type": "uint256[]"
-      },
-      {
-        "internalType": "uint8[]",
-        "name": "pct",
-        "type": "uint8[]"
-      },
-      {
-        "internalType": "uint24",
-        "name": "withdrawDelay",
-        "type": "uint24"
-      }
-    ],
-    "name": "deploySale",
-    "outputs": [
-      {
-        "internalType": "address",
-        "name": "presaleId",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "feeCollector",
-    "outputs": [
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
       }
     ],
     "stateMutability": "view",
@@ -322,19 +160,6 @@
       }
     ],
     "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "account",
-        "type": "address"
-      }
-    ],
-    "name": "grantAdminRole",
-    "outputs": [],
-    "stateMutability": "nonpayable",
     "type": "function"
   },
   {
@@ -381,6 +206,32 @@
   },
   {
     "inputs": [],
+    "name": "maintainerRole",
+    "outputs": [
+      {
+        "internalType": "bytes32",
+        "name": "",
+        "type": "bytes32"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "name",
+    "outputs": [
+      {
+        "internalType": "string",
+        "name": "",
+        "type": "string"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
     "name": "owner",
     "outputs": [
       {
@@ -390,6 +241,89 @@
       }
     ],
     "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "tokenIn",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "tokenOut",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "amountIn",
+        "type": "uint256"
+      }
+    ],
+    "name": "query",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "amountOut",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "token",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "to",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
+      }
+    ],
+    "name": "recoverERC20",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "to",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
+      }
+    ],
+    "name": "recoverEther",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "maintainer",
+        "type": "address"
+      }
+    ],
+    "name": "removeMaintainer",
+    "outputs": [],
+    "stateMutability": "nonpayable",
     "type": "function"
   },
   {
@@ -420,19 +354,6 @@
   {
     "inputs": [
       {
-        "internalType": "address",
-        "name": "account",
-        "type": "address"
-      }
-    ],
-    "name": "revokeAdminRole",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
         "internalType": "bytes32",
         "name": "role",
         "type": "bytes32"
@@ -449,40 +370,14 @@
     "type": "function"
   },
   {
-    "inputs": [],
-    "name": "salePercentageForEcosystem",
-    "outputs": [
-      {
-        "internalType": "uint16",
-        "name": "",
-        "type": "uint16"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint16",
-        "name": "ecosystemPercentage",
-        "type": "uint16"
-      }
-    ],
-    "name": "setEcosystemPercentage",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
     "inputs": [
       {
         "internalType": "address",
-        "name": "_feeCollector",
+        "name": "maintainer",
         "type": "address"
       }
     ],
-    "name": "setFeeCollector",
+    "name": "setMaintainer",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -510,33 +405,12 @@
     "inputs": [
       {
         "internalType": "address",
-        "name": "newOwner",
+        "name": "tokenIn",
         "type": "address"
-      }
-    ],
-    "name": "transferOwnership",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
+      },
       {
         "internalType": "address",
-        "name": "to",
-        "type": "address"
-      }
-    ],
-    "name": "withdrawEther",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "token",
+        "name": "tokenOut",
         "type": "address"
       },
       {
@@ -546,11 +420,29 @@
       },
       {
         "internalType": "uint256",
-        "name": "amount",
+        "name": "amountIn",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "amountOut",
         "type": "uint256"
       }
     ],
-    "name": "withdrawToken",
+    "name": "swap",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "newOwner",
+        "type": "address"
+      }
+    ],
+    "name": "transferOwnership",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"

@@ -1,1 +1,1 @@
-prettier --write **/**/*.{js,ts,json,yml,yaml}
+prettier --write **/**/*.{graphql,js,ts,json,yml,yaml}

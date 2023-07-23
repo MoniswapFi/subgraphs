@@ -1,0 +1,53 @@
+specVersion: 0.0.5
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum
+    name: SparkfiRouter
+    network: goerli
+    source:
+      address: "0xF6a7F229447FB986195c4dC8305553C8A8518d06"
+      abi: SparkfiRouter
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Router
+        - Adapter
+        - Token
+      abis:
+        - name: SparkfiRouter
+          file: ./abis/SparkfiRouter.json
+        - name: ERC20
+          file: ./abis/ERC20.json
+        - name: SparkfiAdapter
+          file: ./abis/SparkfiAdapter.json
+      eventHandlers:
+        - event: RouterSwap(indexed address,indexed address,address,uint256,uint256)
+          handler: handleRouterSwap
+        - event: SetAdapters(address[])
+          handler: handleSetAdapters
+      file: ./mappings/router.ts
+templates:
+  - kind: ethereum
+    name: Adapter
+    network: goerli
+    source:
+      abi: SparkfiAdapter
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      file: ./mappings/core.ts
+      entities:
+        - Adapter
+        - Token
+      abis:
+        - name: ERC20
+          file: ./abis/ERC20.json
+        - name: SparkfiAdapter
+          file: ./abis/SparkfiAdapter.json
+      eventHandlers:
+        - event: AdapterSwap(indexed address,indexed address,address,uint256,uint256)
+          handler: handleAdapterSwap

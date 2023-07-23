@@ -1,5 +1,5 @@
 type QuasarFactory @entity {
-   id: ID!
+  id: ID!
   pairCount: Int!
   totalVolumeUSD: BigDecimal!
   totalVolumeETH: BigDecimal!
@@ -35,7 +35,7 @@ type Pair @entity {
 }
 
 type Token @entity {
-   id: ID!
+  id: ID!
   symbol: String!
   name: String!
   decimals: BigInt!
