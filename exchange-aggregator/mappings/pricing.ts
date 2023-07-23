@@ -1,6 +1,6 @@
 import { Address, BigDecimal, BigInt } from "@graphprotocol/graph-ts";
 import { queryAmountOut } from "./utils/adapter";
-import { BI_18, USDC, USDT, WETH, ZERO_BD, ZERO_BI } from "./constants";
+import { USDC, USDT, WETH, ZERO_BD, ZERO_BI } from "./constants";
 import { fetchTokenDecimals } from "./utils/erc20";
 
 function getETHPriceInUSDFromAdapterQuery(address: Address): BigDecimal {
