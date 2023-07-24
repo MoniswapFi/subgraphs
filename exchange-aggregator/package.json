@@ -4,10 +4,10 @@
   "scripts": {
     "codegen": "graph codegen",
     "build": "graph build",
-    "deploy": "graph deploy --node https://api.thegraph.com/deploy/ sparkfi/exchangeAggregatorV1",
-    "create-local": "graph create --node http://localhost:8020/ sparkfi/exchangeAggregatorV1",
-    "remove-local": "graph remove --node http://localhost:8020/ sparkfi/exchangeAggregatorV1",
-    "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 sparkfi/exchangeAggregatorV1",
+    "deploy-remote-goerli": "graph deploy --ipfs https://graphs.sparkfi.xyz/ipfs/api/v0 --node https://graphs.sparkfi.xyz/base/admin/ sparkfi/exchangeAggregatorV1",
+    "create-remote-goerli": "graph create --node https://graphs.sparkfi.xyz/base/admin/ sparkfi/exchangeAggregatorV1",
+    "remove-local": "graph remove --node http://localhost:8020/ vefi/token-sales",
+    "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 vefi/token-sales",
     "test": "graph test"
   },
   "dependencies": {

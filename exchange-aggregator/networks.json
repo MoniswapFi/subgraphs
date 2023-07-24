@@ -1,7 +1,8 @@
 {
   "goerli": {
     "SparkfiRouter": {
-      "address": "0xF6a7F229447FB986195c4dC8305553C8A8518d06"
+      "address": "0xF6a7F229447FB986195c4dC8305553C8A8518d06",
+      "startBlock": 7383684
     }
   }
 }
