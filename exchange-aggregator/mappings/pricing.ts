@@ -4,8 +4,8 @@ import { USDC, USDT, WETH, ZERO_BD, ZERO_BI } from "./constants";
 import { fetchTokenDecimals } from "./utils/erc20";
 
 function getETHPriceInUSDFromAdapterQuery(address: Address): BigDecimal {
-  const WETH_USDT = queryAmountOut(address, Address.fromString(WETH), Address.fromString(USDT), BigInt.fromI32(1e18 as u8));
-  const WETH_USDC = queryAmountOut(address, Address.fromString(WETH), Address.fromString(USDC), BigInt.fromI32(1e18 as u8));
+  const WETH_USDT = queryAmountOut(address, Address.fromString(WETH), Address.fromString(USDT), BigInt.fromU64(1e18 as u64));
+  const WETH_USDC = queryAmountOut(address, Address.fromString(WETH), Address.fromString(USDC), BigInt.fromU64(1e18 as u64));
   let price: BigDecimal = ZERO_BD;
 
   if (WETH_USDT !== null && WETH_USDC !== null) {
@@ -16,11 +16,16 @@ function getETHPriceInUSDFromAdapterQuery(address: Address): BigDecimal {
     }
   }
 
-  return price.div(BigInt.fromI32(1e18 as u8).toBigDecimal());
+  return price.div(BigInt.fromU64(1e18 as u64).toBigDecimal());
 }
 
 export function getTokenPriceInUSDFromAdapterQuery(adapter: Address, token: Address): BigDecimal {
   const ethPrice = getETHPriceInUSDFromAdapterQuery(adapter);
+
+  if (token.toHex().toLowerCase() == WETH.toLowerCase()) {
+    return ethPrice;
+  }
+
   const decimals = fetchTokenDecimals(token) as BigInt;
   const TOKEN_WETH = queryAmountOut(
     adapter,
@@ -32,7 +37,7 @@ export function getTokenPriceInUSDFromAdapterQuery(adapter: Address, token: Addr
 
   if (TOKEN_WETH !== null) {
     price = TOKEN_WETH.toBigDecimal()
-      .div(BigInt.fromI32(1e18 as u8).toBigDecimal())
+      .div(BigInt.fromU64(1e18 as u64).toBigDecimal())
       .times(ethPrice);
   }
 

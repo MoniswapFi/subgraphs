@@ -2,7 +2,7 @@ import { Address, BigInt, log } from "@graphprotocol/graph-ts";
 import { AdapterSwap as AdapterSwapEvent } from "../generated/SparkfiRouter/SparkfiAdapter";
 import { Adapter, AdapterSwap, Token } from "../generated/schema";
 import { ONE_BI, ZERO_BD, ZERO_BI } from "./constants";
-import { fetchTokenDecimals, fetchTokenSymbol, fetchTokenTotalSupply } from "./utils/erc20";
+import { fetchTokenDecimals, fetchTokenName, fetchTokenSymbol, fetchTokenTotalSupply } from "./utils/erc20";
 import { getTokenPriceInUSDFromAdapterQuery } from "./pricing";
 import { updatePairDayData, updatePairHourData, updateTokenDayData } from "./day_updates";
 
@@ -16,6 +16,13 @@ export function handleAdapterSwap(event: AdapterSwapEvent): void {
     tokenIn.txCount = ZERO_BI;
     tokenIn.tradeVolumeUSD = ZERO_BD;
     tokenIn.tradeVolume = ZERO_BD;
+
+    const name = fetchTokenName(event.params.tokenIn);
+
+    if (name === null) {
+      log.debug("could not fetch name", []);
+      return;
+    }
 
     const symbol = fetchTokenSymbol(event.params.tokenIn);
 
@@ -38,6 +45,7 @@ export function handleAdapterSwap(event: AdapterSwapEvent): void {
       return;
     }
 
+    tokenIn.name = name;
     tokenIn.symbol = symbol;
     tokenIn.decimals = decimals;
     tokenIn.totalSupply = totalSupply.div(BigInt.fromI32(10).pow(decimals.toI32() as u8));
@@ -48,6 +56,13 @@ export function handleAdapterSwap(event: AdapterSwapEvent): void {
     tokenOut.txCount = ZERO_BI;
     tokenOut.tradeVolumeUSD = ZERO_BD;
     tokenOut.tradeVolume = ZERO_BD;
+
+    const name = fetchTokenName(event.params.tokenOut);
+
+    if (name === null) {
+      log.debug("could not fetch name", []);
+      return;
+    }
 
     const symbol = fetchTokenSymbol(event.params.tokenOut);
 
@@ -70,6 +85,7 @@ export function handleAdapterSwap(event: AdapterSwapEvent): void {
       return;
     }
 
+    tokenOut.name = name;
     tokenOut.symbol = symbol;
     tokenOut.decimals = decimals;
     tokenOut.totalSupply = totalSupply.div(BigInt.fromI32(10).pow(decimals.toI32() as u8));
