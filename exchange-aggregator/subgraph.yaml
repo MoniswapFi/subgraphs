@@ -6,8 +6,9 @@ dataSources:
     name: SparkfiRouter
     network: goerli
     source:
-      address: "0xF6a7F229447FB986195c4dC8305553C8A8518d06"
       abi: SparkfiRouter
+      address: "0xC17573eC77381E358adB9b36CA9774E7302ce068"
+      startBlock: 7486733
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
