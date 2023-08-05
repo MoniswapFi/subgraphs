@@ -369,6 +369,19 @@
     "anonymous": false,
     "inputs": [
       {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "whitelistEndTime",
+        "type": "uint256"
+      }
+    ],
+    "name": "SetWhitelistEndTime",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
         "indexed": true,
         "internalType": "address",
         "name": "whitelistSetter",
@@ -376,6 +389,19 @@
       }
     ],
     "name": "SetWhitelistSetter",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "whitelistStartTime",
+        "type": "uint256"
+      }
+    ],
+    "name": "SetWhitelistStartTime",
     "type": "event"
   },
   {
@@ -1097,6 +1123,24 @@
   {
     "inputs": [
       {
+        "internalType": "uint256",
+        "name": "_whitelistStartTime",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint16",
+        "name": "_duration",
+        "type": "uint16"
+      }
+    ],
+    "name": "setWhitelistDuration",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
         "internalType": "address",
         "name": "_whitelistSetter",
         "type": "address"
@@ -1238,12 +1282,38 @@
   },
   {
     "inputs": [],
+    "name": "whitelistEndTime",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
     "name": "whitelistRootHash",
     "outputs": [
       {
         "internalType": "bytes32",
         "name": "",
         "type": "bytes32"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "whitelistStartTime",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
       }
     ],
     "stateMutability": "view",

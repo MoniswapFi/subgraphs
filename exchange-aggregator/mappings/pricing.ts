@@ -31,7 +31,7 @@ export function getTokenPriceInUSDFromAdapterQuery(adapter: Address, token: Addr
     adapter,
     token,
     Address.fromString(WETH),
-    BigInt.fromI32(1).times(BigInt.fromI32(10).pow((decimals.toI32() || 18) as u8))
+    BigInt.fromI32(1).times(BigInt.fromI32(10).pow((decimals.toI32() || 18) as u8)),
   );
   let price: BigDecimal = ZERO_BD;
 

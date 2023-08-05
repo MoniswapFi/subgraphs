@@ -50,12 +50,12 @@ export function handleRouterSwap(event: RouterSwapEvent): void {
   const amountIn = event.params.amountIn.toBigDecimal().div(
     BigInt.fromI32(10)
       .pow(tokenIn.decimals.toI32() as u8)
-      .toBigDecimal()
+      .toBigDecimal(),
   );
   const amountOut = event.params.amountOut.toBigDecimal().div(
     BigInt.fromI32(10)
       .pow(tokenOut.decimals.toI32() as u8)
-      .toBigDecimal()
+      .toBigDecimal(),
   );
 
   swap.amountIn = amountIn;

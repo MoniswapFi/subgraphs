@@ -17,7 +17,7 @@ export function handlePurchase(event: PurchaseEvent): void {
   const amount = event.params.paymentAmount.toBigDecimal().div(
     BigInt.fromI32(10)
       .pow(decimals.toI32() as u8)
-      .toBigDecimal()
+      .toBigDecimal(),
   );
   tokenSale.totalPaymentMade = tokenSale.totalPaymentMade.plus(amount);
   tokenSale.save();
@@ -42,7 +42,7 @@ export function handleFund(event: FundEvent): void {
   const amount = event.params.amount.toBigDecimal().div(
     BigInt.fromI32(10)
       .pow(decimals.toI32() as u8)
-      .toBigDecimal()
+      .toBigDecimal(),
   );
   tokenSale.totalAvailableSaleTokens = tokenSale.totalAvailableSaleTokens.plus(amount);
   tokenSale.save();
@@ -55,7 +55,7 @@ export function handleSetMinTotalPayment(event: SetMinTotalPaymentEvent): void {
   tokenSale.minTotalPayment = event.params.minTotalPayment.toBigDecimal().div(
     BigInt.fromI32(10)
       .pow(decimals.toI32() as u8)
-      .toBigDecimal()
+      .toBigDecimal(),
   );
   tokenSale.save();
 }

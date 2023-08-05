@@ -61,7 +61,7 @@ export const getTrackedVolumeInUSD = (
   tokenAmount0: BigDecimal,
   token0: Token,
   tokenAmount1: BigDecimal,
-  token1: Token
+  token1: Token,
 ): BigDecimal => {
   const price0 = token0.derivedETH!.times(bundle.ethPrice);
   const price1 = token1.derivedETH!.times(bundle.ethPrice);

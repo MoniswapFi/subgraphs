@@ -2,7 +2,7 @@
   "goerli": {
     "PresaleFactory": {
       "address": "0x7961c29F9007ADbE089c1C4163a77e453A960583",
-      "startBlock": 6859252
+      "startBlock": 8037276
     }
   }
 }

@@ -24,7 +24,7 @@ export function createPresaleCreatedEvent(
   endTime: BigInt,
   minTotalPayment: BigInt,
   maxTotalPayment: BigInt,
-  withdrawDelay: i32
+  withdrawDelay: i32,
 ): PresaleCreated {
   let presaleCreatedEvent = changetype<PresaleCreated>(newMockEvent());
 

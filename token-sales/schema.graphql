@@ -3,6 +3,11 @@ enum VestingType {
   CLIFF
 }
 
+enum SaleType {
+  REGULAR
+  ALLOCATION
+}
+
 type PresaleFactory @entity {
   id: ID!
   salesCount: Int!
@@ -40,6 +45,7 @@ type TokenSale @entity {
   cliffPeriod: [CliffPeriod!]
   totalPaymentMade: BigDecimal!
   contributions: [Contribution!]! @derivedFrom(field: "tokenSale")
+  saleType: SaleType!
 }
 
 type Token @entity {

@@ -31,13 +31,13 @@ describe("Describe entity assertions", () => {
       "OwnershipTransferred",
       "0xa16081f360e3847006db660bae1c6d1b2e17ec2a-1",
       "previousOwner",
-      "0x0000000000000000000000000000000000000001"
+      "0x0000000000000000000000000000000000000001",
     );
     assert.fieldEquals(
       "OwnershipTransferred",
       "0xa16081f360e3847006db660bae1c6d1b2e17ec2a-1",
       "newOwner",
-      "0x0000000000000000000000000000000000000001"
+      "0x0000000000000000000000000000000000000001",
     );
 
     // More assert options:

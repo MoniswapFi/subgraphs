@@ -100,8 +100,8 @@ export function handleAdapterSwap(event: AdapterSwapEvent): void {
     amountIn.toBigDecimal().div(
       BigInt.fromI32(10)
         .pow(tokenIn.decimals.toI32() as u8)
-        .toBigDecimal()
-    )
+        .toBigDecimal(),
+    ),
   );
   tokenIn.tradeVolumeUSD = tokenIn.priceUSD.times(tokenIn.tradeVolume);
 
@@ -111,8 +111,8 @@ export function handleAdapterSwap(event: AdapterSwapEvent): void {
     amountOut.toBigDecimal().div(
       BigInt.fromI32(10)
         .pow(tokenOut.decimals.toI32() as u8)
-        .toBigDecimal()
-    )
+        .toBigDecimal(),
+    ),
   );
   tokenOut.tradeVolumeUSD = tokenOut.priceUSD.times(tokenOut.tradeVolume);
 
@@ -129,12 +129,12 @@ export function handleAdapterSwap(event: AdapterSwapEvent): void {
   swap.amountIn = amountIn.toBigDecimal().div(
     BigInt.fromI32(10)
       .pow(tokenIn.decimals.toI32() as u8)
-      .toBigDecimal()
+      .toBigDecimal(),
   );
   swap.amountOut = amountOut.toBigDecimal().div(
     BigInt.fromI32(10)
       .pow(tokenOut.decimals.toI32() as u8)
-      .toBigDecimal()
+      .toBigDecimal(),
   );
   swap.tokenIn = tokenIn.id;
   swap.tokenOut = tokenOut.id;
