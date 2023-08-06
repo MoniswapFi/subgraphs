@@ -9,6 +9,7 @@ export function handleStake(event: StakeEvent): void {
   if (allocator == null) {
     allocator = new Allocator(ALLOCATOR_ADDRESS);
     allocator.totalTokensStaked = BigDecimal.zero();
+    allocator.totalStakers = 0;
   }
 
   const accountId = event.params.account.toHex();
@@ -25,6 +26,10 @@ export function handleStake(event: StakeEvent): void {
   account.amountStaked = account.amountStaked.plus(amount);
   account.save();
 
+  if (account.amountStaked.equals(amount)) {
+    allocator.totalStakers = allocator.totalStakers + 1;
+  }
+
   allocator.totalTokensStaked = allocator.totalTokensStaked.plus(amount);
   allocator.save();
 }
@@ -35,6 +40,7 @@ export function handleTierAdded(event: TierAddedEvent): void {
   if (allocator == null) {
     allocator = new Allocator(ALLOCATOR_ADDRESS);
     allocator.totalTokensStaked = BigDecimal.zero();
+    allocator.totalStakers = 0;
   }
 
   const tier = new Tier(event.address.toHex() + ":" + event.params.name);
@@ -53,6 +59,10 @@ export function handleUnstake(event: UnstakeEvent): void {
   const amount = event.params.amount.toBigDecimal().div(BigInt.fromU64(1e18 as u64).toBigDecimal());
   account.amountStaked = account.amountStaked.minus(amount);
   account.save();
+
+  if (account.amountStaked.equals(BigDecimal.zero())) {
+    allocator.totalStakers = allocator.totalStakers - 1;
+  }
 
   allocator.totalTokensStaked = allocator.totalTokensStaked.minus(amount);
   allocator.save();

@@ -1,6 +1,7 @@
 type Allocator @entity {
   id: ID!
   totalTokensStaked: BigDecimal!
+  totalStakers: Int!
 }
 
 type Account @entity {
