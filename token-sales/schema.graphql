@@ -46,6 +46,8 @@ type TokenSale @entity {
   totalPaymentMade: BigDecimal!
   contributions: [Contribution!]! @derivedFrom(field: "tokenSale")
   saleType: SaleType!
+  whitelistStartTime: BigInt
+  whitelistEndTime: BigInt
 }
 
 type Token @entity {

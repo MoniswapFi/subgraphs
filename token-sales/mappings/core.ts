@@ -7,6 +7,8 @@ import {
   SetLinearVestingEndTime as SetLinearVestingEndTimeEvent,
   SetCliffVestingPeriod as SetCliffVestingPeriodEvent,
   Fund as FundEvent,
+  SetWhitelistStartTime as SetWhitelistStartTimeEvent,
+  SetWhitelistEndTime as SetWhitelistEndTimeEvent
 } from "../generated/templates/Presale/Presale";
 import { fetchTokenDecimals } from "./utils/erc20";
 import { ZERO_BD } from "./constants";
@@ -116,5 +118,17 @@ export function handleSetCliffVestingPeriod(event: SetCliffVestingPeriodEvent): 
   tokenSale.vestingType = "CLIFF";
   tokenSale.cliffPeriod = cliffs;
   tokenSale.linearVesting = null;
+  tokenSale.save();
+}
+
+export function handleSetWhitelistStartTime(event: SetWhitelistStartTimeEvent): void {
+  const tokenSale = TokenSale.load(event.address.toHex()) as TokenSale;
+  tokenSale.whitelistStartTime = event.params.whitelistStartTime;
+  tokenSale.save();
+}
+
+export function handleSetWhitelistEndTime(event: SetWhitelistEndTimeEvent): void {
+  const tokenSale = TokenSale.load(event.address.toHex()) as TokenSale;
+  tokenSale.whitelistEndTime = event.params.whitelistEndTime;
   tokenSale.save();
 }

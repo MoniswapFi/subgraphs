@@ -61,4 +61,8 @@ templates:
           handler: handleSetLinearVestingEndTime
         - event: SetCliffVestingPeriod((indexed uint256,uint8)[])
           handler: handleSetCliffVestingPeriod
+        - event: SetWhitelistStartTime(uint256)
+          handler: handleSetWhitelistStartTime
+        - event: SetWhitelistEndTime(uint256)
+          handler: handleSetWhitelistEndTime
       file: ./mappings/core.ts
