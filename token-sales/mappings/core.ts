@@ -1,5 +1,5 @@
 import { Address, BigInt, Bytes, ethereum } from "@graphprotocol/graph-ts";
-import { CliffPeriod, Contribution, LinearVesting, TokenSale } from "../generated/schema";
+import { Account, CliffPeriod, Contribution, LinearVesting, TokenSale } from "../generated/schema";
 import {
   Purchase as PurchaseEvent,
   SetMinTotalPayment as SetMinTotalPaymentEvent,
@@ -8,7 +8,7 @@ import {
   SetCliffVestingPeriod as SetCliffVestingPeriodEvent,
   Fund as FundEvent,
   SetWhitelistStartTime as SetWhitelistStartTimeEvent,
-  SetWhitelistEndTime as SetWhitelistEndTimeEvent
+  SetWhitelistEndTime as SetWhitelistEndTimeEvent,
 } from "../generated/templates/Presale/Presale";
 import { fetchTokenDecimals } from "./utils/erc20";
 import { ZERO_BD } from "./constants";
@@ -22,20 +22,30 @@ export function handlePurchase(event: PurchaseEvent): void {
       .toBigDecimal(),
   );
   tokenSale.totalPaymentMade = tokenSale.totalPaymentMade.plus(amount);
-  tokenSale.save();
 
   const contributionId = event.address.toHex() + ":" + event.params.sender.toHex();
   let contribution = Contribution.load(contributionId);
+  let account = Account.load(event.params.sender.toHex());
+
+  if (account === null) {
+    account = new Account(event.params.sender.toHex());
+    account.contributionsCount = 0;
+  }
 
   if (contribution === null) {
     contribution = new Contribution(contributionId);
     contribution.amount = ZERO_BD;
-    contribution.user = event.params.sender;
+    contribution.user = account.id;
     contribution.tokenSale = tokenSale.id;
+
+    account.contributionsCount = account.contributionsCount + 1;
+    tokenSale.participants = tokenSale.participants + 1;
   }
 
   contribution.amount = contribution.amount.plus(amount);
   contribution.save();
+  account.save();
+  tokenSale.save();
 }
 
 export function handleFund(event: FundEvent): void {
@@ -67,6 +77,7 @@ export function handleEmergencyWithdrawal(event: EmergencyWithdrawalEvent): void
   const contributionId = event.address.toHex() + ":" + event.params.user.toHex();
   const contribution = Contribution.load(contributionId) as Contribution;
   tokenSale.totalPaymentMade = tokenSale.totalPaymentMade.minus(contribution.amount);
+  tokenSale.participants = tokenSale.participants - 1;
   tokenSale.save();
 
   contribution.amount = ZERO_BD;

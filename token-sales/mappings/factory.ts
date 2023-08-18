@@ -104,6 +104,7 @@ export function handlePresaleCreated(event: PresaleCreatedEvent): void {
   entity.saleType = event.params.presaleType === 1 ? "REGULAR" : "ALLOCATION";
   entity.whitelistStartTime = null;
   entity.whitelistEndTime = null;
+  entity.participants = 0;
 
   entity.save();
 

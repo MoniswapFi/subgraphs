@@ -48,6 +48,7 @@ type TokenSale @entity {
   saleType: SaleType!
   whitelistStartTime: BigInt
   whitelistEndTime: BigInt
+  participants: Int!
 }
 
 type Token @entity {
@@ -58,9 +59,15 @@ type Token @entity {
   totalSupply: BigInt!
 }
 
+type Account @entity {
+  id: ID!
+  contributionsCount: Int!
+  contributions: [Contribution!]! @derivedFrom(field: "user")
+}
+
 type Contribution @entity {
   id: ID!
-  user: Bytes!
+  user: Account!
   tokenSale: TokenSale!
   amount: BigDecimal!
 }
