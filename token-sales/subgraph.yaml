@@ -7,8 +7,8 @@ dataSources:
     network: goerli
     source:
       abi: PresaleFactory
-      address: "0xAA348871551E1984F66A9CE0D58970BaB2766de8"
-      startBlock: 8037276
+      address: "0xd926DB96cc973D775353FcFeee3cf3EcCb1699Bf"
+      startBlock: 8857633
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7

@@ -1,257 +1,596 @@
 [
   {
-    "type": "constructor",
-    "stateMutability": "nonpayable",
     "inputs": [
-      { "type": "address", "name": "router", "internalType": "address" },
-      { "type": "address", "name": "_usd", "internalType": "address" },
-      { "type": "uint16", "name": "_usdFee", "internalType": "uint16" },
-      { "type": "address", "name": "_feeCollector", "internalType": "address" },
-      { "type": "uint16", "name": "_salePercentage", "internalType": "uint16" }
-    ]
+      {
+        "internalType": "uint16",
+        "name": "_salePercentageForEcosystem",
+        "type": "uint16"
+      },
+      {
+        "internalType": "address",
+        "name": "_feeCollector",
+        "type": "address"
+      },
+      {
+        "internalType": "contract IAllocator",
+        "name": "_allocator",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "constructor"
   },
   {
-    "type": "event",
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "previousOwner",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "newOwner",
+        "type": "address"
+      }
+    ],
     "name": "OwnershipTransferred",
-    "inputs": [
-      { "type": "address", "name": "previousOwner", "internalType": "address", "indexed": true },
-      { "type": "address", "name": "newOwner", "internalType": "address", "indexed": true }
-    ],
-    "anonymous": false
+    "type": "event"
   },
   {
-    "type": "event",
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "presaleId",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "string",
+        "name": "metadataURI",
+        "type": "string"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "funder",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "salePrice",
+        "type": "uint256"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "paymentToken",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "saleToken",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "startTime",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "endTime",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "minTotalPayment",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "maxTotalPayment",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint24",
+        "name": "withdrawDelay",
+        "type": "uint24"
+      },
+      {
+        "indexed": false,
+        "internalType": "enum PresaleFactory.PresaleType",
+        "name": "presaleType",
+        "type": "uint8"
+      }
+    ],
     "name": "PresaleCreated",
-    "inputs": [
-      { "type": "address", "name": "presaleId", "internalType": "address", "indexed": true },
-      { "type": "string", "name": "metadataURI", "internalType": "string", "indexed": false },
-      { "type": "address", "name": "funder", "internalType": "address", "indexed": false },
-      { "type": "uint256", "name": "salePrice", "internalType": "uint256", "indexed": false },
-      { "type": "address", "name": "paymentToken", "internalType": "address", "indexed": true },
-      { "type": "address", "name": "saleToken", "internalType": "address", "indexed": true },
-      { "type": "uint256", "name": "startTime", "internalType": "uint256", "indexed": false },
-      { "type": "uint256", "name": "endTime", "internalType": "uint256", "indexed": false },
-      { "type": "uint256", "name": "minTotalPayment", "internalType": "uint256", "indexed": false },
-      { "type": "uint256", "name": "maxTotalPayment", "internalType": "uint256", "indexed": false },
-      { "type": "uint24", "name": "withdrawDelay", "internalType": "uint24", "indexed": false }
-    ],
-    "anonymous": false
+    "type": "event"
   },
   {
-    "type": "event",
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "bytes32",
+        "name": "role",
+        "type": "bytes32"
+      },
+      {
+        "indexed": true,
+        "internalType": "bytes32",
+        "name": "previousAdminRole",
+        "type": "bytes32"
+      },
+      {
+        "indexed": true,
+        "internalType": "bytes32",
+        "name": "newAdminRole",
+        "type": "bytes32"
+      }
+    ],
     "name": "RoleAdminChanged",
-    "inputs": [
-      { "type": "bytes32", "name": "role", "internalType": "bytes32", "indexed": true },
-      { "type": "bytes32", "name": "previousAdminRole", "internalType": "bytes32", "indexed": true },
-      { "type": "bytes32", "name": "newAdminRole", "internalType": "bytes32", "indexed": true }
-    ],
-    "anonymous": false
+    "type": "event"
   },
   {
-    "type": "event",
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "bytes32",
+        "name": "role",
+        "type": "bytes32"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "account",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "sender",
+        "type": "address"
+      }
+    ],
     "name": "RoleGranted",
-    "inputs": [
-      { "type": "bytes32", "name": "role", "internalType": "bytes32", "indexed": true },
-      { "type": "address", "name": "account", "internalType": "address", "indexed": true },
-      { "type": "address", "name": "sender", "internalType": "address", "indexed": true }
-    ],
-    "anonymous": false
+    "type": "event"
   },
   {
-    "type": "event",
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "bytes32",
+        "name": "role",
+        "type": "bytes32"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "account",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "sender",
+        "type": "address"
+      }
+    ],
     "name": "RoleRevoked",
-    "inputs": [
-      { "type": "bytes32", "name": "role", "internalType": "bytes32", "indexed": true },
-      { "type": "address", "name": "account", "internalType": "address", "indexed": true },
-      { "type": "address", "name": "sender", "internalType": "address", "indexed": true }
+    "type": "event"
+  },
+  {
+    "inputs": [],
+    "name": "ADMIN_ROLE",
+    "outputs": [
+      {
+        "internalType": "bytes32",
+        "name": "",
+        "type": "bytes32"
+      }
     ],
-    "anonymous": false
+    "stateMutability": "view",
+    "type": "function"
   },
   {
-    "type": "function",
-    "stateMutability": "view",
-    "outputs": [{ "type": "bytes32", "name": "", "internalType": "bytes32" }],
+    "inputs": [],
     "name": "DEFAULT_ADMIN_ROLE",
-    "inputs": []
+    "outputs": [
+      {
+        "internalType": "bytes32",
+        "name": "",
+        "type": "bytes32"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
   },
   {
-    "type": "function",
-    "stateMutability": "payable",
-    "outputs": [{ "type": "address", "name": "presaleId", "internalType": "address" }],
+    "inputs": [],
+    "name": "allocator",
+    "outputs": [
+      {
+        "internalType": "contract IAllocator",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes",
+        "name": "creationCode",
+        "type": "bytes"
+      },
+      {
+        "internalType": "string",
+        "name": "metadataURI",
+        "type": "string"
+      },
+      {
+        "internalType": "address",
+        "name": "newOwner",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "casher",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "funder",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "salePrice",
+        "type": "uint256"
+      },
+      {
+        "internalType": "address",
+        "name": "paymentToken",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "saleToken",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "startTime",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint16",
+        "name": "daysToLast",
+        "type": "uint16"
+      },
+      {
+        "internalType": "uint256",
+        "name": "minTotalPayment",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "maxTotalPayment",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256[]",
+        "name": "claimTimes",
+        "type": "uint256[]"
+      },
+      {
+        "internalType": "uint8[]",
+        "name": "pct",
+        "type": "uint8[]"
+      },
+      {
+        "internalType": "uint24",
+        "name": "withdrawDelay",
+        "type": "uint24"
+      },
+      {
+        "internalType": "enum PresaleFactory.PresaleType",
+        "name": "presaleType",
+        "type": "uint8"
+      }
+    ],
     "name": "deploySale",
-    "inputs": [
-      { "type": "string", "name": "metadataURI", "internalType": "string" },
-      { "type": "address", "name": "newOwner", "internalType": "address" },
-      { "type": "address", "name": "casher", "internalType": "address" },
-      { "type": "address", "name": "funder", "internalType": "address" },
-      { "type": "uint256", "name": "salePrice", "internalType": "uint256" },
-      { "type": "address", "name": "paymentToken", "internalType": "address" },
-      { "type": "address", "name": "saleToken", "internalType": "address" },
-      { "type": "uint256", "name": "startTime", "internalType": "uint256" },
-      { "type": "uint16", "name": "daysToLast", "internalType": "uint16" },
-      { "type": "uint256", "name": "minTotalPayment", "internalType": "uint256" },
-      { "type": "uint256", "name": "maxTotalPayment", "internalType": "uint256" },
-      { "type": "uint256[]", "name": "claimTimes", "internalType": "uint256[]" },
-      { "type": "uint8[]", "name": "pct", "internalType": "uint8[]" },
-      { "type": "uint24", "name": "withdrawDelay", "internalType": "uint24" }
-    ]
-  },
-  {
-    "type": "function",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "presaleId",
+        "type": "address"
+      }
+    ],
     "stateMutability": "nonpayable",
-    "outputs": [],
-    "name": "excludeFromFee",
-    "inputs": [{ "type": "address", "name": "account", "internalType": "address" }]
+    "type": "function"
   },
   {
-    "type": "function",
-    "stateMutability": "view",
-    "outputs": [{ "type": "bytes32", "name": "", "internalType": "bytes32" }],
-    "name": "excludedFromFeeRole",
-    "inputs": []
-  },
-  {
-    "type": "function",
-    "stateMutability": "view",
-    "outputs": [{ "type": "address", "name": "", "internalType": "address" }],
+    "inputs": [],
     "name": "feeCollector",
-    "inputs": []
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
   },
   {
-    "type": "function",
-    "stateMutability": "view",
-    "outputs": [{ "type": "uint256", "name": "deploymentFee", "internalType": "uint256" }],
-    "name": "getDeploymentFeeETHER",
-    "inputs": [{ "type": "address", "name": "payer", "internalType": "address" }]
-  },
-  {
-    "type": "function",
-    "stateMutability": "view",
-    "outputs": [{ "type": "bytes32", "name": "", "internalType": "bytes32" }],
+    "inputs": [
+      {
+        "internalType": "bytes32",
+        "name": "role",
+        "type": "bytes32"
+      }
+    ],
     "name": "getRoleAdmin",
-    "inputs": [{ "type": "bytes32", "name": "role", "internalType": "bytes32" }]
+    "outputs": [
+      {
+        "internalType": "bytes32",
+        "name": "",
+        "type": "bytes32"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
   },
   {
-    "type": "function",
-    "stateMutability": "nonpayable",
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "account",
+        "type": "address"
+      }
+    ],
+    "name": "grantAdminRole",
     "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes32",
+        "name": "role",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "address",
+        "name": "account",
+        "type": "address"
+      }
+    ],
     "name": "grantRole",
-    "inputs": [
-      { "type": "bytes32", "name": "role", "internalType": "bytes32" },
-      { "type": "address", "name": "account", "internalType": "address" }
-    ]
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
   },
   {
-    "type": "function",
-    "stateMutability": "view",
-    "outputs": [{ "type": "bool", "name": "", "internalType": "bool" }],
+    "inputs": [
+      {
+        "internalType": "bytes32",
+        "name": "role",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "address",
+        "name": "account",
+        "type": "address"
+      }
+    ],
     "name": "hasRole",
-    "inputs": [
-      { "type": "bytes32", "name": "role", "internalType": "bytes32" },
-      { "type": "address", "name": "account", "internalType": "address" }
-    ]
-  },
-  {
-    "type": "function",
-    "stateMutability": "nonpayable",
-    "outputs": [],
-    "name": "includeInFee",
-    "inputs": [{ "type": "address", "name": "account", "internalType": "address" }]
-  },
-  {
-    "type": "function",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
     "stateMutability": "view",
-    "outputs": [{ "type": "address", "name": "", "internalType": "address" }],
+    "type": "function"
+  },
+  {
+    "inputs": [],
     "name": "owner",
-    "inputs": []
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
   },
-  { "type": "function", "stateMutability": "nonpayable", "outputs": [], "name": "renounceOwnership", "inputs": [] },
   {
-    "type": "function",
-    "stateMutability": "nonpayable",
+    "inputs": [],
+    "name": "renounceOwnership",
     "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes32",
+        "name": "role",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "address",
+        "name": "account",
+        "type": "address"
+      }
+    ],
     "name": "renounceRole",
-    "inputs": [
-      { "type": "bytes32", "name": "role", "internalType": "bytes32" },
-      { "type": "address", "name": "account", "internalType": "address" }
-    ]
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
   },
   {
-    "type": "function",
-    "stateMutability": "nonpayable",
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "account",
+        "type": "address"
+      }
+    ],
+    "name": "revokeAdminRole",
     "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes32",
+        "name": "role",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "address",
+        "name": "account",
+        "type": "address"
+      }
+    ],
     "name": "revokeRole",
-    "inputs": [
-      { "type": "bytes32", "name": "role", "internalType": "bytes32" },
-      { "type": "address", "name": "account", "internalType": "address" }
-    ]
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
   },
   {
-    "type": "function",
-    "stateMutability": "view",
-    "outputs": [{ "type": "uint16", "name": "", "internalType": "uint16" }],
+    "inputs": [],
     "name": "salePercentageForEcosystem",
-    "inputs": []
-  },
-  {
-    "type": "function",
-    "stateMutability": "nonpayable",
-    "outputs": [],
-    "name": "setFeeCollector",
-    "inputs": [{ "type": "address", "name": "_feeCollector", "internalType": "address" }]
-  },
-  {
-    "type": "function",
-    "stateMutability": "nonpayable",
-    "outputs": [],
-    "name": "setSalePercentage",
-    "inputs": [{ "type": "uint16", "name": "_salePercentage", "internalType": "uint16" }]
-  },
-  {
-    "type": "function",
-    "stateMutability": "nonpayable",
-    "outputs": [],
-    "name": "setUSDFee",
-    "inputs": [{ "type": "uint16", "name": "_usdFee", "internalType": "uint16" }]
-  },
-  {
-    "type": "function",
+    "outputs": [
+      {
+        "internalType": "uint16",
+        "name": "",
+        "type": "uint16"
+      }
+    ],
     "stateMutability": "view",
-    "outputs": [{ "type": "bool", "name": "", "internalType": "bool" }],
-    "name": "supportsInterface",
-    "inputs": [{ "type": "bytes4", "name": "interfaceId", "internalType": "bytes4" }]
+    "type": "function"
   },
   {
-    "type": "function",
-    "stateMutability": "nonpayable",
-    "outputs": [],
-    "name": "transferOwnership",
-    "inputs": [{ "type": "address", "name": "newOwner", "internalType": "address" }]
-  },
-  {
-    "type": "function",
-    "stateMutability": "view",
-    "outputs": [{ "type": "uint256", "name": "", "internalType": "uint256" }],
-    "name": "usdFee",
-    "inputs": []
-  },
-  {
-    "type": "function",
-    "stateMutability": "nonpayable",
-    "outputs": [],
-    "name": "withdrawEther",
-    "inputs": [{ "type": "address", "name": "to", "internalType": "address" }]
-  },
-  {
-    "type": "function",
-    "stateMutability": "nonpayable",
-    "outputs": [],
-    "name": "withdrawToken",
     "inputs": [
-      { "type": "address", "name": "token", "internalType": "address" },
-      { "type": "address", "name": "to", "internalType": "address" },
-      { "type": "uint256", "name": "amount", "internalType": "uint256" }
-    ]
+      {
+        "internalType": "uint16",
+        "name": "ecosystemPercentage",
+        "type": "uint16"
+      }
+    ],
+    "name": "setEcosystemPercentage",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
   },
-  { "type": "receive", "stateMutability": "payable" }
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_feeCollector",
+        "type": "address"
+      }
+    ],
+    "name": "setFeeCollector",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes4",
+        "name": "interfaceId",
+        "type": "bytes4"
+      }
+    ],
+    "name": "supportsInterface",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "newOwner",
+        "type": "address"
+      }
+    ],
+    "name": "transferOwnership",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "to",
+        "type": "address"
+      }
+    ],
+    "name": "withdrawEther",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "token",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "to",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
+      }
+    ],
+    "name": "withdrawToken",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "stateMutability": "payable",
+    "type": "receive"
+  }
 ]

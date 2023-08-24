@@ -1,5 +1,5 @@
 import { BigDecimal, BigInt } from "@graphprotocol/graph-ts";
-import { Stake as StakeEvent, TierAdded as TierAddedEvent, Unstake as UnstakeEvent } from "../generated/Allocator/Allocator";
+import { Stake as StakeEvent, TierAdded as TierAddedEvent, Unstake as UnstakeEvent, APRChanged as APRChangedEvent } from "../generated/Allocator/Allocator";
 import { Account, Allocator, Tier } from "../generated/schema";
 import { ALLOCATOR_ADDRESS } from "./constants";
 
@@ -10,6 +10,7 @@ export function handleStake(event: StakeEvent): void {
     allocator = new Allocator(ALLOCATOR_ADDRESS);
     allocator.totalTokensStaked = BigDecimal.zero();
     allocator.totalStakers = 0;
+    allocator.apr = BigDecimal.zero();
   }
 
   const accountId = event.params.account.toHex();
@@ -41,6 +42,7 @@ export function handleTierAdded(event: TierAddedEvent): void {
     allocator = new Allocator(ALLOCATOR_ADDRESS);
     allocator.totalTokensStaked = BigDecimal.zero();
     allocator.totalStakers = 0;
+    allocator.apr = BigDecimal.zero();
   }
 
   const tier = new Tier(event.address.toHex() + ":" + event.params.name);
@@ -65,5 +67,11 @@ export function handleUnstake(event: UnstakeEvent): void {
   }
 
   allocator.totalTokensStaked = allocator.totalTokensStaked.minus(amount);
+  allocator.save();
+}
+
+export function handleAPRChanged(event: APRChangedEvent): void {
+  const allocator = Allocator.load(ALLOCATOR_ADDRESS) as Allocator;
+  allocator.apr = BigDecimal.fromString((event.params.apr / Math.pow(10, 3)).toString());
   allocator.save();
 }

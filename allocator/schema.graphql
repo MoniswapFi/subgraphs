@@ -2,6 +2,7 @@ type Allocator @entity {
   id: ID!
   totalTokensStaked: BigDecimal!
   totalStakers: Int!
+  apr: BigDecimal!
 }
 
 type Account @entity {

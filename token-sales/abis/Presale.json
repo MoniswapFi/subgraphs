@@ -55,6 +55,11 @@
         "internalType": "address",
         "name": "_taxSetter",
         "type": "address"
+      },
+      {
+        "internalType": "contract IAllocator",
+        "name": "_allocator",
+        "type": "address"
       }
     ],
     "stateMutability": "nonpayable",
@@ -464,6 +469,19 @@
   },
   {
     "inputs": [],
+    "name": "allocator",
+    "outputs": [
+      {
+        "internalType": "contract IAllocator",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
     "name": "cash",
     "outputs": [],
     "stateMutability": "nonpayable",
@@ -655,6 +673,44 @@
   {
     "inputs": [
       {
+        "internalType": "address",
+        "name": "account",
+        "type": "address"
+      }
+    ],
+    "name": "getMaxPayment",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "account",
+        "type": "address"
+      }
+    ],
+    "name": "getPaymentAllocationForAccount",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
         "internalType": "bytes32",
         "name": "role",
         "type": "bytes32"
@@ -690,6 +746,25 @@
       }
     ],
     "name": "getUnlockedToken",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "user",
+        "type": "address"
+      }
+    ],
+    "name": "getUserStakeValue",
     "outputs": [
       {
         "internalType": "uint256",
