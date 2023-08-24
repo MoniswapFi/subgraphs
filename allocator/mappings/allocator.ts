@@ -1,5 +1,10 @@
 import { BigDecimal, BigInt } from "@graphprotocol/graph-ts";
-import { Stake as StakeEvent, TierAdded as TierAddedEvent, Unstake as UnstakeEvent, APRChanged as APRChangedEvent } from "../generated/Allocator/Allocator";
+import {
+  Stake as StakeEvent,
+  TierAdded as TierAddedEvent,
+  Unstake as UnstakeEvent,
+  APRChanged as APRChangedEvent,
+} from "../generated/Allocator/Allocator";
 import { Account, Allocator, Tier } from "../generated/schema";
 import { ALLOCATOR_ADDRESS } from "./constants";
 
@@ -71,7 +76,15 @@ export function handleUnstake(event: UnstakeEvent): void {
 }
 
 export function handleAPRChanged(event: APRChangedEvent): void {
-  const allocator = Allocator.load(ALLOCATOR_ADDRESS) as Allocator;
+  let allocator = Allocator.load(ALLOCATOR_ADDRESS);
+
+  if (allocator == null) {
+    allocator = new Allocator(ALLOCATOR_ADDRESS);
+    allocator.totalTokensStaked = BigDecimal.zero();
+    allocator.totalStakers = 0;
+    allocator.apr = BigDecimal.zero();
+  }
+
   allocator.apr = BigDecimal.fromString((event.params.apr / Math.pow(10, 3)).toString());
   allocator.save();
 }
