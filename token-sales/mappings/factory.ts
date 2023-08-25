@@ -101,7 +101,7 @@ export function handlePresaleCreated(event: PresaleCreatedEvent): void {
   entity.linearVesting = null;
   entity.totalPaymentMade = ZERO_BD;
   entity.totalAvailableSaleTokens = ZERO_BD;
-  entity.saleType = event.params.presaleType === 1 ? "REGULAR" : "ALLOCATION";
+  entity.saleType = event.params.presaleType === 0 ? "REGULAR" : "ALLOCATION";
   entity.whitelistStartTime = null;
   entity.whitelistEndTime = null;
   entity.participants = 0;
