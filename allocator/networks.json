@@ -1,8 +1,8 @@
 {
   "goerli": {
     "Allocator": {
-      "address": "0xA209292B45DB74C0c8699b266cB9087a34D6A2b1",
-      "startBlock": 8857261
+      "address": "0x71B1f5225c16455011D26c588EDAb2A89D0d6862",
+      "startBlock": 8923060
     }
   }
 }
