@@ -297,22 +297,16 @@
     "anonymous": false,
     "inputs": [
       {
-        "components": [
-          {
-            "internalType": "uint256",
-            "name": "claimTime",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint8",
-            "name": "percentage",
-            "type": "uint8"
-          }
-        ],
-        "indexed": true,
-        "internalType": "struct Vestable.CliffVesting[]",
-        "name": "cliffPeriod",
-        "type": "tuple[]"
+        "indexed": false,
+        "internalType": "uint256[]",
+        "name": "claimTimes",
+        "type": "uint256[]"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint8[]",
+        "name": "pct",
+        "type": "uint8[]"
       }
     ],
     "name": "SetCliffVestingPeriod",

@@ -7,8 +7,8 @@ dataSources:
     network: goerli
     source:
       abi: PresaleFactory
-      address: "0x50e6fAE764Da275d6426e9B1e36E8EbFbAc32cE6"
-      startBlock: 8923117
+      address: "0x1C8900E931A76bEa06eaecf1017d3e356F9eA816"
+      startBlock: 8989414
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -59,7 +59,7 @@ templates:
           handler: handleEmergencyWithdrawal
         - event: SetLinearVestingEndTime(indexed uint256)
           handler: handleSetLinearVestingEndTime
-        - event: SetCliffVestingPeriod((indexed uint256,uint8)[])
+        - event: SetCliffVestingPeriod(uint256[],uint8[])
           handler: handleSetCliffVestingPeriod
         - event: SetWhitelistStartTime(uint256)
           handler: handleSetWhitelistStartTime

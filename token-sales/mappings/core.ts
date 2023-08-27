@@ -107,20 +107,19 @@ export function handleSetCliffVestingPeriod(event: SetCliffVestingPeriodEvent): 
 
   const cliffs: string[] = [];
 
-  const tuples = ethereum.Value.fromBytes(event.params.cliffPeriod).toTupleArray<ethereum.Tuple>();
+  for (let i = 0; i < event.params.claimTimes.length; i++) {
+    const claimTime = event.params.claimTimes[i];
+    const pct = event.params.pct[i];
 
-  for (let i = 0; i < tuples.length; i++) {
-    const tuple = tuples[i];
-
-    const cliffVestingId = event.address.toHex() + ":" + tuple.at(0).toBigInt().toHex();
+    const cliffVestingId = event.address.toHex() + ":" + claimTime.toHex() + ":" + BigInt.fromU64(pct as u64).toHex();
     let cliffPeriod = CliffPeriod.load(cliffVestingId);
 
     if (cliffPeriod === null) {
       cliffPeriod = new CliffPeriod(cliffVestingId);
     }
 
-    cliffPeriod.claimTime = tuple.at(0).toBigInt();
-    cliffPeriod.percentage = tuple.at(1).toI32() as u8;
+    cliffPeriod.claimTime = claimTime;
+    cliffPeriod.percentage = pct;
     cliffPeriod.save();
 
     cliffs.push(cliffVestingId);
