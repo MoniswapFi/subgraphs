@@ -23,9 +23,12 @@ export function handleStake(event: StakeEvent): void {
 
   if (account == null) {
     account = new Account(accountId);
+    account.amountStaked = BigDecimal.zero();
+  }
+
+  if (account.amountStaked.equals(BigDecimal.zero())) {
     account.firstStakeLockPeriod = event.params.lockDuration;
     account.firstStakeTimestamp = event.params.timestamp;
-    account.amountStaked = BigDecimal.zero();
   }
 
   const amount = event.params.amount.toBigDecimal().div(BigInt.fromU64(1e18 as u64).toBigDecimal());
@@ -64,7 +67,7 @@ export function handleUnstake(event: UnstakeEvent): void {
   const account = Account.load(accountId) as Account;
 
   const amount = event.params.amount.toBigDecimal().div(BigInt.fromU64(1e18 as u64).toBigDecimal());
-  account.amountStaked = account.amountStaked.minus(amount);
+  account.amountStaked = BigDecimal.zero();
   account.save();
 
   if (account.amountStaked.equals(BigDecimal.zero())) {
