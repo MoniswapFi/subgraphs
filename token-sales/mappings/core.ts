@@ -1,4 +1,4 @@
-import { Address, BigInt, Bytes, ethereum } from "@graphprotocol/graph-ts";
+import { Address, BigInt, Bytes } from "@graphprotocol/graph-ts";
 import { Account, CliffPeriod, Contribution, LinearVesting, TokenSale } from "../generated/schema";
 import {
   Purchase as PurchaseEvent,

@@ -4,11 +4,11 @@ schema:
 dataSources:
   - kind: ethereum
     name: Allocator
-    network: goerli
+    network: mainnet
     source:
       abi: Allocator
-      address: "0xF2fE2EF1865789E352D4140D98f99486e2e75E76"
-      startBlock: 9060778
+      address: "0x2e19F01B81628CCd8cFce9F7d9F2fACC77343b7c"
+      startBlock: 3472598
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7

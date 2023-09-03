@@ -3,13 +3,14 @@ import { PresaleCreated as PresaleCreatedEvent } from "../generated/PresaleFacto
 import { TokenSale, Token, PresaleFactory } from "../generated/schema";
 import { Presale as TokenSaleTemplate } from "../generated/templates";
 import { fetchTokenName, fetchTokenSymbol, fetchTokenDecimals, fetchTokenTotalSupply } from "./utils/erc20";
-import { FACTORY_ADDRESS, ZERO_BD } from "./constants";
+import { ZERO_BD } from "./constants";
 
 export function handlePresaleCreated(event: PresaleCreatedEvent): void {
-  let factory = PresaleFactory.load(FACTORY_ADDRESS);
+  const factoryId = event.address.toHex();
+  let factory = PresaleFactory.load(factoryId);
 
   if (factory === null) {
-    factory = new PresaleFactory(FACTORY_ADDRESS);
+    factory = new PresaleFactory(factoryId);
     factory.salesCount = 0;
   }
 

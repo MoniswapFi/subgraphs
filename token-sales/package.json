@@ -4,8 +4,8 @@
   "scripts": {
     "codegen": "graph codegen",
     "build": "graph build",
-    "deploy-remote-goerli": "graph deploy --ipfs https://graphs.sparkfi.xyz/ipfs/api/v0 --node https://graphs.sparkfi.xyz/base/admin/ sparkfi/launchpadv2",
-    "create-remote-goerli": "graph create --node https://graphs.sparkfi.xyz/base/admin/ sparkfi/launchpadv2",
+    "deploy-remote": "graph deploy --ipfs https://graphs.sparkfi.xyz/ipfs/api/v0 --node https://graphs.sparkfi.xyz/base/admin/ sparkfi/launchpadv1",
+    "create-remote": "graph create --node https://graphs.sparkfi.xyz/base/admin/ sparkfi/launchpadv1",
     "remove-local": "graph remove --node http://localhost:8020/ vefi/token-sales",
     "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 vefi/token-sales",
     "test": "graph test"

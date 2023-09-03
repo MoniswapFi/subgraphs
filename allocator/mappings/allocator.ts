@@ -6,13 +6,13 @@ import {
   APRChanged as APRChangedEvent,
 } from "../generated/Allocator/Allocator";
 import { Account, Allocator, Tier } from "../generated/schema";
-import { ALLOCATOR_ADDRESS } from "./constants";
 
 export function handleStake(event: StakeEvent): void {
-  let allocator = Allocator.load(ALLOCATOR_ADDRESS);
+  const allocatorId = event.address.toHex();
+  let allocator = Allocator.load(allocatorId);
 
   if (allocator == null) {
-    allocator = new Allocator(ALLOCATOR_ADDRESS);
+    allocator = new Allocator(allocatorId);
     allocator.totalTokensStaked = BigDecimal.zero();
     allocator.totalStakers = 0;
     allocator.apr = BigDecimal.zero();
@@ -44,10 +44,11 @@ export function handleStake(event: StakeEvent): void {
 }
 
 export function handleTierAdded(event: TierAddedEvent): void {
-  let allocator = Allocator.load(ALLOCATOR_ADDRESS);
+  const allocatorId = event.address.toHex();
+  let allocator = Allocator.load(allocatorId);
 
   if (allocator == null) {
-    allocator = new Allocator(ALLOCATOR_ADDRESS);
+    allocator = new Allocator(allocatorId);
     allocator.totalTokensStaked = BigDecimal.zero();
     allocator.totalStakers = 0;
     allocator.apr = BigDecimal.zero();
@@ -62,7 +63,8 @@ export function handleTierAdded(event: TierAddedEvent): void {
 }
 
 export function handleUnstake(event: UnstakeEvent): void {
-  const allocator = Allocator.load(ALLOCATOR_ADDRESS) as Allocator;
+  const allocatorId = event.address.toHex();
+  const allocator = Allocator.load(allocatorId) as Allocator;
   const accountId = event.params.account.toHex();
   const account = Account.load(accountId) as Account;
 
@@ -79,10 +81,11 @@ export function handleUnstake(event: UnstakeEvent): void {
 }
 
 export function handleAPRChanged(event: APRChangedEvent): void {
-  let allocator = Allocator.load(ALLOCATOR_ADDRESS);
+  const allocatorId = event.address.toHex();
+  let allocator = Allocator.load(allocatorId);
 
   if (allocator == null) {
-    allocator = new Allocator(ALLOCATOR_ADDRESS);
+    allocator = new Allocator(allocatorId);
     allocator.totalTokensStaked = BigDecimal.zero();
     allocator.totalStakers = 0;
     allocator.apr = BigDecimal.zero();

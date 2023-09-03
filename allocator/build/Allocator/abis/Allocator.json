@@ -192,6 +192,12 @@
   },
   {
     "anonymous": false,
+    "inputs": [],
+    "name": "TiersReset",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
     "inputs": [
       {
         "indexed": false,
@@ -580,6 +586,13 @@
     "type": "function"
   },
   {
+    "inputs": [],
+    "name": "resetTiers",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
     "inputs": [
       {
         "internalType": "address",
@@ -650,6 +663,19 @@
       }
     ],
     "name": "setAPR",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_guaranteedAllocationStart",
+        "type": "uint256"
+      }
+    ],
+    "name": "setGuaranteedAllocationStart",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
