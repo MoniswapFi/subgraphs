@@ -65,4 +65,6 @@ templates:
           handler: handleSetWhitelistStartTime
         - event: SetWhitelistEndTime(uint256)
           handler: handleSetWhitelistEndTime
+        - event: MetadataURIChanged(string)
+          handler: handleMetadataURIChanged
       file: ./mappings/core.ts

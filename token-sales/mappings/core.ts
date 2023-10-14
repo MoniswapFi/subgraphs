@@ -9,6 +9,7 @@ import {
   Fund as FundEvent,
   SetWhitelistStartTime as SetWhitelistStartTimeEvent,
   SetWhitelistEndTime as SetWhitelistEndTimeEvent,
+  MetadataURIChanged as MetadataURIChangedEvent,
 } from "../generated/templates/Presale/Presale";
 import { fetchTokenDecimals } from "./utils/erc20";
 import { ZERO_BD } from "./constants";
@@ -140,5 +141,11 @@ export function handleSetWhitelistStartTime(event: SetWhitelistStartTimeEvent): 
 export function handleSetWhitelistEndTime(event: SetWhitelistEndTimeEvent): void {
   const tokenSale = TokenSale.load(event.address.toHex()) as TokenSale;
   tokenSale.whitelistEndTime = event.params.whitelistEndTime;
+  tokenSale.save();
+}
+
+export function handleMetadataURIChanged(event: MetadataURIChangedEvent): void {
+  const tokenSale = TokenSale.load(event.address.toHex()) as TokenSale;
+  tokenSale.metadataURI = event.params.metadataURI;
   tokenSale.save();
 }
