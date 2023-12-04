@@ -1,4 +1,4 @@
-import { BigInt, log } from "@graphprotocol/graph-ts";
+import { BigInt, dataSource, log } from "@graphprotocol/graph-ts";
 import { SetAdapters as SetAdaptersEvent, RouterSwap as RouterSwapEvent } from "../generated/SparkfiRouter/SparkfiRouter";
 import { Adapter, Router, RouterSwap, Token } from "../generated/schema";
 import { Adapter as AdapterTemplate } from "../generated/templates";
@@ -6,10 +6,11 @@ import { ROUTER_ADDRESS } from "./constants";
 import { fetchAdapterName } from "./utils/adapter";
 
 export function handleSetAdapters(event: SetAdaptersEvent): void {
-  let router = Router.load(ROUTER_ADDRESS);
+  const network = dataSource.network();
+  let router = Router.load(ROUTER_ADDRESS.get(network) as string);
 
   if (router == null) {
-    router = new Router(ROUTER_ADDRESS);
+    router = new Router(ROUTER_ADDRESS.get(network) as string);
     router.swapCount = 0;
   }
 
@@ -43,7 +44,8 @@ export function handleSetAdapters(event: SetAdaptersEvent): void {
 }
 
 export function handleRouterSwap(event: RouterSwapEvent): void {
-  const router = Router.load(ROUTER_ADDRESS) as Router;
+  const network = dataSource.network();
+  const router = Router.load(ROUTER_ADDRESS.get(network) as string) as Router;
   const swap = new RouterSwap(event.address.toHex() + "-" + event.transaction.hash.toHex());
   const tokenIn = Token.load(event.params.tokenIn.toHex()) as Token;
   const tokenOut = Token.load(event.params.tokenOut.toHex()) as Token;
