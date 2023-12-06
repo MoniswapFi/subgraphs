@@ -26,6 +26,7 @@ type Adapter @entity {
   txCount: Int!
   swaps: [AdapterSwap!]! @derivedFrom(field: "adapter")
   tradeVolumeUSD: BigDecimal!
+  adapterDayData: [AdapterDayData!]! @derivedFrom(field: "adapter")
 }
 
 type AdapterSwap @entity {
@@ -46,6 +47,14 @@ type RouterDayData @entity {
   dailyVolumeUSD: BigDecimal!
   totalTransactions: Int!
   date: Int!
+}
+
+type AdapterDayData @entity {
+  id: ID!
+  date: Int!
+  txCount: Int!
+  dailyVolumeUSD: BigDecimal!
+  adapter: Adapter!
 }
 
 type TokenDayData @entity {

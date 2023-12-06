@@ -1,5 +1,5 @@
 import { ethereum, BigInt, Address, dataSource } from "@graphprotocol/graph-ts";
-import { PairDayData, PairHourData, RouterDayData, Token, TokenDayData } from "../generated/schema";
+import { Adapter, AdapterDayData, PairDayData, PairHourData, RouterDayData, Token, TokenDayData } from "../generated/schema";
 import { getTokenPriceInUSDFromAdapterQuery } from "./pricing";
 import { ONE_BI, ROUTER_ADDRESS, ZERO_BD, ZERO_BI } from "./constants";
 
@@ -24,6 +24,27 @@ export function updateRouterDayData(event: ethereum.Event): RouterDayData {
   routerDayData.totalTransactions = routerDayData.totalTransactions + 1;
   routerDayData.save();
   return routerDayData;
+}
+
+export function updateAdapterDayData(adapter: Adapter, event: ethereum.Event): AdapterDayData {
+  const timestamp = event.block.timestamp.toI32();
+  const dayID = timestamp / 86400;
+  const dayStartTimestamp = dayID * 86400;
+  const adapterDayID = adapter.id.concat("-").concat(dayID.toString());
+
+  let adapterDayData = AdapterDayData.load(adapterDayID);
+
+  if (adapterDayData == null) {
+    adapterDayData = new AdapterDayData(adapterDayID);
+    adapterDayData.dailyVolumeUSD = ZERO_BD;
+    adapterDayData.txCount = 0;
+    adapterDayData.adapter = adapter.id;
+    adapterDayData.date = dayStartTimestamp;
+  }
+
+  adapterDayData.txCount = adapterDayData.txCount + 1;
+  adapterDayData.save();
+  return adapterDayData;
 }
 
 export function updateTokenDayData(token: Token, event: ethereum.Event): TokenDayData {
