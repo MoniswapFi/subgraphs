@@ -74,6 +74,21 @@ export function handleRouterSwap(event: RouterSwapEvent): void {
   swap.save();
 
   router.swapCount = router.swapCount + 1;
-  router.totalTradeVolumeUSD = tokenIn.tradeVolumeUSD.plus(tokenOut.tradeVolumeUSD);
+
+  let ttv = ZERO_BD;
+  const tokenInDayData = tokenIn.tokenDayData.load();
+  const tokenOutDayData = tokenOut.tokenDayData.load();
+
+  for (let i = 0; i < tokenInDayData.length; i++) {
+    const tDayData = tokenInDayData[i];
+    ttv = ttv.plus(tDayData.dailyVolumeUSD);
+  }
+
+  for (let i = 0; i < tokenOutDayData.length; i++) {
+    const tDayData = tokenOutDayData[i];
+    ttv = ttv.plus(tDayData.dailyVolumeUSD);
+  }
+
+  router.totalTradeVolumeUSD = ttv;
   router.save();
 }
