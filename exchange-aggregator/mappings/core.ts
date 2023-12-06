@@ -172,5 +172,6 @@ export function handleAdapterSwap(event: AdapterSwapEvent): void {
   pairHourData.save();
 
   adapter.txCount = adapter.txCount + 1;
+  adapter.tradeVolumeUSD = adapter.tradeVolumeUSD.plus(pairDayData.dailyVolumeUSD);
   adapter.save();
 }

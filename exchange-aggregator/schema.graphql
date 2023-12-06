@@ -25,6 +25,7 @@ type Adapter @entity {
   name: String!
   txCount: Int!
   swaps: [AdapterSwap!]! @derivedFrom(field: "adapter")
+  tradeVolumeUSD: BigDecimal!
 }
 
 type AdapterSwap @entity {

@@ -30,6 +30,7 @@ export function handleSetAdapters(event: SetAdaptersEvent): void {
 
       adapter.name = adapterName as string;
       adapter.txCount = 0;
+      adapter.tradeVolumeUSD = ZERO_BD;
     }
 
     adapter.save();
