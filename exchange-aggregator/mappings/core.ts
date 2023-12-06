@@ -170,4 +170,7 @@ export function handleAdapterSwap(event: AdapterSwapEvent): void {
   pairHourData.hourlyVolumeToken2 = pairHourData.hourlyVolumeToken2.plus(tokensVolume[1]);
   pairHourData.hourlyVolumeUSD = pairHourData.hourlyVolumeUSD.plus(tokensVolumeUSD[0]).plus(tokensVolumeUSD[1]);
   pairHourData.save();
+
+  adapter.txCount = adapter.txCount + 1;
+  adapter.save();
 }
