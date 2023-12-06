@@ -4,6 +4,7 @@ type Router @entity {
   adapters: [Adapter!]!
   swaps: [RouterSwap!]! @derivedFrom(field: "router")
   swapCount: Int!
+  totalTradeVolumeUSD: BigDecimal!
 }
 
 type RouterSwap @entity {
@@ -37,6 +38,13 @@ type AdapterSwap @entity {
   blockTimestamp: BigInt!
   transactionHash: Bytes!
   adapter: Adapter!
+}
+
+type RouterDayData @entity {
+  id: ID!
+  dailyVolumeUSD: BigDecimal!
+  totalTransactions: Int!
+  date: Int!
 }
 
 type TokenDayData @entity {

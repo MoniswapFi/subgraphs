@@ -2,7 +2,7 @@ import { BigInt, dataSource, log } from "@graphprotocol/graph-ts";
 import { SetAdapters as SetAdaptersEvent, RouterSwap as RouterSwapEvent } from "../generated/SparkfiRouter/SparkfiRouter";
 import { Adapter, Router, RouterSwap, Token } from "../generated/schema";
 import { Adapter as AdapterTemplate } from "../generated/templates";
-import { ROUTER_ADDRESS } from "./constants";
+import { ROUTER_ADDRESS, ZERO_BD } from "./constants";
 import { fetchAdapterName } from "./utils/adapter";
 
 export function handleSetAdapters(event: SetAdaptersEvent): void {
@@ -12,6 +12,7 @@ export function handleSetAdapters(event: SetAdaptersEvent): void {
   if (router == null) {
     router = new Router(ROUTER_ADDRESS.get(network) as string);
     router.swapCount = 0;
+    router.totalTradeVolumeUSD = ZERO_BD;
   }
 
   const adapters = event.params.adapters;
@@ -73,5 +74,6 @@ export function handleRouterSwap(event: RouterSwapEvent): void {
   swap.save();
 
   router.swapCount = router.swapCount + 1;
+  router.totalTradeVolumeUSD = tokenIn.tradeVolumeUSD.plus(tokenOut.tradeVolumeUSD);
   router.save();
 }

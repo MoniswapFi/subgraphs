@@ -4,7 +4,7 @@ import { Adapter, AdapterSwap, Token } from "../generated/schema";
 import { ONE_BI, ZERO_BD, ZERO_BI } from "./constants";
 import { fetchTokenDecimals, fetchTokenName, fetchTokenSymbol, fetchTokenTotalSupply } from "./utils/erc20";
 import { getTokenPriceInUSDFromAdapterQuery } from "./pricing";
-import { updatePairDayData, updatePairHourData, updateTokenDayData } from "./day_updates";
+import { updatePairDayData, updatePairHourData, updateRouterDayData, updateTokenDayData } from "./day_updates";
 
 export function handleAdapterSwap(event: AdapterSwapEvent): void {
   const adapter = Adapter.load(event.address.toHex()) as Adapter;
@@ -141,6 +141,7 @@ export function handleAdapterSwap(event: AdapterSwapEvent): void {
 
   swap.save();
 
+  const routerDayData = updateRouterDayData(event);
   const tokenInDayData = updateTokenDayData(tokenIn, event);
   const tokenOutDayData = updateTokenDayData(tokenOut, event);
   const pairDayData = updatePairDayData(tokenIn, tokenOut, event);
@@ -161,6 +162,9 @@ export function handleAdapterSwap(event: AdapterSwapEvent): void {
   pairDayData.dailyVolumeToken2 = pairDayData.dailyVolumeToken2.plus(tokensVolume[1]);
   pairDayData.dailyVolumeUSD = tokenInDayData.dailyVolumeUSD.plus(tokenOutDayData.dailyVolumeUSD);
   pairDayData.save();
+
+  routerDayData.dailyVolumeUSD = routerDayData.dailyVolumeUSD.plus(pairDayData.dailyVolumeUSD);
+  routerDayData.save();
 
   pairHourData.hourlyVolumeToken1 = pairHourData.hourlyVolumeToken1.plus(tokensVolume[0]);
   pairHourData.hourlyVolumeToken2 = pairHourData.hourlyVolumeToken2.plus(tokensVolume[1]);
