@@ -21,7 +21,7 @@ function isCompleteMint(mintId: string): boolean {
 }
 
 function createAccountPosition(pairId: string, user: Address): AccountPosition {
-  const positionId = pairId + ":" + user;
+  const positionId = pairId + ":" + user.toHex();
   let accountPosition = AccountPosition.load(positionId);
 
   if (accountPosition === null) {
