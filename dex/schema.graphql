@@ -1,4 +1,4 @@
-type QuasarFactory @entity {
+type PoolFactory @entity {
   id: ID!
   pairCount: Int!
   totalVolumeUSD: BigDecimal!
@@ -32,6 +32,14 @@ type Pair @entity {
   mints: [Mint!] @derivedFrom(field: "pair")
   burns: [Burn!] @derivedFrom(field: "pair")
   swaps: [Swap!] @derivedFrom(field: "pair")
+  stable: Boolean!
+}
+
+type AccountPosition @entity {
+  id: ID!
+  pair: Pair!
+  account: Bytes!
+  position: BigDecimal!
 }
 
 type Token @entity {
@@ -117,7 +125,7 @@ type Bundle @entity {
   ethPrice: BigDecimal! # price of ETH usd
 }
 
-type QuasarDayData @entity {
+type FactoryDayData @entity {
   id: ID!
   date: Int!
   dailyVolumeETH: BigDecimal!

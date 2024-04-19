@@ -1,13 +1,37 @@
-import { Burn as BurnEvent, Mint as MintEvent, Swap as SwapEvent, Pair, Transaction, Token, QuasarFactory, Bundle } from "../generated/schema";
-import { Burn, Mint, Swap, Sync, Transfer } from "../generated/templates/Pair/Pair";
+import {
+  Burn as BurnEvent,
+  Mint as MintEvent,
+  Swap as SwapEvent,
+  Pair,
+  Transaction,
+  Token,
+  PoolFactory,
+  Bundle,
+  AccountPosition,
+} from "../generated/schema";
+import { Burn, Mint, Pool, Swap, Sync, Transfer } from "../generated/templates/Pool/Pool";
 import { ADDRESS_ZERO, BI_18, FACTORY_ADDRESS, ONE_BI, ZERO_BD } from "./constants";
-import { BigDecimal, BigInt, store } from "@graphprotocol/graph-ts";
+import { Address, BigDecimal, BigInt, dataSource, store } from "@graphprotocol/graph-ts";
 import { convertTokenToDecimal } from "./utils";
 import { findETHPerToken, getETHPriceInUSD, getTrackedLiquidityUSD, getTrackedVolumeInUSD } from "./pricing";
-import { updatePairDayData, updatePairHourData, updateQuasarDayData, updateTokenDayData } from "./day_updates";
+import { updatePairDayData, updatePairHourData, updateFactoryDayData, updateTokenDayData } from "./day_updates";
 
 function isCompleteMint(mintId: string): boolean {
   return (MintEvent.load(mintId) as MintEvent).sender !== null;
+}
+
+function createAccountPosition(pairId: string, user: Address): AccountPosition {
+  const positionId = pairId + ":" + user;
+  let accountPosition = AccountPosition.load(positionId);
+
+  if (accountPosition === null) {
+    accountPosition = new AccountPosition(positionId);
+    accountPosition.account = user;
+    accountPosition.pair = pairId;
+    accountPosition.position = ZERO_BD;
+  }
+  accountPosition.save();
+  return accountPosition;
 }
 
 export function handleTransfer(event: Transfer): void {
@@ -16,6 +40,7 @@ export function handleTransfer(event: Transfer): void {
   }
 
   const pair = Pair.load(event.address.toHex()) as Pair;
+  const pairContract = Pool.bind(event.address);
   const value = convertTokenToDecimal(event.params.value, BI_18);
   let transaction = Transaction.load(event.transaction.hash.toHex());
 
@@ -117,6 +142,18 @@ export function handleTransfer(event: Transfer): void {
     transaction.save();
   }
 
+  if (event.params.from.toHex() !== ADDRESS_ZERO && event.params.from.toHex() !== pair.id) {
+    const accLiqPos = createAccountPosition(pair.id, event.params.from);
+    accLiqPos.position = convertTokenToDecimal(pairContract.balanceOf(event.params.from), BI_18);
+    accLiqPos.save();
+  }
+
+  if (event.params.to.toHex() !== ADDRESS_ZERO && event.params.to.toHex() !== pair.id) {
+    const accLiqPos = createAccountPosition(pair.id, event.params.to);
+    accLiqPos.position = convertTokenToDecimal(pairContract.balanceOf(event.params.to), BI_18);
+    accLiqPos.save();
+  }
+
   transaction.save();
 }
 
@@ -124,9 +161,9 @@ export function handleSync(event: Sync): void {
   const pair = Pair.load(event.address.toHex()) as Pair;
   const token0 = Token.load(pair.token0) as Token;
   const token1 = Token.load(pair.token1) as Token;
-  const quasar = QuasarFactory.load(FACTORY_ADDRESS) as QuasarFactory;
+  const factory = PoolFactory.load(FACTORY_ADDRESS.get(dataSource.network()) as string) as PoolFactory;
 
-  quasar.totalLiquidityETH = quasar.totalLiquidityETH.minus(pair.trackedReserveETH);
+  factory.totalLiquidityETH = factory.totalLiquidityETH.minus(pair.trackedReserveETH);
 
   token0.totalLiquidity = token0.totalLiquidity.minus(pair.reserve0);
   token1.totalLiquidity = token1.totalLiquidity.minus(pair.reserve1);
@@ -163,14 +200,14 @@ export function handleSync(event: Sync): void {
   pair.reserveETH = pair.reserve0.times(token0.derivedETH as BigDecimal).plus(pair.reserve1.times(token1.derivedETH as BigDecimal));
   pair.reserveUSD = pair.reserveETH.times(bundle.ethPrice);
 
-  quasar.totalLiquidityETH = quasar.totalLiquidityETH.plus(trackedLiquidityETH);
-  quasar.totalLiquidityUSD = quasar.totalLiquidityETH.times(bundle.ethPrice);
+  factory.totalLiquidityETH = factory.totalLiquidityETH.plus(trackedLiquidityETH);
+  factory.totalLiquidityUSD = factory.totalLiquidityETH.times(bundle.ethPrice);
 
   token0.totalLiquidity = token0.totalLiquidity.plus(pair.reserve0);
   token1.totalLiquidity = token1.totalLiquidity.plus(pair.reserve1);
 
   pair.save();
-  quasar.save();
+  factory.save();
   token0.save();
   token1.save();
 }
@@ -181,7 +218,7 @@ export function handleMint(event: Mint): void {
   const mint = MintEvent.load(mints[mints.length - 1]) as MintEvent;
 
   const pair = Pair.load(event.address.toHex()) as Pair;
-  const quasar = QuasarFactory.load(FACTORY_ADDRESS) as QuasarFactory;
+  const factory = PoolFactory.load(FACTORY_ADDRESS.get(dataSource.network()) as string) as PoolFactory;
 
   const token0 = Token.load(pair.token0) as Token;
   const token1 = Token.load(pair.token1) as Token;
@@ -197,13 +234,13 @@ export function handleMint(event: Mint): void {
   let amountTotalUSD = token1.derivedETH!.times(token1Amount).plus(token0.derivedETH!.times(token0Amount)).times(bundle.ethPrice);
 
   pair.txCount = pair.txCount.plus(ONE_BI);
-  quasar.txCount = quasar.txCount.plus(ONE_BI);
+  factory.txCount = factory.txCount.plus(ONE_BI);
 
   // save entities
   token0.save();
   token1.save();
   pair.save();
-  quasar.save();
+  factory.save();
 
   mint.sender = event.params.sender;
   mint.amount0 = token0Amount as BigDecimal;
@@ -214,7 +251,7 @@ export function handleMint(event: Mint): void {
 
   updatePairDayData(event);
   updatePairHourData(event);
-  updateQuasarDayData(event);
+  updateFactoryDayData(event);
   updateTokenDayData(token0, event);
   updateTokenDayData(token1, event);
 }
@@ -229,7 +266,7 @@ export function handleBurn(event: Burn): void {
   const burn = BurnEvent.load(burns[burns.length - 1]) as BurnEvent;
 
   const pair = Pair.load(event.address.toHex()) as Pair;
-  const quasar = QuasarFactory.load(FACTORY_ADDRESS) as QuasarFactory;
+  const factory = PoolFactory.load(FACTORY_ADDRESS.get(dataSource.network()) as string) as PoolFactory;
 
   const token0 = Token.load(pair.token0) as Token;
   const token1 = Token.load(pair.token1) as Token;
@@ -242,14 +279,14 @@ export function handleBurn(event: Burn): void {
   const bundle = Bundle.load("1") as Bundle;
   const amountTotalUSD = token1.derivedETH!.times(token1Amount).plus(token0.derivedETH!.times(token0Amount)).times(bundle.ethPrice);
 
-  quasar.txCount = quasar.txCount.plus(ONE_BI);
+  factory.txCount = factory.txCount.plus(ONE_BI);
   pair.txCount = pair.txCount.plus(ONE_BI);
 
   // update global counter and save
   token0.save();
   token1.save();
   pair.save();
-  quasar.save();
+  factory.save();
 
   burn.sender = event.params.sender;
   burn.amount0 = token0Amount;
@@ -261,7 +298,7 @@ export function handleBurn(event: Burn): void {
 
   updatePairDayData(event);
   updatePairHourData(event);
-  updateQuasarDayData(event);
+  updateFactoryDayData(event);
   updateTokenDayData(token0, event);
   updateTokenDayData(token1, event);
 }
@@ -310,16 +347,16 @@ export function handleSwap(event: Swap): void {
   pair.txCount = pair.txCount.plus(ONE_BI);
   pair.save();
 
-  const quasar = QuasarFactory.load(FACTORY_ADDRESS) as QuasarFactory;
-  quasar.totalVolumeUSD = quasar.totalVolumeUSD.plus(trackedAmountUSD);
-  quasar.totalVolumeETH = quasar.totalVolumeETH.plus(trackedAmountETH);
-  quasar.untrackedVolumeUSD = quasar.untrackedVolumeUSD.plus(derivedAmountUSD);
-  quasar.txCount = quasar.txCount.plus(ONE_BI);
+  const factory = PoolFactory.load(FACTORY_ADDRESS.get(dataSource.network()) as string) as PoolFactory;
+  factory.totalVolumeUSD = factory.totalVolumeUSD.plus(trackedAmountUSD);
+  factory.totalVolumeETH = factory.totalVolumeETH.plus(trackedAmountETH);
+  factory.untrackedVolumeUSD = factory.untrackedVolumeUSD.plus(derivedAmountUSD);
+  factory.txCount = factory.txCount.plus(ONE_BI);
 
   pair.save();
   token0.save();
   token1.save();
-  quasar.save();
+  factory.save();
 
   let transaction = Transaction.load(event.transaction.hash.toHex());
   if (transaction === null) {
@@ -354,14 +391,14 @@ export function handleSwap(event: Swap): void {
 
   const pairDayData = updatePairDayData(event);
   const pairHourData = updatePairHourData(event);
-  const quasarDayData = updateQuasarDayData(event);
+  const factoryDayData = updateFactoryDayData(event);
   const token0DayData = updateTokenDayData(token0 as Token, event);
   const token1DayData = updateTokenDayData(token1 as Token, event);
 
-  quasarDayData.dailyVolumeUSD = quasarDayData.dailyVolumeUSD.plus(trackedAmountUSD);
-  quasarDayData.dailyVolumeETH = quasarDayData.dailyVolumeETH.plus(trackedAmountETH);
-  quasarDayData.dailyVolumeUntracked = quasarDayData.dailyVolumeUntracked.plus(derivedAmountUSD);
-  quasarDayData.save();
+  factoryDayData.dailyVolumeUSD = factoryDayData.dailyVolumeUSD.plus(trackedAmountUSD);
+  factoryDayData.dailyVolumeETH = factoryDayData.dailyVolumeETH.plus(trackedAmountETH);
+  factoryDayData.dailyVolumeUntracked = factoryDayData.dailyVolumeUntracked.plus(derivedAmountUSD);
+  factoryDayData.save();
 
   pairDayData.dailyVolumeToken0 = pairDayData.dailyVolumeToken0.plus(amount0Total);
   pairDayData.dailyVolumeToken1 = pairDayData.dailyVolumeToken1.plus(amount1Total);

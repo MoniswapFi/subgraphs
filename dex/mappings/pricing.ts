@@ -1,11 +1,11 @@
-import { Address, BigDecimal } from "@graphprotocol/graph-ts";
+import { Address, BigDecimal, dataSource } from "@graphprotocol/graph-ts";
 import { Bundle, Pair, Token } from "../generated/schema";
-import { ADDRESS_ZERO, ONE_BD, WETH, WETH_USDC_PAIR, WETH_USDT_PAIR, ZERO_BD } from "./constants";
+import { ADDRESS_ZERO, ONE_BD, USDC, USDT, WETH, WETH_USDC_PAIR, WETH_USDT_PAIR, ZERO_BD } from "./constants";
 import { factoryContract } from "./utils";
 
 export const getETHPriceInUSD = (): BigDecimal => {
-  const usdtPair = Pair.load(WETH_USDT_PAIR); // usdt is token1;
-  const usdcPair = Pair.load(WETH_USDC_PAIR); // usdc is token0;
+  const usdtPair = Pair.load(WETH_USDT_PAIR.get(dataSource.network()) as string); // usdt is token1;
+  const usdcPair = Pair.load(WETH_USDC_PAIR.get(dataSource.network()) as string); // usdc is token0;
 
   if (usdtPair !== null && usdcPair !== null) {
     const totalLiquidityETH = usdtPair.reserve0.plus(usdcPair.reserve1);
@@ -23,21 +23,26 @@ export const getETHPriceInUSD = (): BigDecimal => {
   return ZERO_BD;
 };
 
-const WHITELIST: Array<string> = [
-  WETH,
-  "0xcf2df9377a4e3c10e9ea29fdb8879d74c27fcde7", // USDC
-  "0xe3f5a90f9cb311505cd691a46596599aa1a0ad7d", // USDT
-];
-
 const MINIMUM_LIQUIDITY_THRESHOLD_ETH = BigDecimal.fromString("10");
 
 export const findETHPerToken = (token: Token): BigDecimal => {
-  if (token.id == WETH) {
+  const WHITELIST: Array<string> = [
+    WETH.get(dataSource.network()) as string,
+    USDC.get(dataSource.network()) as string, // USDC
+    USDT.get(dataSource.network()) as string, // USDT
+  ];
+
+  if (token.id == (WETH.get(dataSource.network()) as string)) {
     return ONE_BD;
   }
 
   for (let i = 0; i < WHITELIST.length; i++) {
-    const pairAddress = factoryContract.getPair(Address.fromString(token.id), Address.fromString(WHITELIST[i]));
+    let pairAddress = factoryContract(dataSource.network()).getPool1(Address.fromString(token.id), Address.fromString(WHITELIST[i]), false);
+
+    if (pairAddress.toHex() == ADDRESS_ZERO) {
+      pairAddress = factoryContract(dataSource.network()).getPool1(Address.fromString(token.id), Address.fromString(WHITELIST[i]), true);
+    }
+
     if (pairAddress.toHex() != ADDRESS_ZERO) {
       const pair = Pair.load(pairAddress.toHexString());
       if (pair !== null) {
@@ -63,6 +68,12 @@ export const getTrackedVolumeInUSD = (
   tokenAmount1: BigDecimal,
   token1: Token,
 ): BigDecimal => {
+  const WHITELIST: Array<string> = [
+    WETH.get(dataSource.network()) as string,
+    USDC.get(dataSource.network()) as string, // USDC
+    USDT.get(dataSource.network()) as string, // USDT
+  ];
+
   const price0 = token0.derivedETH!.times(bundle.ethPrice);
   const price1 = token1.derivedETH!.times(bundle.ethPrice);
 
@@ -84,6 +95,12 @@ export const getTrackedVolumeInUSD = (
 export function getTrackedLiquidityUSD(bundle: Bundle, tokenAmount0: BigDecimal, token0: Token, tokenAmount1: BigDecimal, token1: Token): BigDecimal {
   const price0 = token0.derivedETH!.times(bundle.ethPrice);
   const price1 = token1.derivedETH!.times(bundle.ethPrice);
+
+  const WHITELIST: Array<string> = [
+    WETH.get(dataSource.network()) as string,
+    USDC.get(dataSource.network()) as string, // USDC
+    USDT.get(dataSource.network()) as string, // USDT
+  ];
 
   if (WHITELIST.includes(token0.id) && WHITELIST.includes(token1.id)) {
     return tokenAmount0.times(price0).plus(tokenAmount1.times(price1));

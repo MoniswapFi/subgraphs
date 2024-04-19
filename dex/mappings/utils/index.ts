@@ -1,6 +1,6 @@
 import { Address, BigDecimal, BigInt } from "@graphprotocol/graph-ts";
 import { FACTORY_ADDRESS, ONE_BI, ZERO_BI } from "../constants";
-import { QuasarFactory as FactoryContract } from "../../generated/templates/Pair/QuasarFactory";
+import { PoolFactory as FactoryContract } from "../../generated/templates/Pool/PoolFactory";
 
 export function exponentToBigDecimal(decimals: BigInt): BigDecimal {
   let bd = BigDecimal.fromString("1.0");
@@ -17,4 +17,4 @@ export function convertTokenToDecimal(tokenAmount: BigInt, exchangeDecimals: Big
   return tokenAmount.toBigDecimal().div(exponentToBigDecimal(exchangeDecimals));
 }
 
-export const factoryContract = FactoryContract.bind(Address.fromString(FACTORY_ADDRESS));
+export const factoryContract = (network: string) => FactoryContract.bind(Address.fromString(FACTORY_ADDRESS.get(network) as string));

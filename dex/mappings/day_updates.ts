@@ -1,29 +1,29 @@
-import { ethereum, BigDecimal, BigInt } from "@graphprotocol/graph-ts";
-import { QuasarDayData, QuasarFactory, PairDayData, Pair, PairHourData, Token, TokenDayData, Bundle } from "../generated/schema";
+import { ethereum, BigDecimal, BigInt, dataSource } from "@graphprotocol/graph-ts";
+import { FactoryDayData, PoolFactory, PairDayData, Pair, PairHourData, Token, TokenDayData, Bundle } from "../generated/schema";
 import { FACTORY_ADDRESS, ZERO_BD, ZERO_BI, ONE_BI } from "./constants";
 
-export function updateQuasarDayData(event: ethereum.Event): QuasarDayData {
-  const quasar = QuasarFactory.load(FACTORY_ADDRESS) as QuasarFactory;
+export function updateFactoryDayData(event: ethereum.Event): FactoryDayData {
+  const factory = PoolFactory.load(FACTORY_ADDRESS.get(dataSource.network()) as string) as PoolFactory;
   const timestamp = event.block.timestamp.toI32();
   const dayID = timestamp / 86400;
   const dayStartTimestamp = dayID * 86400;
 
-  let quasarDayData = QuasarDayData.load(dayID.toString());
-  if (quasarDayData === null) {
-    quasarDayData = new QuasarDayData(dayID.toString());
-    quasarDayData.date = dayStartTimestamp;
-    quasarDayData.dailyVolumeUSD = ZERO_BD;
-    quasarDayData.dailyVolumeETH = ZERO_BD;
-    quasarDayData.totalVolumeUSD = ZERO_BD;
-    quasarDayData.totalVolumeETH = ZERO_BD;
-    quasarDayData.dailyVolumeUntracked = ZERO_BD;
+  let factoryDayData = FactoryDayData.load(dayID.toString());
+  if (factoryDayData === null) {
+    factoryDayData = new FactoryDayData(dayID.toString());
+    factoryDayData.date = dayStartTimestamp;
+    factoryDayData.dailyVolumeUSD = ZERO_BD;
+    factoryDayData.dailyVolumeETH = ZERO_BD;
+    factoryDayData.totalVolumeUSD = ZERO_BD;
+    factoryDayData.totalVolumeETH = ZERO_BD;
+    factoryDayData.dailyVolumeUntracked = ZERO_BD;
   }
-  quasarDayData.totalLiquidityUSD = quasar.totalLiquidityUSD;
-  quasarDayData.totalLiquidityETH = quasar.totalLiquidityETH;
-  quasarDayData.txCount = quasar.txCount;
-  quasarDayData.save();
+  factoryDayData.totalLiquidityUSD = factory.totalLiquidityUSD;
+  factoryDayData.totalLiquidityETH = factory.totalLiquidityETH;
+  factoryDayData.txCount = factory.txCount;
+  factoryDayData.save();
 
-  return quasarDayData as QuasarDayData;
+  return factoryDayData as FactoryDayData;
 }
 
 export function updatePairDayData(event: ethereum.Event): PairDayData {

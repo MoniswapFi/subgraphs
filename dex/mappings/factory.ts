@@ -1,15 +1,15 @@
-import { BigInt, log } from "@graphprotocol/graph-ts";
-import { PairCreated as PairCreatedEvent } from "../generated/QuasarFactory/QuasarFactory";
-import { QuasarFactory, Pair, Bundle, Token } from "../generated/schema";
-import { Pair as PairTemplate } from "../generated/templates";
+import { BigInt, dataSource, log } from "@graphprotocol/graph-ts";
+import { PoolCreated as PoolCreatedEvent } from "../generated/PoolFactory/PoolFactory";
+import { PoolFactory, Pair, Bundle, Token } from "../generated/schema";
+import { Pool as PoolTemplate } from "../generated/templates";
 import { fetchTokenDecimals, fetchTokenName, fetchTokenSymbol, fetchTokenTotalSupply } from "./utils/erc20";
 import { FACTORY_ADDRESS, ZERO_BD, ZERO_BI } from "./constants";
 
-export function handlePairCreated(event: PairCreatedEvent): void {
-  let factory = QuasarFactory.load(FACTORY_ADDRESS);
+export function handlePoolCreated(event: PoolCreatedEvent): void {
+  let factory = PoolFactory.load(FACTORY_ADDRESS.get(dataSource.network()) as string);
 
   if (!factory || factory === null) {
-    factory = new QuasarFactory(FACTORY_ADDRESS);
+    factory = new PoolFactory(FACTORY_ADDRESS.get(dataSource.network()) as string);
     factory.pairCount = 0;
     factory.totalLiquidityETH = ZERO_BD;
     factory.totalLiquidityETH = ZERO_BD;
@@ -90,7 +90,7 @@ export function handlePairCreated(event: PairCreatedEvent): void {
     token1.save();
   }
 
-  const pair = new Pair(event.params.pair.toHex());
+  const pair = new Pair(event.params.pool.toHex());
   pair.token0 = token0.id;
   pair.token1 = token1.id;
   pair.createdAtTimestamp = event.block.timestamp;
@@ -108,8 +108,9 @@ export function handlePairCreated(event: PairCreatedEvent): void {
   pair.untrackedVolumeUSD = ZERO_BD;
   pair.token0Price = ZERO_BD;
   pair.token1Price = ZERO_BD;
+  pair.stable = event.params.stable;
 
   pair.save();
 
-  PairTemplate.create(event.params.pair);
+  PoolTemplate.create(event.params.pool);
 }
