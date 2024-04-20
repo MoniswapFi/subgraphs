@@ -1,5 +1,5 @@
 import { Address, BigInt } from "@graphprotocol/graph-ts";
-import { ERC20 } from "../../generated/SparkfiRouter/ERC20";
+import { ERC20 } from "../../generated/AggregatorRouter/ERC20";
 
 export const fetchTokenName = (id: Address): string | null => {
   const contract = ERC20.bind(id);

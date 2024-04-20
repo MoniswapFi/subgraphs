@@ -1,8 +1,8 @@
 {
-  "goerli": {
-    "SparkfiRouter": {
-      "address": "0xd6351CC74A04F9472dFBA0b5601d5Bb0d93F4E22",
-      "startBlock": 13067485
+  "bscTestnet": {
+    "AggregatorRouter": {
+      "address": "0xA2Af4FAe0d22608E3d34698F03ba4c4f75201a73",
+      "startBlock": 39263932
     }
   },
   "mainnet": {

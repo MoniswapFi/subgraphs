@@ -1,5 +1,5 @@
 import { Address, BigInt, log } from "@graphprotocol/graph-ts";
-import { AdapterSwap as AdapterSwapEvent } from "../generated/SparkfiRouter/SparkfiAdapter";
+import { AdapterSwap as AdapterSwapEvent } from "../generated/AggregatorRouter/Adapter";
 import { Adapter, AdapterSwap, Token } from "../generated/schema";
 import { ONE_BI, ZERO_BD, ZERO_BI } from "./constants";
 import { fetchTokenDecimals, fetchTokenName, fetchTokenSymbol, fetchTokenTotalSupply } from "./utils/erc20";

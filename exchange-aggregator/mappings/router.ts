@@ -1,5 +1,5 @@
 import { BigInt, dataSource, log } from "@graphprotocol/graph-ts";
-import { SetAdapters as SetAdaptersEvent, RouterSwap as RouterSwapEvent } from "../generated/SparkfiRouter/SparkfiRouter";
+import { SetAdapters as SetAdaptersEvent, RouterSwap as RouterSwapEvent } from "../generated/AggregatorRouter/AggregatorRouter";
 import { Adapter, Router, RouterSwap, Token } from "../generated/schema";
 import { Adapter as AdapterTemplate } from "../generated/templates";
 import { ROUTER_ADDRESS, ZERO_BD } from "./constants";
