@@ -17,4 +17,4 @@ export function convertTokenToDecimal(tokenAmount: BigInt, exchangeDecimals: Big
   return tokenAmount.toBigDecimal().div(exponentToBigDecimal(exchangeDecimals));
 }
 
-export const factoryContract = (network: string) => FactoryContract.bind(Address.fromString(FACTORY_ADDRESS.get(network) as string));
+export const factoryContract = (network: string): FactoryContract => FactoryContract.bind(Address.fromString(FACTORY_ADDRESS.get(network) as string));
