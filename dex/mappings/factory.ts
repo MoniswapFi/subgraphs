@@ -18,6 +18,7 @@ export function handlePoolCreated(event: PoolCreatedEvent): void {
     factory.untrackedVolumeUSD = ZERO_BD;
     factory.totalLiquidityUSD = ZERO_BD;
     factory.txCount = ZERO_BI;
+    factory.feesUSD = ZERO_BD;
 
     const bundle = new Bundle("1");
     bundle.ethPrice = ZERO_BD;

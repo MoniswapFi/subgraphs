@@ -8,8 +8,9 @@ import {
   PoolFactory,
   Bundle,
   AccountPosition,
+  Fee,
 } from "../generated/schema";
-import { Burn, Mint, Pool, Swap, Sync, Transfer } from "../generated/templates/Pool/Pool";
+import { Burn, Mint, Pool, Swap, Sync, Transfer, Fees, Claim } from "../generated/templates/Pool/Pool";
 import { ADDRESS_ZERO, BI_18, FACTORY_ADDRESS, ONE_BI, ZERO_BD } from "./constants";
 import { Address, BigDecimal, BigInt, dataSource, store } from "@graphprotocol/graph-ts";
 import { convertTokenToDecimal } from "./utils";
@@ -155,6 +156,56 @@ export function handleTransfer(event: Transfer): void {
   }
 
   transaction.save();
+}
+
+export function handleFees(event: Fees): void {
+  const factory = PoolFactory.load(FACTORY_ADDRESS.get(dataSource.network()) as string) as PoolFactory;
+  const pair = Pair.load(event.address.toHex()) as Pair;
+  const token0 = Token.load(pair.token0) as Token;
+  const token1 = Token.load(pair.token1) as Token;
+  const feeId = pair.id + ":" + event.params.sender.toHex();
+
+  let fee = Fee.load(feeId);
+
+  if (fee === null) {
+    fee = new Fee(feeId);
+
+    fee.account = event.params.sender;
+    fee.amount0Claimable = ZERO_BD;
+    fee.amount1Claimable = ZERO_BD;
+    fee.amountClaimableUSD = ZERO_BD;
+    fee.pair = pair.id;
+  }
+
+  fee.amount0Claimable = fee.amount0Claimable.plus(convertTokenToDecimal(event.params.amount0, token0.decimals));
+  fee.amount1Claimable = fee.amount1Claimable.plus(convertTokenToDecimal(event.params.amount1, token1.decimals));
+  fee.amountClaimableUSD = fee.amount0Claimable.times(token0.derivedUSD!).plus(fee.amount1Claimable.times(token1.derivedUSD!));
+
+  fee.save();
+
+  factory.feesUSD = factory.feesUSD.plus(fee.amountClaimableUSD);
+  factory.save();
+}
+
+export function handleClaim(event: Claim): void {
+  const factory = PoolFactory.load(FACTORY_ADDRESS.get(dataSource.network()) as string) as PoolFactory;
+  const pair = Pair.load(event.address.toHex()) as Pair;
+  const token0 = Token.load(pair.token0) as Token;
+  const token1 = Token.load(pair.token1) as Token;
+  const feeId = pair.id + ":" + event.params.sender.toHex();
+  const fee = Fee.load(feeId) as Fee;
+
+  fee.amount0Claimable = fee.amount0Claimable.minus(convertTokenToDecimal(event.params.amount0, token0.decimals));
+  fee.amount1Claimable = fee.amount1Claimable.minus(convertTokenToDecimal(event.params.amount1, token1.decimals));
+  fee.amountClaimableUSD = fee.amount0Claimable.times(token0.derivedUSD!).plus(fee.amount1Claimable.times(token1.derivedUSD!));
+  fee.save();
+
+  const eventAmount0USD = convertTokenToDecimal(event.params.amount0, token0.decimals).times(token0.derivedUSD!);
+  const eventAmount1USD = convertTokenToDecimal(event.params.amount1, token1.decimals).times(token1.derivedUSD!);
+  const feesToBeSubracted = eventAmount0USD.plus(eventAmount1USD);
+
+  factory.feesUSD = factory.feesUSD.minus(feesToBeSubracted);
+  factory.save();
 }
 
 export function handleSync(event: Sync): void {

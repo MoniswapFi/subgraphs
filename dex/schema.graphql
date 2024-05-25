@@ -7,6 +7,7 @@ type PoolFactory @entity {
   totalLiquidityUSD: BigDecimal!
   totalLiquidityETH: BigDecimal!
   txCount: BigInt!
+  feesUSD: BigDecimal!
 }
 
 type Pair @entity {
@@ -33,6 +34,15 @@ type Pair @entity {
   burns: [Burn!] @derivedFrom(field: "pair")
   swaps: [Swap!] @derivedFrom(field: "pair")
   stable: Boolean!
+}
+
+type Fee @entity {
+  id: ID!
+  pair: Pair!
+  amount0Claimable: BigDecimal!
+  amount1Claimable: BigDecimal!
+  amountClaimableUSD: BigDecimal!
+  account: Bytes!
 }
 
 type AccountPosition @entity {
