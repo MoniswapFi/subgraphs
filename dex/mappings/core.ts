@@ -183,8 +183,17 @@ export function handleFees(event: Fees): void {
 
   fee.save();
 
-  factory.feesUSD = factory.feesUSD.plus(fee.amountClaimableUSD);
+  factory.feesUSD = factory.feesUSD
+    .plus(convertTokenToDecimal(event.params.amount0, token0.decimals).times(token0.derivedUSD!))
+    .plus(convertTokenToDecimal(event.params.amount1, token1.decimals).times(token1.derivedUSD!));
   factory.save();
+
+  pair.feesUSD = pair.feesUSD
+    .plus(convertTokenToDecimal(event.params.amount0, token0.decimals).times(token0.derivedUSD!))
+    .plus(convertTokenToDecimal(event.params.amount1, token1.decimals).times(token1.derivedUSD!));
+  pair.totalAmount0Claimable = pair.totalAmount0Claimable.plus(convertTokenToDecimal(event.params.amount0, token0.decimals));
+  pair.totalAmount1Claimable = pair.totalAmount1Claimable.plus(convertTokenToDecimal(event.params.amount1, token1.decimals));
+  pair.save();
 }
 
 export function handleClaim(event: Claim): void {
@@ -206,6 +215,11 @@ export function handleClaim(event: Claim): void {
 
   factory.feesUSD = factory.feesUSD.minus(feesToBeSubracted);
   factory.save();
+
+  pair.feesUSD = pair.feesUSD.minus(feesToBeSubracted);
+  pair.totalAmount0Claimable = pair.totalAmount0Claimable.minus(convertTokenToDecimal(event.params.amount0, token0.decimals));
+  pair.totalAmount1Claimable = pair.totalAmount1Claimable.minus(convertTokenToDecimal(event.params.amount1, token1.decimals));
+  pair.save();
 }
 
 export function handleSync(event: Sync): void {

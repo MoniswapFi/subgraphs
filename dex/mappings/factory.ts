@@ -110,6 +110,9 @@ export function handlePoolCreated(event: PoolCreatedEvent): void {
   pair.token0Price = ZERO_BD;
   pair.token1Price = ZERO_BD;
   pair.stable = event.params.stable;
+  pair.feesUSD = ZERO_BD;
+  pair.totalAmount0Claimable = ZERO_BD;
+  pair.totalAmount1Claimable = ZERO_BD;
 
   pair.save();
 

@@ -34,6 +34,9 @@ type Pair @entity {
   burns: [Burn!] @derivedFrom(field: "pair")
   swaps: [Swap!] @derivedFrom(field: "pair")
   stable: Boolean!
+  feesUSD: BigDecimal!
+  totalAmount0Claimable: BigDecimal!
+  totalAmount1Claimable: BigDecimal!
 }
 
 type Fee @entity {
