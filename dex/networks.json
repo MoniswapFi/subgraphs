@@ -4,5 +4,11 @@
       "address": "0x0542fd4b76074eD67d3031D197119e87c4C7d1FA",
       "startBlock": 39260923
     }
+  },
+  "chapel": {
+    "PoolFactory": {
+      "address": "0x0542fd4b76074eD67d3031D197119e87c4C7d1FA",
+      "startBlock": 39260923
+    }
   }
 }

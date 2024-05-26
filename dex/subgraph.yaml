@@ -5,7 +5,7 @@ schema:
 dataSources:
   - kind: ethereum
     name: PoolFactory
-    network: bscTestnet
+    network: chapel
     source:
       abi: PoolFactory
       address: "0x0542fd4b76074eD67d3031D197119e87c4C7d1FA"
@@ -30,7 +30,7 @@ dataSources:
 templates:
   - kind: ethereum
     name: Pool
-    network: bscTestnet
+    network: chapel
     source:
       abi: Pool
     mapping:
