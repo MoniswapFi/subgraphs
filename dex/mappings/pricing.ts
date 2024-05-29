@@ -32,7 +32,7 @@ export const findETHPerToken = (token: Token): BigDecimal => {
     USDT.get(dataSource.network()) as string, // USDT
   ];
 
-  if (token.id == (WETH.get(dataSource.network()) as string)) {
+  if (token.id.toLowerCase() == (WETH.get(dataSource.network()) as string).toLowerCase()) {
     return ONE_BD;
   }
 
