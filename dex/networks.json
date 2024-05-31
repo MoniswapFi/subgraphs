@@ -10,5 +10,11 @@
       "address": "0x0542fd4b76074eD67d3031D197119e87c4C7d1FA",
       "startBlock": 39260923
     }
+  },
+  "berachain-public-testnet": {
+    "PoolFactory": {
+      "address": "0xe0C2aC5716da69382a3ba3C20E43b91Ada068Fb6",
+      "startBlock": 2397212
+    }
   }
 }
