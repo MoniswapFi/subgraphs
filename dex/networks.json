@@ -11,10 +11,10 @@
       "startBlock": 39260923
     }
   },
-  "berachain-public-testnet": {
+  "berachain-bartio": {
     "PoolFactory": {
-      "address": "0xe0C2aC5716da69382a3ba3C20E43b91Ada068Fb6",
-      "startBlock": 2397212
+      "address": "0xa933091dd8b94D07cE68DF5eA96822A45e3EA819",
+      "startBlock": 1886789
     }
   }
 }

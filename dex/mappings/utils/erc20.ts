@@ -1,5 +1,5 @@
 import { Address, BigInt } from "@graphprotocol/graph-ts";
-import { ERC20 } from "../../generated/QuasarFactory/ERC20";
+import { ERC20 } from "../../generated/PoolFactory/ERC20";
 
 export const fetchTokenName = (id: Address): string => {
   const contract = ERC20.bind(id);

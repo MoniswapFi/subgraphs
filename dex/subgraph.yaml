@@ -5,11 +5,11 @@ schema:
 dataSources:
   - kind: ethereum
     name: PoolFactory
-    network: berachain-public-testnet
+    network: berachain-bartio
     source:
       abi: PoolFactory
-      address: "0xe0C2aC5716da69382a3ba3C20E43b91Ada068Fb6"
-      startBlock: 2397212
+      address: "0xa933091dd8b94D07cE68DF5eA96822A45e3EA819"
+      startBlock: 1886789
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -30,7 +30,7 @@ dataSources:
 templates:
   - kind: ethereum
     name: Pool
-    network: berachain-public-testnet
+    network: berachain-bartio
     source:
       abi: Pool
     mapping:
