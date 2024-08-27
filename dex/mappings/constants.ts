@@ -16,7 +16,7 @@ export const USDC = new TypedMap<string, string>();
 
 // const BSC_TESTNET = "bscTestnet";
 // const CHAPEL = "chapel";
-const BERA_TESTNET = "berachain-bartio"
+const BERA_TESTNET = "berachain-bartio";
 
 // FACTORY_ADDRESS.set(BSC_TESTNET, "0x0542fd4b76074eD67d3031D197119e87c4C7d1FA");
 // WETH.set(BSC_TESTNET, "0xae13d989daC2f0dEbFf460aC112a837C89BAa7cd");

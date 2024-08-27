@@ -1,0 +1,96 @@
+type Abstained @entity(immutable: true) {
+  id: Bytes!
+  voter: Bytes! # address
+  pool: Bytes! # address
+  tokenId: BigInt! # uint256
+  weight: BigInt! # uint256
+  totalWeight: BigInt! # uint256
+  timestamp: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type DistributeReward @entity(immutable: true) {
+  id: Bytes!
+  sender: Bytes! # address
+  gauge: Bytes! # address
+  amount: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type GaugeCreated @entity(immutable: true) {
+  id: Bytes!
+  poolFactory: Bytes! # address
+  votingRewardsFactory: Bytes! # address
+  gaugeFactory: Bytes! # address
+  pool: Bytes! # address
+  bribeVotingReward: Bytes! # address
+  feeVotingReward: Bytes! # address
+  gauge: Bytes! # address
+  creator: Bytes! # address
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type GaugeKilled @entity(immutable: true) {
+  id: Bytes!
+  gauge: Bytes! # address
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type GaugeRevived @entity(immutable: true) {
+  id: Bytes!
+  gauge: Bytes! # address
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type NotifyReward @entity(immutable: true) {
+  id: Bytes!
+  sender: Bytes! # address
+  reward: Bytes! # address
+  amount: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type Voted @entity(immutable: true) {
+  id: Bytes!
+  voter: Bytes! # address
+  pool: Bytes! # address
+  tokenId: BigInt! # uint256
+  weight: BigInt! # uint256
+  totalWeight: BigInt! # uint256
+  timestamp: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type WhitelistNFT @entity(immutable: true) {
+  id: Bytes!
+  whitelister: Bytes! # address
+  tokenId: BigInt! # uint256
+  _bool: Boolean! # bool
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type WhitelistToken @entity(immutable: true) {
+  id: Bytes!
+  whitelister: Bytes! # address
+  token: Bytes! # address
+  _bool: Boolean! # bool
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
