@@ -8,6 +8,7 @@
         "create-local": "graph create --node http://localhost:8020/ moniswap-bartio-voting/v1.0.0",
         "remove-local": "graph remove --node http://localhost:8020/ moniswap-bartio-voting/v1.0.0",
         "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 moniswap-bartio-voting/v1.0.0",
+        "deploy-goldsky:bera-bartio": "goldsky subgraph deploy moniswap-bartio-voter/v1.0.0 --path ./build",
         "test": "graph test"
     },
     "dependencies": {

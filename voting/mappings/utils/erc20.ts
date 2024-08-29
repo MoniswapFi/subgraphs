@@ -13,7 +13,7 @@ export function loadSymbol(address: Address): string {
     return call.reverted ? "" : call.value;
 }
 
-export function loadDecimals(address: Address): number {
+export function loadDecimals(address: Address): i32 {
     const contract = ERC20.bind(address);
     const call = contract.try_decimals();
     return call.reverted ? 0 : call.value;

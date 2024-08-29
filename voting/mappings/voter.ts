@@ -23,30 +23,30 @@ export function handleGaugeCreated(event: GaugeCreatedEvent): void {
     if (pair === null) {
         pair = new Pair(poolId);
 
-        pair.name = loadName(Address.fromHexString(poolId));
-        pair.symbol = loadSymbol(Address.fromHexString(poolId));
+        pair.name = loadName(Address.fromString(poolId));
+        pair.symbol = loadSymbol(Address.fromString(poolId));
     }
 
-    const token0Id = loadToken0(Address.fromHexString(poolId)).toHex();
-    const token1Id = loadToken1(Address.fromHexString(poolId)).toHex();
+    const token0Id = loadToken0(Address.fromString(poolId)).toHex();
+    const token1Id = loadToken1(Address.fromString(poolId)).toHex();
 
     let token0 = Token.load(token0Id);
     let token1 = Token.load(token1Id);
 
     if (token0 === null) {
         token0 = new Token(token0Id);
-        token0.decimals = loadDecimals(Address.fromHexString(token0Id));
-        token0.symbol = loadSymbol(Address.fromHexString(token0Id));
-        token0.name = loadName(Address.fromHexString(token0Id));
+        token0.decimals = loadDecimals(Address.fromString(token0Id));
+        token0.symbol = loadSymbol(Address.fromString(token0Id));
+        token0.name = loadName(Address.fromString(token0Id));
 
         token0.save();
     }
 
     if (token1 === null) {
         token1 = new Token(token1Id);
-        token1.decimals = loadDecimals(Address.fromHexString(token1Id));
-        token1.symbol = loadSymbol(Address.fromHexString(token1Id));
-        token1.name = loadName(Address.fromHexString(token1Id));
+        token1.decimals = loadDecimals(Address.fromString(token1Id));
+        token1.symbol = loadSymbol(Address.fromString(token1Id));
+        token1.name = loadName(Address.fromString(token1Id));
 
         token1.save();
     }

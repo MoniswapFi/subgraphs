@@ -28,7 +28,8 @@ dataSources:
               - name: ERC20
                 file: ./abis/ERC20.json
           eventHandlers:
-              - event: GaugeCreated(indexed address,indexed address,indexed address,address,address,address,address,address)
+              - event: GaugeCreated(indexed address,indexed address,indexed
+                    address,address,address,address,address,address)
                 handler: handleGaugeCreated
               - event: GaugeKilled(indexed address)
                 handler: handleGaugeKilled
