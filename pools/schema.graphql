@@ -1,47 +1,47 @@
 type StakingPoolFactory @entity {
-  id: ID!
-  poolsCount: Int!
-  stakesCount: Int!
+    id: ID!
+    poolsCount: Int!
+    stakesCount: Int!
 }
 
 type StakingPool @entity {
-  id: ID!
-  owner: Bytes!
-  stakedToken: Token!
-  rewardToken: Token!
-  apy: BigInt!
-  tax: Int!
-  endsIn: BigInt!
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  totalStaked: BigDecimal!
-  totalRewards: BigDecimal!
-  stakes: [Stake!] @derivedFrom(field: "pool")
-  withdrawals: [Withdrawal!] @derivedFrom(field: "pool")
+    id: ID!
+    owner: Bytes!
+    stakedToken: Token!
+    rewardToken: Token!
+    apy: BigInt!
+    tax: Int!
+    endsIn: BigInt!
+    blockNumber: BigInt!
+    blockTimestamp: BigInt!
+    totalStaked: BigDecimal!
+    totalRewards: BigDecimal!
+    stakes: [Stake!] @derivedFrom(field: "pool")
+    withdrawals: [Withdrawal!] @derivedFrom(field: "pool")
 }
 
 type Token @entity {
-  id: ID!
-  name: String!
-  decimals: BigInt!
-  symbol: String!
-  totalSupply: BigInt!
+    id: ID!
+    name: String!
+    decimals: BigInt!
+    symbol: String!
+    totalSupply: BigInt!
 }
 
 type Stake @entity {
-  id: ID!
-  account: Bytes!
-  amount: BigDecimal!
-  blockTimestamp: BigInt!
-  blockNumber: BigInt!
-  pool: StakingPool!
+    id: ID!
+    account: Bytes!
+    amount: BigDecimal!
+    blockTimestamp: BigInt!
+    blockNumber: BigInt!
+    pool: StakingPool!
 }
 
 type Withdrawal @entity {
-  id: ID!
-  account: Bytes!
-  reward: BigDecimal!
-  pool: StakingPool!
-  blockTimestamp: BigInt!
-  blockNumber: BigInt!
+    id: ID!
+    account: Bytes!
+    reward: BigDecimal!
+    pool: StakingPool!
+    blockTimestamp: BigInt!
+    blockNumber: BigInt!
 }

@@ -1,21 +1,21 @@
 {
-  "name": "allocatorv1",
-  "license": "UNLICENSED",
-  "scripts": {
-    "codegen": "graph codegen",
-    "build": "graph build",
-    "create-remote": "graph create --node https://graphs.sparkfi.xyz/base/admin/ sparkfi/allocatorv1",
-    "deploy": "graph deploy --ipfs https://graphs.sparkfi.xyz/ipfs/api/v0 --node https://graphs.sparkfi.xyz/base/admin/ sparkfi/allocatorv1",
-    "create-local": "graph create --node http://localhost:8020/ sparkfi/allocatorv1",
-    "remove-local": "graph remove --node http://localhost:8020/ sparkfi/allocatorv1",
-    "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 sparkfi/allocatorv1",
-    "test": "graph test"
-  },
-  "dependencies": {
-    "@graphprotocol/graph-cli": "0.54.0",
-    "@graphprotocol/graph-ts": "0.30.0"
-  },
-  "devDependencies": {
-    "matchstick-as": "0.5.0"
-  }
+    "name": "allocatorv1",
+    "license": "UNLICENSED",
+    "scripts": {
+        "codegen": "graph codegen",
+        "build": "graph build",
+        "create-remote": "graph create --node https://graphs.sparkfi.xyz/base/admin/ sparkfi/allocatorv1",
+        "deploy": "graph deploy --ipfs https://graphs.sparkfi.xyz/ipfs/api/v0 --node https://graphs.sparkfi.xyz/base/admin/ sparkfi/allocatorv1",
+        "create-local": "graph create --node http://localhost:8020/ sparkfi/allocatorv1",
+        "remove-local": "graph remove --node http://localhost:8020/ sparkfi/allocatorv1",
+        "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 sparkfi/allocatorv1",
+        "test": "graph test"
+    },
+    "dependencies": {
+        "@graphprotocol/graph-cli": "0.54.0",
+        "@graphprotocol/graph-ts": "0.30.0"
+    },
+    "devDependencies": {
+        "matchstick-as": "0.5.0"
+    }
 }

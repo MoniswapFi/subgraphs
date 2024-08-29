@@ -1,70 +1,70 @@
 specVersion: 0.0.5
 schema:
-  file: ./schema.graphql
+    file: ./schema.graphql
 dataSources:
-  - kind: ethereum
-    name: PresaleFactory
-    network: mainnet
-    source:
-      abi: PresaleFactory
-      address: "0xf886ABaCe837E5EC0CF7037B4d2198F7a1bf35B5"
-      startBlock: 3472863
-    mapping:
-      kind: ethereum/events
-      apiVersion: 0.0.7
-      language: wasm/assemblyscript
-      entities:
-        - TokenSale
-        - PresaleFactory
-        - Token
-      abis:
-        - name: PresaleFactory
-          file: ./abis/PresaleFactory.json
-        - name: ERC20
-          file: ./abis/ERC20.json
-      eventHandlers:
-        - event: PresaleCreated(indexed address,string,address,uint256,indexed
-            address,indexed
-            address,uint256,uint256,uint256,uint256,uint24,uint8)
-          handler: handlePresaleCreated
-      file: ./mappings/factory.ts
+    - kind: ethereum
+      name: PresaleFactory
+      network: mainnet
+      source:
+          abi: PresaleFactory
+          address: "0xf886ABaCe837E5EC0CF7037B4d2198F7a1bf35B5"
+          startBlock: 3472863
+      mapping:
+          kind: ethereum/events
+          apiVersion: 0.0.7
+          language: wasm/assemblyscript
+          entities:
+              - TokenSale
+              - PresaleFactory
+              - Token
+          abis:
+              - name: PresaleFactory
+                file: ./abis/PresaleFactory.json
+              - name: ERC20
+                file: ./abis/ERC20.json
+          eventHandlers:
+              - event: PresaleCreated(indexed address,string,address,uint256,indexed
+                    address,indexed
+                    address,uint256,uint256,uint256,uint256,uint24,uint8)
+                handler: handlePresaleCreated
+          file: ./mappings/factory.ts
 templates:
-  - kind: ethereum
-    name: Presale
-    network: mainnet
-    source:
-      abi: Presale
-    mapping:
-      kind: ethereum/events
-      apiVersion: 0.0.7
-      language: wasm/assemblyscript
-      entities:
-        - TokenSale
-        - Contribution
-      abis:
-        - name: Presale
-          file: ./abis/Presale.json
-        - name: PresaleFactory
-          file: ./abis/PresaleFactory.json
-        - name: ERC20
-          file: ./abis/ERC20.json
-      eventHandlers:
-        - event: Purchase(indexed address,uint256)
-          handler: handlePurchase
-        - event: Fund(indexed address,uint256)
-          handler: handleFund
-        - event: SetMinTotalPayment(indexed uint256)
-          handler: handleSetMinTotalPayment
-        - event: EmergencyWithdrawal(indexed address)
-          handler: handleEmergencyWithdrawal
-        - event: SetLinearVestingEndTime(indexed uint256)
-          handler: handleSetLinearVestingEndTime
-        - event: SetCliffVestingPeriod(uint256[],uint8[])
-          handler: handleSetCliffVestingPeriod
-        - event: SetWhitelistStartTime(uint256)
-          handler: handleSetWhitelistStartTime
-        - event: SetWhitelistEndTime(uint256)
-          handler: handleSetWhitelistEndTime
-        - event: MetadataURIChanged(string)
-          handler: handleMetadataURIChanged
-      file: ./mappings/core.ts
+    - kind: ethereum
+      name: Presale
+      network: mainnet
+      source:
+          abi: Presale
+      mapping:
+          kind: ethereum/events
+          apiVersion: 0.0.7
+          language: wasm/assemblyscript
+          entities:
+              - TokenSale
+              - Contribution
+          abis:
+              - name: Presale
+                file: ./abis/Presale.json
+              - name: PresaleFactory
+                file: ./abis/PresaleFactory.json
+              - name: ERC20
+                file: ./abis/ERC20.json
+          eventHandlers:
+              - event: Purchase(indexed address,uint256)
+                handler: handlePurchase
+              - event: Fund(indexed address,uint256)
+                handler: handleFund
+              - event: SetMinTotalPayment(indexed uint256)
+                handler: handleSetMinTotalPayment
+              - event: EmergencyWithdrawal(indexed address)
+                handler: handleEmergencyWithdrawal
+              - event: SetLinearVestingEndTime(indexed uint256)
+                handler: handleSetLinearVestingEndTime
+              - event: SetCliffVestingPeriod(uint256[],uint8[])
+                handler: handleSetCliffVestingPeriod
+              - event: SetWhitelistStartTime(uint256)
+                handler: handleSetWhitelistStartTime
+              - event: SetWhitelistEndTime(uint256)
+                handler: handleSetWhitelistEndTime
+              - event: MetadataURIChanged(string)
+                handler: handleMetadataURIChanged
+          file: ./mappings/core.ts

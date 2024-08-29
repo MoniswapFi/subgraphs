@@ -1,14 +1,14 @@
 {
-  "goerli": {
-    "PresaleFactory": {
-      "address": "0x8919e33AEB5B06d127B737Deb89182930B9F43e8",
-      "startBlock": 9060943
+    "goerli": {
+        "PresaleFactory": {
+            "address": "0x8919e33AEB5B06d127B737Deb89182930B9F43e8",
+            "startBlock": 9060943
+        }
+    },
+    "mainnet": {
+        "PresaleFactory": {
+            "address": "0xf886ABaCe837E5EC0CF7037B4d2198F7a1bf35B5",
+            "startBlock": 3472863
+        }
     }
-  },
-  "mainnet": {
-    "PresaleFactory": {
-      "address": "0xf886ABaCe837E5EC0CF7037B4d2198F7a1bf35B5",
-      "startBlock": 3472863
-    }
-  }
 }

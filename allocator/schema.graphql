@@ -1,19 +1,19 @@
 type Allocator @entity {
-  id: ID!
-  totalTokensStaked: BigDecimal!
-  totalStakers: Int!
-  apr: BigDecimal!
+    id: ID!
+    totalTokensStaked: BigDecimal!
+    totalStakers: Int!
+    apr: BigDecimal!
 }
 
 type Account @entity {
-  id: ID!
-  amountStaked: BigDecimal!
-  firstStakeLockPeriod: BigInt!
-  firstStakeTimestamp: BigInt!
+    id: ID!
+    amountStaked: BigDecimal!
+    firstStakeLockPeriod: BigInt!
+    firstStakeTimestamp: BigInt!
 }
 
 type Tier @entity {
-  id: ID!
-  name: String!
-  num: BigInt!
+    id: ID!
+    name: String!
+    num: BigInt!
 }

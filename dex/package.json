@@ -1,24 +1,24 @@
 {
-  "name": "pairs",
-  "license": "UNLICENSED",
-  "scripts": {
-    "codegen": "graph codegen",
-    "build": "graph build",
-    "deploy-remote:bscTestnet": "graph deploy moniswap/pools -i https://graph.moniswap.xyz/ipfs-api/api/v0 --network bscTestnet --node https://graph.moniswap.xyz/bscTestnet/admin/",
-    "create-remote:bscTestnet": "graph create moniswap/pools --node https://graph.moniswap.xyz/bscTestnet/admin/",
-    "deploy-chainstack": "graph deploy --node https://api.graph-ams.p2pify.com/f1cebaa3d9562c36648545480fbada4e/deploy --ipfs https://api.graph-ams.p2pify.com/f1cebaa3d9562c36648545480fbada4e/ipfs pools",
-    "deploy-goldsky:bsc": "goldsky subgraph deploy moniswap/pools --path ./build",
-    "deploy-goldsky:bera-bartio": "goldsky subgraph deploy moniswap-bartio-pools/v1.0.0 --path ./build",
-    "create-local": "graph create --node http://localhost:8020/ Factory",
-    "remove-local": "graph remove --node http://localhost:8020/ Factory",
-    "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 Factory",
-    "test": "graph test"
-  },
-  "dependencies": {
-    "@graphprotocol/graph-cli": "^0.70.0",
-    "@graphprotocol/graph-ts": "^0.35.0"
-  },
-  "devDependencies": {
-    "matchstick-as": "0.5.0"
-  }
+    "name": "pairs",
+    "license": "UNLICENSED",
+    "scripts": {
+        "codegen": "graph codegen",
+        "build": "graph build",
+        "deploy-remote:bscTestnet": "graph deploy moniswap/pools -i https://graph.moniswap.xyz/ipfs-api/api/v0 --network bscTestnet --node https://graph.moniswap.xyz/bscTestnet/admin/",
+        "create-remote:bscTestnet": "graph create moniswap/pools --node https://graph.moniswap.xyz/bscTestnet/admin/",
+        "deploy-chainstack": "graph deploy --node https://api.graph-ams.p2pify.com/f1cebaa3d9562c36648545480fbada4e/deploy --ipfs https://api.graph-ams.p2pify.com/f1cebaa3d9562c36648545480fbada4e/ipfs pools",
+        "deploy-goldsky:bsc": "goldsky subgraph deploy moniswap/pools --path ./build",
+        "deploy-goldsky:bera-bartio": "goldsky subgraph deploy moniswap-bartio-pools/v1.0.0 --path ./build",
+        "create-local": "graph create --node http://localhost:8020/ Factory",
+        "remove-local": "graph remove --node http://localhost:8020/ Factory",
+        "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 Factory",
+        "test": "graph test"
+    },
+    "dependencies": {
+        "@graphprotocol/graph-cli": "^0.70.0",
+        "@graphprotocol/graph-ts": "^0.35.0"
+    },
+    "devDependencies": {
+        "matchstick-as": "0.5.0"
+    }
 }

@@ -1,96 +1,47 @@
-type Abstained @entity(immutable: true) {
-  id: Bytes!
-  voter: Bytes! # address
-  pool: Bytes! # address
-  tokenId: BigInt! # uint256
-  weight: BigInt! # uint256
-  totalWeight: BigInt! # uint256
-  timestamp: BigInt! # uint256
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
+type Voter @entity {
+    id: ID!
+    gaugesCount: Int!
+    gaugesAlive: Int!
+    gaugesDead: Int!
 }
 
-type DistributeReward @entity(immutable: true) {
-  id: Bytes!
-  sender: Bytes! # address
-  gauge: Bytes! # address
-  amount: BigInt! # uint256
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
+type Token @entity {
+    id: ID!
+    name: String!
+    symbol: String!
+    decimals: Int!
+    pairBase: [Pair!] @derivedFrom(field: "token0")
+    pairQuote: [Pair!] @derivedFrom(field: "token1")
 }
 
-type GaugeCreated @entity(immutable: true) {
-  id: Bytes!
-  poolFactory: Bytes! # address
-  votingRewardsFactory: Bytes! # address
-  gaugeFactory: Bytes! # address
-  pool: Bytes! # address
-  bribeVotingReward: Bytes! # address
-  feeVotingReward: Bytes! # address
-  gauge: Bytes! # address
-  creator: Bytes! # address
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
+type Pair @entity {
+    id: ID!
+    name: String!
+    symbol: String!
+    token0: Token!
+    token1: Token!
 }
 
-type GaugeKilled @entity(immutable: true) {
-  id: Bytes!
-  gauge: Bytes! # address
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
+type Gauge @entity {
+    id: ID!
+    poolFactory: Bytes! # address
+    votingRewardsFactory: Bytes! # address
+    gaugeFactory: Bytes! # address
+    pair: Pair!
+    bribeVotingReward: Bytes! # address
+    feeVotingReward: Bytes! # address
+    creator: Bytes! # address
+    blockNumber: BigInt!
+    blockTimestamp: BigInt!
+    alive: Boolean!
+    positions: [GaugePosition!] @deriveFrom(field: "gauge")
+    availableRewards: BigDecimal!
+    totalDeposits: BigDecimal!
 }
 
-type GaugeRevived @entity(immutable: true) {
-  id: Bytes!
-  gauge: Bytes! # address
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
-}
-
-type NotifyReward @entity(immutable: true) {
-  id: Bytes!
-  sender: Bytes! # address
-  reward: Bytes! # address
-  amount: BigInt! # uint256
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
-}
-
-type Voted @entity(immutable: true) {
-  id: Bytes!
-  voter: Bytes! # address
-  pool: Bytes! # address
-  tokenId: BigInt! # uint256
-  weight: BigInt! # uint256
-  totalWeight: BigInt! # uint256
-  timestamp: BigInt! # uint256
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
-}
-
-type WhitelistNFT @entity(immutable: true) {
-  id: Bytes!
-  whitelister: Bytes! # address
-  tokenId: BigInt! # uint256
-  _bool: Boolean! # bool
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
-}
-
-type WhitelistToken @entity(immutable: true) {
-  id: Bytes!
-  whitelister: Bytes! # address
-  token: Bytes! # address
-  _bool: Boolean! # bool
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
+type GaugePosition @entity {
+    id: ID!
+    owner: Bytes!
+    gauge: Gauge!
+    amount: BigDecimal!
 }

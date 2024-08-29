@@ -1,73 +1,73 @@
 enum VestingType {
-  LINEAR
-  CLIFF
+    LINEAR
+    CLIFF
 }
 
 enum SaleType {
-  REGULAR
-  ALLOCATION
+    REGULAR
+    ALLOCATION
 }
 
 type PresaleFactory @entity {
-  id: ID!
-  salesCount: Int!
+    id: ID!
+    salesCount: Int!
 }
 
 type LinearVesting @entity {
-  id: ID!
-  endTime: BigInt!
+    id: ID!
+    endTime: BigInt!
 }
 
 type CliffPeriod @entity {
-  id: ID!
-  claimTime: BigInt!
-  percentage: Int!
+    id: ID!
+    claimTime: BigInt!
+    percentage: Int!
 }
 
 type TokenSale @entity {
-  id: ID!
-  presaleId: Bytes!
-  metadataURI: String!
-  salePrice: BigDecimal!
-  totalAvailableSaleTokens: BigDecimal!
-  paymentToken: Token!
-  saleToken: Token!
-  startTime: BigInt!
-  endTime: BigInt!
-  minTotalPayment: BigDecimal!
-  maxTotalPayment: BigDecimal!
-  withdrawDelay: Int!
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
-  vestingType: VestingType
-  linearVesting: LinearVesting
-  cliffPeriod: [CliffPeriod!]
-  totalPaymentMade: BigDecimal!
-  contributions: [Contribution!]! @derivedFrom(field: "tokenSale")
-  saleType: SaleType!
-  whitelistStartTime: BigInt
-  whitelistEndTime: BigInt
-  participants: Int!
+    id: ID!
+    presaleId: Bytes!
+    metadataURI: String!
+    salePrice: BigDecimal!
+    totalAvailableSaleTokens: BigDecimal!
+    paymentToken: Token!
+    saleToken: Token!
+    startTime: BigInt!
+    endTime: BigInt!
+    minTotalPayment: BigDecimal!
+    maxTotalPayment: BigDecimal!
+    withdrawDelay: Int!
+    blockNumber: BigInt!
+    blockTimestamp: BigInt!
+    transactionHash: Bytes!
+    vestingType: VestingType
+    linearVesting: LinearVesting
+    cliffPeriod: [CliffPeriod!]
+    totalPaymentMade: BigDecimal!
+    contributions: [Contribution!]! @derivedFrom(field: "tokenSale")
+    saleType: SaleType!
+    whitelistStartTime: BigInt
+    whitelistEndTime: BigInt
+    participants: Int!
 }
 
 type Token @entity {
-  id: ID!
-  name: String!
-  decimals: BigInt!
-  symbol: String!
-  totalSupply: BigInt!
+    id: ID!
+    name: String!
+    decimals: BigInt!
+    symbol: String!
+    totalSupply: BigInt!
 }
 
 type Account @entity {
-  id: ID!
-  contributionsCount: Int!
-  contributions: [Contribution!]! @derivedFrom(field: "user")
+    id: ID!
+    contributionsCount: Int!
+    contributions: [Contribution!]! @derivedFrom(field: "user")
 }
 
 type Contribution @entity {
-  id: ID!
-  user: Account!
-  tokenSale: TokenSale!
-  amount: BigDecimal!
+    id: ID!
+    user: Account!
+    tokenSale: TokenSale!
+    amount: BigDecimal!
 }

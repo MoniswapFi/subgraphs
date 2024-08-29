@@ -1,14 +1,14 @@
 {
-  "bscTestnet": {
-    "AggregatorRouter": {
-      "address": "0xA2Af4FAe0d22608E3d34698F03ba4c4f75201a73",
-      "startBlock": 39263932
+    "bscTestnet": {
+        "AggregatorRouter": {
+            "address": "0xA2Af4FAe0d22608E3d34698F03ba4c4f75201a73",
+            "startBlock": 39263932
+        }
+    },
+    "mainnet": {
+        "SparkfiRouter": {
+            "address": "0x8160C59218be97F301a857cD8E72e5d3446621df",
+            "startBlock": 7681007
+        }
     }
-  },
-  "mainnet": {
-    "SparkfiRouter": {
-      "address": "0x8160C59218be97F301a857cD8E72e5d3446621df",
-      "startBlock": 7681007
-    }
-  }
 }

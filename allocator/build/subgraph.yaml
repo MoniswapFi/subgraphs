@@ -1,39 +1,39 @@
 specVersion: 0.0.5
 schema:
-  file: schema.graphql
+    file: schema.graphql
 dataSources:
-  - kind: ethereum
-    name: Allocator
-    network: mainnet
-    source:
-      abi: Allocator
-      address: "0x2e19F01B81628CCd8cFce9F7d9F2fACC77343b7c"
-      startBlock: 3472598
-    mapping:
-      kind: ethereum/events
-      apiVersion: 0.0.7
-      language: wasm/assemblyscript
-      entities:
-        - OwnershipTransferred
-        - Paused
-        - RoleAdminChanged
-        - RoleGranted
-        - RoleRevoked
-        - Stake
-        - TaxPercentageChanged
-        - TierAdded
-        - Unpaused
-        - Unstake
-      abis:
-        - name: Allocator
-          file: Allocator/abis/Allocator.json
-      eventHandlers:
-        - event: Stake(address,uint256,uint256,uint256)
-          handler: handleStake
-        - event: TierAdded(string,uint256)
-          handler: handleTierAdded
-        - event: Unstake(address,uint256)
-          handler: handleUnstake
-        - event: APRChanged(uint24)
-          handler: handleAPRChanged
-      file: Allocator/Allocator.wasm
+    - kind: ethereum
+      name: Allocator
+      network: mainnet
+      source:
+          abi: Allocator
+          address: "0x2e19F01B81628CCd8cFce9F7d9F2fACC77343b7c"
+          startBlock: 3472598
+      mapping:
+          kind: ethereum/events
+          apiVersion: 0.0.7
+          language: wasm/assemblyscript
+          entities:
+              - OwnershipTransferred
+              - Paused
+              - RoleAdminChanged
+              - RoleGranted
+              - RoleRevoked
+              - Stake
+              - TaxPercentageChanged
+              - TierAdded
+              - Unpaused
+              - Unstake
+          abis:
+              - name: Allocator
+                file: Allocator/abis/Allocator.json
+          eventHandlers:
+              - event: Stake(address,uint256,uint256,uint256)
+                handler: handleStake
+              - event: TierAdded(string,uint256)
+                handler: handleTierAdded
+              - event: Unstake(address,uint256)
+                handler: handleUnstake
+              - event: APRChanged(uint24)
+                handler: handleAPRChanged
+          file: Allocator/Allocator.wasm

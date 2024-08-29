@@ -1,50 +1,59 @@
 specVersion: 1.0.0
 indexerHints:
-  prune: auto
+    prune: auto
 schema:
-  file: ./schema.graphql
+    file: ./schema.graphql
 dataSources:
-  - kind: ethereum
-    name: Voter
-    network: berachain-bartio
-    source:
-      address: "0x6399081084Aff4A927E8704E77bC939703bd892c"
-      abi: Voter
-      startBlock: 1886842
-    mapping:
-      kind: ethereum/events
-      apiVersion: 0.0.7
-      language: wasm/assemblyscript
-      entities:
-        - Abstained
-        - DistributeReward
-        - GaugeCreated
-        - GaugeKilled
-        - GaugeRevived
-        - NotifyReward
-        - Voted
-        - WhitelistNFT
-        - WhitelistToken
-      abis:
-        - name: Voter
-          file: ./abis/Voter.json
-      eventHandlers:
-        - event: Abstained(indexed address,indexed address,indexed uint256,uint256,uint256,uint256)
-          handler: handleAbstained
-        - event: DistributeReward(indexed address,indexed address,uint256)
-          handler: handleDistributeReward
-        - event: GaugeCreated(indexed address,indexed address,indexed address,address,address,address,address,address)
-          handler: handleGaugeCreated
-        - event: GaugeKilled(indexed address)
-          handler: handleGaugeKilled
-        - event: GaugeRevived(indexed address)
-          handler: handleGaugeRevived
-        - event: NotifyReward(indexed address,indexed address,uint256)
-          handler: handleNotifyReward
-        - event: Voted(indexed address,indexed address,indexed uint256,uint256,uint256,uint256)
-          handler: handleVoted
-        - event: WhitelistNFT(indexed address,indexed uint256,indexed bool)
-          handler: handleWhitelistNFT
-        - event: WhitelistToken(indexed address,indexed address,indexed bool)
-          handler: handleWhitelistToken
-      file: ./src/voter.ts
+    - kind: ethereum
+      name: Voter
+      network: berachain-bartio
+      source:
+          address: "0x6399081084Aff4A927E8704E77bC939703bd892c"
+          abi: Voter
+          startBlock: 1886842
+      mapping:
+          kind: ethereum/events
+          apiVersion: 0.0.7
+          language: wasm/assemblyscript
+          entities:
+              - Voter
+              - Gauge
+              - Pair
+              - Token
+          abis:
+              - name: Voter
+                file: ./abis/Voter.json
+              - name: Pair
+                file: ./abis/Pair.json
+              - name: ERC20
+                file: ./abis/ERC20.json
+          eventHandlers:
+              - event: GaugeCreated(indexed address,indexed address,indexed address,address,address,address,address,address)
+                handler: handleGaugeCreated
+              - event: GaugeKilled(indexed address)
+                handler: handleGaugeKilled
+              - event: GaugeRevived(indexed address)
+                handler: handleGaugeRevived
+          file: ./mappings/voter.ts
+templates:
+    - kind: ethereum
+      name: Gauge
+      network: berachain-bartio
+      source:
+          abi: Gauge
+      mapping:
+          kind: ethereum/events
+          apiVersion: 0.0.7
+          language: wasm/assemblyscript
+          file: ./mappings/core.ts
+          entities:
+              - Gauge
+              - GaugePosition
+          abis:
+              - name: Gauge
+                file: ./abis/Gauge.json
+          eventHandlers:
+              - event: Deposit(indexed address,indexed address,uint256)
+                handler: handleDeposit
+              - event: Withdraw(indexed address,uint256)
+                handler: handleWithdraw

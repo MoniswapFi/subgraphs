@@ -1,101 +1,101 @@
 type Router @entity {
-  id: ID!
-  adaptersCount: Int!
-  adapters: [Adapter!]!
-  swaps: [RouterSwap!]! @derivedFrom(field: "router")
-  swapCount: Int!
-  totalTradeVolumeUSD: BigDecimal!
+    id: ID!
+    adaptersCount: Int!
+    adapters: [Adapter!]!
+    swaps: [RouterSwap!]! @derivedFrom(field: "router")
+    swapCount: Int!
+    totalTradeVolumeUSD: BigDecimal!
 }
 
 type RouterSwap @entity {
-  id: ID!
-  tokenIn: Token! # address
-  tokenOut: Token! # address
-  to: Bytes! # address
-  amountIn: BigDecimal!
-  amountOut: BigDecimal!
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
-  router: Router!
+    id: ID!
+    tokenIn: Token! # address
+    tokenOut: Token! # address
+    to: Bytes! # address
+    amountIn: BigDecimal!
+    amountOut: BigDecimal!
+    blockNumber: BigInt!
+    blockTimestamp: BigInt!
+    transactionHash: Bytes!
+    router: Router!
 }
 
 type Adapter @entity {
-  id: ID!
-  name: String!
-  txCount: Int!
-  swaps: [AdapterSwap!]! @derivedFrom(field: "adapter")
-  tradeVolumeUSD: BigDecimal!
-  adapterDayData: [AdapterDayData!]! @derivedFrom(field: "adapter")
+    id: ID!
+    name: String!
+    txCount: Int!
+    swaps: [AdapterSwap!]! @derivedFrom(field: "adapter")
+    tradeVolumeUSD: BigDecimal!
+    adapterDayData: [AdapterDayData!]! @derivedFrom(field: "adapter")
 }
 
 type AdapterSwap @entity {
-  id: ID!
-  tokenIn: Token!
-  tokenOut: Token!
-  to: Bytes!
-  amountIn: BigDecimal!
-  amountOut: BigDecimal!
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
-  adapter: Adapter!
+    id: ID!
+    tokenIn: Token!
+    tokenOut: Token!
+    to: Bytes!
+    amountIn: BigDecimal!
+    amountOut: BigDecimal!
+    blockNumber: BigInt!
+    blockTimestamp: BigInt!
+    transactionHash: Bytes!
+    adapter: Adapter!
 }
 
 type RouterDayData @entity {
-  id: ID!
-  dailyVolumeUSD: BigDecimal!
-  totalTransactions: Int!
-  date: Int!
+    id: ID!
+    dailyVolumeUSD: BigDecimal!
+    totalTransactions: Int!
+    date: Int!
 }
 
 type AdapterDayData @entity {
-  id: ID!
-  date: Int!
-  txCount: Int!
-  dailyVolumeUSD: BigDecimal!
-  adapter: Adapter!
+    id: ID!
+    date: Int!
+    txCount: Int!
+    dailyVolumeUSD: BigDecimal!
+    adapter: Adapter!
 }
 
 type TokenDayData @entity {
-  id: ID!
-  date: Int!
-  token: Token!
-  dailyVolumeToken: BigDecimal!
-  dailyVolumeUSD: BigDecimal!
-  dailyTxns: BigInt!
-  priceUSD: BigDecimal!
+    id: ID!
+    date: Int!
+    token: Token!
+    dailyVolumeToken: BigDecimal!
+    dailyVolumeUSD: BigDecimal!
+    dailyTxns: BigInt!
+    priceUSD: BigDecimal!
 }
 
 type PairDayData @entity {
-  id: ID!
-  date: Int!
-  token1: Token!
-  token2: Token!
-  dailyVolumeUSD: BigDecimal!
-  dailyVolumeToken1: BigDecimal!
-  dailyVolumeToken2: BigDecimal!
+    id: ID!
+    date: Int!
+    token1: Token!
+    token2: Token!
+    dailyVolumeUSD: BigDecimal!
+    dailyVolumeToken1: BigDecimal!
+    dailyVolumeToken2: BigDecimal!
 }
 
 type PairHourData @entity {
-  id: ID!
-  date: Int!
-  token1: Token!
-  token2: Token!
-  hourlyVolumeUSD: BigDecimal!
-  hourlyVolumeToken1: BigDecimal!
-  hourlyVolumeToken2: BigDecimal!
+    id: ID!
+    date: Int!
+    token1: Token!
+    token2: Token!
+    hourlyVolumeUSD: BigDecimal!
+    hourlyVolumeToken1: BigDecimal!
+    hourlyVolumeToken2: BigDecimal!
 }
 
 type Token @entity {
-  id: ID!
-  symbol: String!
-  name: String!
-  decimals: BigInt!
-  totalSupply: BigInt!
-  tradeVolume: BigDecimal!
-  tradeVolumeUSD: BigDecimal!
-  txCount: BigInt!
-  priceUSD: BigDecimal!
-  tokenDayData: [TokenDayData!]! @derivedFrom(field: "token")
+    id: ID!
+    symbol: String!
+    name: String!
+    decimals: BigInt!
+    totalSupply: BigInt!
+    tradeVolume: BigDecimal!
+    tradeVolumeUSD: BigDecimal!
+    txCount: BigInt!
+    priceUSD: BigDecimal!
+    tokenDayData: [TokenDayData!]! @derivedFrom(field: "token")
 }

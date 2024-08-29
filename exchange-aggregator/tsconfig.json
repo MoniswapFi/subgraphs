@@ -1,8 +1,8 @@
 {
-  "extends": "@graphprotocol/graph-ts/types/tsconfig.base.json",
-  "include": ["mappings"],
-  "compilerOptions": {
-    "lib": ["dom", "dom.iterable"],
-    "noLib": false
-  }
+    "extends": "@graphprotocol/graph-ts/types/tsconfig.base.json",
+    "include": ["mappings"],
+    "compilerOptions": {
+        "lib": ["dom", "dom.iterable"],
+        "noLib": false
+    }
 }

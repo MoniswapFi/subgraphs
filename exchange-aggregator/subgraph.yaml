@@ -1,54 +1,54 @@
 specVersion: 0.0.5
 schema:
-  file: ./schema.graphql
+    file: ./schema.graphql
 dataSources:
-  - kind: ethereum
-    name: AggregatorRouter
-    network: bscTestnet
-    source:
-      abi: AggregatorRouter
-      address: "0xA2Af4FAe0d22608E3d34698F03ba4c4f75201a73"
-      startBlock: 39263932
-    mapping:
-      kind: ethereum/events
-      apiVersion: 0.0.7
-      language: wasm/assemblyscript
-      entities:
-        - Router
-        - Adapter
-        - Token
-      abis:
-        - name: AggregatorRouter
-          file: ./abis/Router.json
-        - name: ERC20
-          file: ./abis/ERC20.json
-        - name: Adapter
-          file: ./abis/Adapter.json
-      eventHandlers:
-        - event: RouterSwap(indexed address,indexed address,address,uint256,uint256)
-          handler: handleRouterSwap
-        - event: SetAdapters(address[])
-          handler: handleSetAdapters
-      file: ./mappings/router.ts
+    - kind: ethereum
+      name: AggregatorRouter
+      network: bscTestnet
+      source:
+          abi: AggregatorRouter
+          address: "0xA2Af4FAe0d22608E3d34698F03ba4c4f75201a73"
+          startBlock: 39263932
+      mapping:
+          kind: ethereum/events
+          apiVersion: 0.0.7
+          language: wasm/assemblyscript
+          entities:
+              - Router
+              - Adapter
+              - Token
+          abis:
+              - name: AggregatorRouter
+                file: ./abis/Router.json
+              - name: ERC20
+                file: ./abis/ERC20.json
+              - name: Adapter
+                file: ./abis/Adapter.json
+          eventHandlers:
+              - event: RouterSwap(indexed address,indexed address,address,uint256,uint256)
+                handler: handleRouterSwap
+              - event: SetAdapters(address[])
+                handler: handleSetAdapters
+          file: ./mappings/router.ts
 templates:
-  - kind: ethereum
-    name: Adapter
-    network: bscTestnet
-    source:
-      abi: Adapter
-    mapping:
-      kind: ethereum/events
-      apiVersion: 0.0.7
-      language: wasm/assemblyscript
-      file: ./mappings/core.ts
-      entities:
-        - Adapter
-        - Token
-      abis:
-        - name: ERC20
-          file: ./abis/ERC20.json
-        - name: Adapter
-          file: ./abis/Adapter.json
-      eventHandlers:
-        - event: AdapterSwap(indexed address,indexed address,address,uint256,uint256)
-          handler: handleAdapterSwap
+    - kind: ethereum
+      name: Adapter
+      network: bscTestnet
+      source:
+          abi: Adapter
+      mapping:
+          kind: ethereum/events
+          apiVersion: 0.0.7
+          language: wasm/assemblyscript
+          file: ./mappings/core.ts
+          entities:
+              - Adapter
+              - Token
+          abis:
+              - name: ERC20
+                file: ./abis/ERC20.json
+              - name: Adapter
+                file: ./abis/Adapter.json
+          eventHandlers:
+              - event: AdapterSwap(indexed address,indexed address,address,uint256,uint256)
+                handler: handleAdapterSwap

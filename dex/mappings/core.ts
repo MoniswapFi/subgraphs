@@ -1,14 +1,14 @@
 import {
-  Burn as BurnEvent,
-  Mint as MintEvent,
-  Swap as SwapEvent,
-  Pair,
-  Transaction,
-  Token,
-  PoolFactory,
-  Bundle,
-  AccountPosition,
-  Fee,
+    Burn as BurnEvent,
+    Mint as MintEvent,
+    Swap as SwapEvent,
+    Pair,
+    Transaction,
+    Token,
+    PoolFactory,
+    Bundle,
+    AccountPosition,
+    Fee,
 } from "../generated/schema";
 import { Burn, Mint, Pool, Swap, Sync, Transfer, Fees, Claim } from "../generated/templates/Pool/Pool";
 import { ADDRESS_ZERO, BI_18, FACTORY_ADDRESS, ONE_BI, ZERO_BD } from "./constants";
@@ -18,471 +18,471 @@ import { findETHPerToken, getETHPriceInUSD, getTrackedLiquidityUSD, getTrackedVo
 import { updatePairDayData, updatePairHourData, updateFactoryDayData, updateTokenDayData } from "./day_updates";
 
 function isCompleteMint(mintId: string): boolean {
-  return (MintEvent.load(mintId) as MintEvent).sender !== null;
+    return (MintEvent.load(mintId) as MintEvent).sender !== null;
 }
 
 function createAccountPosition(pairId: string, user: Address): AccountPosition {
-  const positionId = pairId + ":" + user.toHex();
-  let accountPosition = AccountPosition.load(positionId);
+    const positionId = pairId + ":" + user.toHex();
+    let accountPosition = AccountPosition.load(positionId);
 
-  if (accountPosition === null) {
-    accountPosition = new AccountPosition(positionId);
-    accountPosition.account = user;
-    accountPosition.pair = pairId;
-    accountPosition.position = ZERO_BD;
-  }
-  accountPosition.save();
-  return accountPosition;
+    if (accountPosition === null) {
+        accountPosition = new AccountPosition(positionId);
+        accountPosition.account = user;
+        accountPosition.pair = pairId;
+        accountPosition.position = ZERO_BD;
+    }
+    accountPosition.save();
+    return accountPosition;
 }
 
 export function handleTransfer(event: Transfer): void {
-  if (event.params.to.toHex() == ADDRESS_ZERO && event.params.value.equals(BigInt.fromI32(1000))) {
-    return;
-  }
-
-  const pair = Pair.load(event.address.toHex()) as Pair;
-  const pairContract = Pool.bind(event.address);
-  const value = convertTokenToDecimal(event.params.value, BI_18);
-  let transaction = Transaction.load(event.transaction.hash.toHex());
-
-  if (!transaction || transaction === null) {
-    transaction = new Transaction(event.transaction.hash.toHex());
-    transaction.block = event.block.number;
-    transaction.timestamp = event.block.timestamp;
-    transaction.mints = [];
-    transaction.burns = [];
-    transaction.swaps = [];
-  }
-
-  const mints = transaction.mints;
-  if (event.params.from.toHex() == ADDRESS_ZERO) {
-    pair.totalSupply = pair.totalSupply.plus(value);
-    pair.save();
-
-    if (mints.length === 0 || isCompleteMint(mints[mints.length - 1])) {
-      const mint = new MintEvent(event.transaction.hash.toHex().concat("-").concat(BigInt.fromI32(mints.length).toString()));
-      mint.transaction = transaction.id;
-      mint.pair = pair.id;
-      mint.to = event.params.to;
-      mint.liquidity = value;
-      mint.timestamp = transaction.timestamp;
-      mint.transaction = transaction.id;
-      mint.save();
-
-      transaction.mints = mints.concat([mint.id]);
-      transaction.save();
+    if (event.params.to.toHex() == ADDRESS_ZERO && event.params.value.equals(BigInt.fromI32(1000))) {
+        return;
     }
-  }
 
-  if (event.params.to.toHex() == pair.id) {
-    let burns = transaction.burns;
-    const burn = new BurnEvent(event.transaction.hash.toHex().concat("-").concat(BigInt.fromI32(burns.length).toString()));
-    burn.transaction = transaction.id;
-    burn.pair = pair.id;
-    burn.liquidity = value;
-    burn.timestamp = transaction.timestamp;
-    burn.to = event.params.to;
-    burn.sender = event.params.from;
-    burn.needsComplete = true;
-    burn.transaction = transaction.id;
-    burn.save();
+    const pair = Pair.load(event.address.toHex()) as Pair;
+    const pairContract = Pool.bind(event.address);
+    const value = convertTokenToDecimal(event.params.value, BI_18);
+    let transaction = Transaction.load(event.transaction.hash.toHex());
 
-    burns = burns.concat([burn.id]);
-    transaction.burns = burns;
-    transaction.save();
-  }
+    if (!transaction || transaction === null) {
+        transaction = new Transaction(event.transaction.hash.toHex());
+        transaction.block = event.block.number;
+        transaction.timestamp = event.block.timestamp;
+        transaction.mints = [];
+        transaction.burns = [];
+        transaction.swaps = [];
+    }
 
-  if (event.params.to.toHex() == ADDRESS_ZERO && event.params.from.toHex() == pair.id) {
-    pair.totalSupply = pair.totalSupply.minus(value);
-    pair.save();
+    const mints = transaction.mints;
+    if (event.params.from.toHex() == ADDRESS_ZERO) {
+        pair.totalSupply = pair.totalSupply.plus(value);
+        pair.save();
 
-    let burns = transaction.burns;
-    let burn: BurnEvent;
-    if (burns.length > 0) {
-      const currentBurn = BurnEvent.load(burns[burns.length - 1]) as BurnEvent;
-      if (currentBurn.needsComplete) {
-        burn = currentBurn;
-      } else {
-        burn = new BurnEvent(event.transaction.hash.toHex().concat("-").concat(BigInt.fromI32(burns.length).toString()));
+        if (mints.length === 0 || isCompleteMint(mints[mints.length - 1])) {
+            const mint = new MintEvent(event.transaction.hash.toHex().concat("-").concat(BigInt.fromI32(mints.length).toString()));
+            mint.transaction = transaction.id;
+            mint.pair = pair.id;
+            mint.to = event.params.to;
+            mint.liquidity = value;
+            mint.timestamp = transaction.timestamp;
+            mint.transaction = transaction.id;
+            mint.save();
+
+            transaction.mints = mints.concat([mint.id]);
+            transaction.save();
+        }
+    }
+
+    if (event.params.to.toHex() == pair.id) {
+        let burns = transaction.burns;
+        const burn = new BurnEvent(event.transaction.hash.toHex().concat("-").concat(BigInt.fromI32(burns.length).toString()));
         burn.transaction = transaction.id;
-        burn.needsComplete = false;
         burn.pair = pair.id;
         burn.liquidity = value;
-        burn.transaction = transaction.id;
         burn.timestamp = transaction.timestamp;
-      }
-    } else {
-      burn = new BurnEvent(event.transaction.hash.toHex().concat("-").concat(BigInt.fromI32(burns.length).toString()));
-      burn.transaction = transaction.id;
-      burn.needsComplete = false;
-      burn.pair = pair.id;
-      burn.liquidity = value;
-      burn.transaction = transaction.id;
-      burn.timestamp = transaction.timestamp;
+        burn.to = event.params.to;
+        burn.sender = event.params.from;
+        burn.needsComplete = true;
+        burn.transaction = transaction.id;
+        burn.save();
+
+        burns = burns.concat([burn.id]);
+        transaction.burns = burns;
+        transaction.save();
     }
 
-    if (mints.length !== 0 && !isCompleteMint(mints[mints.length - 1])) {
-      let mint = MintEvent.load(mints[mints.length - 1]) as MintEvent;
-      burn.feeTo = mint.to;
-      burn.feeLiquidity = mint.liquidity;
-      store.remove("Mint", mints[mints.length - 1]);
-      let m = mints.slice(0);
-      m.pop();
-      transaction.mints = m;
-      transaction.save();
+    if (event.params.to.toHex() == ADDRESS_ZERO && event.params.from.toHex() == pair.id) {
+        pair.totalSupply = pair.totalSupply.minus(value);
+        pair.save();
+
+        let burns = transaction.burns;
+        let burn: BurnEvent;
+        if (burns.length > 0) {
+            const currentBurn = BurnEvent.load(burns[burns.length - 1]) as BurnEvent;
+            if (currentBurn.needsComplete) {
+                burn = currentBurn;
+            } else {
+                burn = new BurnEvent(event.transaction.hash.toHex().concat("-").concat(BigInt.fromI32(burns.length).toString()));
+                burn.transaction = transaction.id;
+                burn.needsComplete = false;
+                burn.pair = pair.id;
+                burn.liquidity = value;
+                burn.transaction = transaction.id;
+                burn.timestamp = transaction.timestamp;
+            }
+        } else {
+            burn = new BurnEvent(event.transaction.hash.toHex().concat("-").concat(BigInt.fromI32(burns.length).toString()));
+            burn.transaction = transaction.id;
+            burn.needsComplete = false;
+            burn.pair = pair.id;
+            burn.liquidity = value;
+            burn.transaction = transaction.id;
+            burn.timestamp = transaction.timestamp;
+        }
+
+        if (mints.length !== 0 && !isCompleteMint(mints[mints.length - 1])) {
+            let mint = MintEvent.load(mints[mints.length - 1]) as MintEvent;
+            burn.feeTo = mint.to;
+            burn.feeLiquidity = mint.liquidity;
+            store.remove("Mint", mints[mints.length - 1]);
+            let m = mints.slice(0);
+            m.pop();
+            transaction.mints = m;
+            transaction.save();
+        }
+        burn.save();
+        if (burn.needsComplete) {
+            burns[burns.length - 1] = burn.id;
+        } else {
+            // TODO: Consider using .concat() for handling array updates to protect
+            // against unintended side effects for other code paths.
+            burns = burns.concat([burn.id]);
+        }
+        transaction.burns = burns;
+        transaction.save();
     }
-    burn.save();
-    if (burn.needsComplete) {
-      burns[burns.length - 1] = burn.id;
-    } else {
-      // TODO: Consider using .concat() for handling array updates to protect
-      // against unintended side effects for other code paths.
-      burns = burns.concat([burn.id]);
+
+    if (event.params.from.toHex() !== ADDRESS_ZERO && event.params.from.toHex() !== pair.id) {
+        const accLiqPos = createAccountPosition(pair.id, event.params.from);
+        accLiqPos.position = convertTokenToDecimal(pairContract.balanceOf(event.params.from), BI_18);
+        accLiqPos.save();
     }
-    transaction.burns = burns;
+
+    if (event.params.to.toHex() !== ADDRESS_ZERO && event.params.to.toHex() !== pair.id) {
+        const accLiqPos = createAccountPosition(pair.id, event.params.to);
+        accLiqPos.position = convertTokenToDecimal(pairContract.balanceOf(event.params.to), BI_18);
+        accLiqPos.save();
+    }
+
     transaction.save();
-  }
-
-  if (event.params.from.toHex() !== ADDRESS_ZERO && event.params.from.toHex() !== pair.id) {
-    const accLiqPos = createAccountPosition(pair.id, event.params.from);
-    accLiqPos.position = convertTokenToDecimal(pairContract.balanceOf(event.params.from), BI_18);
-    accLiqPos.save();
-  }
-
-  if (event.params.to.toHex() !== ADDRESS_ZERO && event.params.to.toHex() !== pair.id) {
-    const accLiqPos = createAccountPosition(pair.id, event.params.to);
-    accLiqPos.position = convertTokenToDecimal(pairContract.balanceOf(event.params.to), BI_18);
-    accLiqPos.save();
-  }
-
-  transaction.save();
 }
 
 export function handleFees(event: Fees): void {
-  const factory = PoolFactory.load(FACTORY_ADDRESS.get(dataSource.network()) as string) as PoolFactory;
-  const pair = Pair.load(event.address.toHex()) as Pair;
-  const token0 = Token.load(pair.token0) as Token;
-  const token1 = Token.load(pair.token1) as Token;
-  const feeId = pair.id + ":" + event.params.sender.toHex();
+    const factory = PoolFactory.load(FACTORY_ADDRESS.get(dataSource.network()) as string) as PoolFactory;
+    const pair = Pair.load(event.address.toHex()) as Pair;
+    const token0 = Token.load(pair.token0) as Token;
+    const token1 = Token.load(pair.token1) as Token;
+    const feeId = pair.id + ":" + event.params.sender.toHex();
 
-  let fee = Fee.load(feeId);
+    let fee = Fee.load(feeId);
 
-  if (fee === null) {
-    fee = new Fee(feeId);
+    if (fee === null) {
+        fee = new Fee(feeId);
 
-    fee.account = event.params.sender;
-    fee.amount0Claimable = ZERO_BD;
-    fee.amount1Claimable = ZERO_BD;
-    fee.amountClaimableUSD = ZERO_BD;
-    fee.pair = pair.id;
-  }
+        fee.account = event.params.sender;
+        fee.amount0Claimable = ZERO_BD;
+        fee.amount1Claimable = ZERO_BD;
+        fee.amountClaimableUSD = ZERO_BD;
+        fee.pair = pair.id;
+    }
 
-  fee.amount0Claimable = fee.amount0Claimable.plus(convertTokenToDecimal(event.params.amount0, token0.decimals));
-  fee.amount1Claimable = fee.amount1Claimable.plus(convertTokenToDecimal(event.params.amount1, token1.decimals));
-  fee.amountClaimableUSD = fee.amount0Claimable.times(token0.derivedUSD!).plus(fee.amount1Claimable.times(token1.derivedUSD!));
+    fee.amount0Claimable = fee.amount0Claimable.plus(convertTokenToDecimal(event.params.amount0, token0.decimals));
+    fee.amount1Claimable = fee.amount1Claimable.plus(convertTokenToDecimal(event.params.amount1, token1.decimals));
+    fee.amountClaimableUSD = fee.amount0Claimable.times(token0.derivedUSD!).plus(fee.amount1Claimable.times(token1.derivedUSD!));
 
-  fee.save();
+    fee.save();
 
-  factory.feesUSD = factory.feesUSD
-    .plus(convertTokenToDecimal(event.params.amount0, token0.decimals).times(token0.derivedUSD!))
-    .plus(convertTokenToDecimal(event.params.amount1, token1.decimals).times(token1.derivedUSD!));
-  factory.save();
+    factory.feesUSD = factory.feesUSD
+        .plus(convertTokenToDecimal(event.params.amount0, token0.decimals).times(token0.derivedUSD!))
+        .plus(convertTokenToDecimal(event.params.amount1, token1.decimals).times(token1.derivedUSD!));
+    factory.save();
 
-  pair.feesUSD = pair.feesUSD
-    .plus(convertTokenToDecimal(event.params.amount0, token0.decimals).times(token0.derivedUSD!))
-    .plus(convertTokenToDecimal(event.params.amount1, token1.decimals).times(token1.derivedUSD!));
-  pair.totalAmount0Claimable = pair.totalAmount0Claimable.plus(convertTokenToDecimal(event.params.amount0, token0.decimals));
-  pair.totalAmount1Claimable = pair.totalAmount1Claimable.plus(convertTokenToDecimal(event.params.amount1, token1.decimals));
-  pair.save();
+    pair.feesUSD = pair.feesUSD
+        .plus(convertTokenToDecimal(event.params.amount0, token0.decimals).times(token0.derivedUSD!))
+        .plus(convertTokenToDecimal(event.params.amount1, token1.decimals).times(token1.derivedUSD!));
+    pair.totalAmount0Claimable = pair.totalAmount0Claimable.plus(convertTokenToDecimal(event.params.amount0, token0.decimals));
+    pair.totalAmount1Claimable = pair.totalAmount1Claimable.plus(convertTokenToDecimal(event.params.amount1, token1.decimals));
+    pair.save();
 }
 
 export function handleClaim(event: Claim): void {
-  const factory = PoolFactory.load(FACTORY_ADDRESS.get(dataSource.network()) as string) as PoolFactory;
-  const pair = Pair.load(event.address.toHex()) as Pair;
-  const token0 = Token.load(pair.token0) as Token;
-  const token1 = Token.load(pair.token1) as Token;
-  const feeId = pair.id + ":" + event.params.sender.toHex();
-  const fee = Fee.load(feeId) as Fee;
+    const factory = PoolFactory.load(FACTORY_ADDRESS.get(dataSource.network()) as string) as PoolFactory;
+    const pair = Pair.load(event.address.toHex()) as Pair;
+    const token0 = Token.load(pair.token0) as Token;
+    const token1 = Token.load(pair.token1) as Token;
+    const feeId = pair.id + ":" + event.params.sender.toHex();
+    const fee = Fee.load(feeId) as Fee;
 
-  fee.amount0Claimable = fee.amount0Claimable.minus(convertTokenToDecimal(event.params.amount0, token0.decimals));
-  fee.amount1Claimable = fee.amount1Claimable.minus(convertTokenToDecimal(event.params.amount1, token1.decimals));
-  fee.amountClaimableUSD = fee.amount0Claimable.times(token0.derivedUSD!).plus(fee.amount1Claimable.times(token1.derivedUSD!));
-  fee.save();
+    fee.amount0Claimable = fee.amount0Claimable.minus(convertTokenToDecimal(event.params.amount0, token0.decimals));
+    fee.amount1Claimable = fee.amount1Claimable.minus(convertTokenToDecimal(event.params.amount1, token1.decimals));
+    fee.amountClaimableUSD = fee.amount0Claimable.times(token0.derivedUSD!).plus(fee.amount1Claimable.times(token1.derivedUSD!));
+    fee.save();
 
-  const eventAmount0USD = convertTokenToDecimal(event.params.amount0, token0.decimals).times(token0.derivedUSD!);
-  const eventAmount1USD = convertTokenToDecimal(event.params.amount1, token1.decimals).times(token1.derivedUSD!);
-  const feesToBeSubracted = eventAmount0USD.plus(eventAmount1USD);
+    const eventAmount0USD = convertTokenToDecimal(event.params.amount0, token0.decimals).times(token0.derivedUSD!);
+    const eventAmount1USD = convertTokenToDecimal(event.params.amount1, token1.decimals).times(token1.derivedUSD!);
+    const feesToBeSubracted = eventAmount0USD.plus(eventAmount1USD);
 
-  factory.feesUSD = factory.feesUSD.minus(feesToBeSubracted);
-  factory.save();
+    factory.feesUSD = factory.feesUSD.minus(feesToBeSubracted);
+    factory.save();
 
-  pair.feesUSD = pair.feesUSD.minus(feesToBeSubracted);
-  pair.totalAmount0Claimable = pair.totalAmount0Claimable.minus(convertTokenToDecimal(event.params.amount0, token0.decimals));
-  pair.totalAmount1Claimable = pair.totalAmount1Claimable.minus(convertTokenToDecimal(event.params.amount1, token1.decimals));
-  pair.save();
+    pair.feesUSD = pair.feesUSD.minus(feesToBeSubracted);
+    pair.totalAmount0Claimable = pair.totalAmount0Claimable.minus(convertTokenToDecimal(event.params.amount0, token0.decimals));
+    pair.totalAmount1Claimable = pair.totalAmount1Claimable.minus(convertTokenToDecimal(event.params.amount1, token1.decimals));
+    pair.save();
 }
 
 export function handleSync(event: Sync): void {
-  const pair = Pair.load(event.address.toHex()) as Pair;
-  const token0 = Token.load(pair.token0) as Token;
-  const token1 = Token.load(pair.token1) as Token;
-  const factory = PoolFactory.load(FACTORY_ADDRESS.get(dataSource.network()) as string) as PoolFactory;
+    const pair = Pair.load(event.address.toHex()) as Pair;
+    const token0 = Token.load(pair.token0) as Token;
+    const token1 = Token.load(pair.token1) as Token;
+    const factory = PoolFactory.load(FACTORY_ADDRESS.get(dataSource.network()) as string) as PoolFactory;
 
-  factory.totalLiquidityETH = factory.totalLiquidityETH.minus(pair.trackedReserveETH);
+    factory.totalLiquidityETH = factory.totalLiquidityETH.minus(pair.trackedReserveETH);
 
-  token0.totalLiquidity = token0.totalLiquidity.minus(pair.reserve0);
-  token1.totalLiquidity = token1.totalLiquidity.minus(pair.reserve1);
+    token0.totalLiquidity = token0.totalLiquidity.minus(pair.reserve0);
+    token1.totalLiquidity = token1.totalLiquidity.minus(pair.reserve1);
 
-  pair.reserve0 = convertTokenToDecimal(event.params.reserve0, token0.decimals);
-  pair.reserve1 = convertTokenToDecimal(event.params.reserve1, token1.decimals);
+    pair.reserve0 = convertTokenToDecimal(event.params.reserve0, token0.decimals);
+    pair.reserve1 = convertTokenToDecimal(event.params.reserve1, token1.decimals);
 
-  if (pair.reserve1.notEqual(ZERO_BD)) pair.token0Price = pair.reserve0.div(pair.reserve1);
-  else pair.token0Price = ZERO_BD;
-  if (pair.reserve0.notEqual(ZERO_BD)) pair.token1Price = pair.reserve1.div(pair.reserve0);
-  else pair.token1Price = ZERO_BD;
+    if (pair.reserve1.notEqual(ZERO_BD)) pair.token0Price = pair.reserve0.div(pair.reserve1);
+    else pair.token0Price = ZERO_BD;
+    if (pair.reserve0.notEqual(ZERO_BD)) pair.token1Price = pair.reserve1.div(pair.reserve0);
+    else pair.token1Price = ZERO_BD;
 
-  const bundle = Bundle.load("1") as Bundle;
-  bundle.ethPrice = getETHPriceInUSD();
-  bundle.save();
-  const t0DerivedETH = findETHPerToken(token0);
-  token0.derivedETH = t0DerivedETH;
-  token0.derivedUSD = t0DerivedETH.times(bundle.ethPrice);
-  token0.save();
+    const bundle = Bundle.load("1") as Bundle;
+    bundle.ethPrice = getETHPriceInUSD();
+    bundle.save();
+    const t0DerivedETH = findETHPerToken(token0);
+    token0.derivedETH = t0DerivedETH;
+    token0.derivedUSD = t0DerivedETH.times(bundle.ethPrice);
+    token0.save();
 
-  let t1DerivedETH = findETHPerToken(token1);
-  token1.derivedETH = t1DerivedETH;
-  token1.derivedUSD = t1DerivedETH.times(bundle.ethPrice);
-  token1.save();
+    let t1DerivedETH = findETHPerToken(token1);
+    token1.derivedETH = t1DerivedETH;
+    token1.derivedUSD = t1DerivedETH.times(bundle.ethPrice);
+    token1.save();
 
-  let trackedLiquidityETH: BigDecimal;
-  if (bundle.ethPrice.notEqual(ZERO_BD)) {
-    trackedLiquidityETH = getTrackedLiquidityUSD(bundle, pair.reserve0, token0, pair.reserve1, token1).div(bundle.ethPrice);
-  } else {
-    trackedLiquidityETH = ZERO_BD;
-  }
+    let trackedLiquidityETH: BigDecimal;
+    if (bundle.ethPrice.notEqual(ZERO_BD)) {
+        trackedLiquidityETH = getTrackedLiquidityUSD(bundle, pair.reserve0, token0, pair.reserve1, token1).div(bundle.ethPrice);
+    } else {
+        trackedLiquidityETH = ZERO_BD;
+    }
 
-  pair.trackedReserveETH = trackedLiquidityETH;
-  pair.reserveETH = pair.reserve0.times(token0.derivedETH as BigDecimal).plus(pair.reserve1.times(token1.derivedETH as BigDecimal));
-  pair.reserveUSD = pair.reserveETH.times(bundle.ethPrice);
+    pair.trackedReserveETH = trackedLiquidityETH;
+    pair.reserveETH = pair.reserve0.times(token0.derivedETH as BigDecimal).plus(pair.reserve1.times(token1.derivedETH as BigDecimal));
+    pair.reserveUSD = pair.reserveETH.times(bundle.ethPrice);
 
-  factory.totalLiquidityETH = factory.totalLiquidityETH.plus(trackedLiquidityETH);
-  factory.totalLiquidityUSD = factory.totalLiquidityETH.times(bundle.ethPrice);
+    factory.totalLiquidityETH = factory.totalLiquidityETH.plus(trackedLiquidityETH);
+    factory.totalLiquidityUSD = factory.totalLiquidityETH.times(bundle.ethPrice);
 
-  token0.totalLiquidity = token0.totalLiquidity.plus(pair.reserve0);
-  token1.totalLiquidity = token1.totalLiquidity.plus(pair.reserve1);
+    token0.totalLiquidity = token0.totalLiquidity.plus(pair.reserve0);
+    token1.totalLiquidity = token1.totalLiquidity.plus(pair.reserve1);
 
-  pair.save();
-  factory.save();
-  token0.save();
-  token1.save();
+    pair.save();
+    factory.save();
+    token0.save();
+    token1.save();
 }
 
 export function handleMint(event: Mint): void {
-  const transaction = Transaction.load(event.transaction.hash.toHex()) as Transaction;
-  const mints = transaction.mints;
-  const mint = MintEvent.load(mints[mints.length - 1]) as MintEvent;
+    const transaction = Transaction.load(event.transaction.hash.toHex()) as Transaction;
+    const mints = transaction.mints;
+    const mint = MintEvent.load(mints[mints.length - 1]) as MintEvent;
 
-  const pair = Pair.load(event.address.toHex()) as Pair;
-  const factory = PoolFactory.load(FACTORY_ADDRESS.get(dataSource.network()) as string) as PoolFactory;
+    const pair = Pair.load(event.address.toHex()) as Pair;
+    const factory = PoolFactory.load(FACTORY_ADDRESS.get(dataSource.network()) as string) as PoolFactory;
 
-  const token0 = Token.load(pair.token0) as Token;
-  const token1 = Token.load(pair.token1) as Token;
+    const token0 = Token.load(pair.token0) as Token;
+    const token1 = Token.load(pair.token1) as Token;
 
-  // update exchange info (except balances, sync will cover that)
-  const token0Amount = convertTokenToDecimal(event.params.amount0, token0.decimals);
-  const token1Amount = convertTokenToDecimal(event.params.amount1, token1.decimals);
+    // update exchange info (except balances, sync will cover that)
+    const token0Amount = convertTokenToDecimal(event.params.amount0, token0.decimals);
+    const token1Amount = convertTokenToDecimal(event.params.amount1, token1.decimals);
 
-  token0.txCount = token0.txCount.plus(ONE_BI);
-  token1.txCount = token1.txCount.plus(ONE_BI);
+    token0.txCount = token0.txCount.plus(ONE_BI);
+    token1.txCount = token1.txCount.plus(ONE_BI);
 
-  const bundle = Bundle.load("1") as Bundle;
-  let amountTotalUSD = token1.derivedETH!.times(token1Amount).plus(token0.derivedETH!.times(token0Amount)).times(bundle.ethPrice);
+    const bundle = Bundle.load("1") as Bundle;
+    let amountTotalUSD = token1.derivedETH!.times(token1Amount).plus(token0.derivedETH!.times(token0Amount)).times(bundle.ethPrice);
 
-  pair.txCount = pair.txCount.plus(ONE_BI);
-  factory.txCount = factory.txCount.plus(ONE_BI);
+    pair.txCount = pair.txCount.plus(ONE_BI);
+    factory.txCount = factory.txCount.plus(ONE_BI);
 
-  // save entities
-  token0.save();
-  token1.save();
-  pair.save();
-  factory.save();
+    // save entities
+    token0.save();
+    token1.save();
+    pair.save();
+    factory.save();
 
-  mint.sender = event.params.sender;
-  mint.amount0 = token0Amount as BigDecimal;
-  mint.amount1 = token1Amount as BigDecimal;
-  mint.logIndex = event.logIndex;
-  mint.amountUSD = amountTotalUSD as BigDecimal;
-  mint.save();
+    mint.sender = event.params.sender;
+    mint.amount0 = token0Amount as BigDecimal;
+    mint.amount1 = token1Amount as BigDecimal;
+    mint.logIndex = event.logIndex;
+    mint.amountUSD = amountTotalUSD as BigDecimal;
+    mint.save();
 
-  updatePairDayData(event);
-  updatePairHourData(event);
-  updateFactoryDayData(event);
-  updateTokenDayData(token0, event);
-  updateTokenDayData(token1, event);
+    updatePairDayData(event);
+    updatePairHourData(event);
+    updateFactoryDayData(event);
+    updateTokenDayData(token0, event);
+    updateTokenDayData(token1, event);
 }
 
 export function handleBurn(event: Burn): void {
-  const transaction = Transaction.load(event.transaction.hash.toHex()) as Transaction;
-  if (transaction === null) {
-    return;
-  }
+    const transaction = Transaction.load(event.transaction.hash.toHex()) as Transaction;
+    if (transaction === null) {
+        return;
+    }
 
-  const burns = transaction.burns;
-  const burn = BurnEvent.load(burns[burns.length - 1]) as BurnEvent;
+    const burns = transaction.burns;
+    const burn = BurnEvent.load(burns[burns.length - 1]) as BurnEvent;
 
-  const pair = Pair.load(event.address.toHex()) as Pair;
-  const factory = PoolFactory.load(FACTORY_ADDRESS.get(dataSource.network()) as string) as PoolFactory;
+    const pair = Pair.load(event.address.toHex()) as Pair;
+    const factory = PoolFactory.load(FACTORY_ADDRESS.get(dataSource.network()) as string) as PoolFactory;
 
-  const token0 = Token.load(pair.token0) as Token;
-  const token1 = Token.load(pair.token1) as Token;
-  const token0Amount = convertTokenToDecimal(event.params.amount0, token0.decimals);
-  const token1Amount = convertTokenToDecimal(event.params.amount1, token1.decimals);
+    const token0 = Token.load(pair.token0) as Token;
+    const token1 = Token.load(pair.token1) as Token;
+    const token0Amount = convertTokenToDecimal(event.params.amount0, token0.decimals);
+    const token1Amount = convertTokenToDecimal(event.params.amount1, token1.decimals);
 
-  token0.txCount = token0.txCount.plus(ONE_BI);
-  token1.txCount = token1.txCount.plus(ONE_BI);
+    token0.txCount = token0.txCount.plus(ONE_BI);
+    token1.txCount = token1.txCount.plus(ONE_BI);
 
-  const bundle = Bundle.load("1") as Bundle;
-  const amountTotalUSD = token1.derivedETH!.times(token1Amount).plus(token0.derivedETH!.times(token0Amount)).times(bundle.ethPrice);
+    const bundle = Bundle.load("1") as Bundle;
+    const amountTotalUSD = token1.derivedETH!.times(token1Amount).plus(token0.derivedETH!.times(token0Amount)).times(bundle.ethPrice);
 
-  factory.txCount = factory.txCount.plus(ONE_BI);
-  pair.txCount = pair.txCount.plus(ONE_BI);
+    factory.txCount = factory.txCount.plus(ONE_BI);
+    pair.txCount = pair.txCount.plus(ONE_BI);
 
-  // update global counter and save
-  token0.save();
-  token1.save();
-  pair.save();
-  factory.save();
+    // update global counter and save
+    token0.save();
+    token1.save();
+    pair.save();
+    factory.save();
 
-  burn.sender = event.params.sender;
-  burn.amount0 = token0Amount;
-  burn.amount1 = token1Amount;
-  burn.to = event.params.to;
-  burn.logIndex = event.logIndex;
-  burn.amountUSD = amountTotalUSD as BigDecimal;
-  burn.save();
+    burn.sender = event.params.sender;
+    burn.amount0 = token0Amount;
+    burn.amount1 = token1Amount;
+    burn.to = event.params.to;
+    burn.logIndex = event.logIndex;
+    burn.amountUSD = amountTotalUSD as BigDecimal;
+    burn.save();
 
-  updatePairDayData(event);
-  updatePairHourData(event);
-  updateFactoryDayData(event);
-  updateTokenDayData(token0, event);
-  updateTokenDayData(token1, event);
+    updatePairDayData(event);
+    updatePairHourData(event);
+    updateFactoryDayData(event);
+    updateTokenDayData(token0, event);
+    updateTokenDayData(token1, event);
 }
 
 export function handleSwap(event: Swap): void {
-  const pair = Pair.load(event.address.toHex()) as Pair;
-  const token0 = Token.load(pair.token0) as Token;
-  const token1 = Token.load(pair.token1) as Token;
-  const amount0In = convertTokenToDecimal(event.params.amount0In, token0.decimals);
-  const amount1In = convertTokenToDecimal(event.params.amount1In, token1.decimals);
-  const amount0Out = convertTokenToDecimal(event.params.amount0Out, token0.decimals);
-  const amount1Out = convertTokenToDecimal(event.params.amount1Out, token1.decimals);
+    const pair = Pair.load(event.address.toHex()) as Pair;
+    const token0 = Token.load(pair.token0) as Token;
+    const token1 = Token.load(pair.token1) as Token;
+    const amount0In = convertTokenToDecimal(event.params.amount0In, token0.decimals);
+    const amount1In = convertTokenToDecimal(event.params.amount1In, token1.decimals);
+    const amount0Out = convertTokenToDecimal(event.params.amount0Out, token0.decimals);
+    const amount1Out = convertTokenToDecimal(event.params.amount1Out, token1.decimals);
 
-  const amount0Total = amount0Out.plus(amount0In);
-  const amount1Total = amount1Out.plus(amount1In);
+    const amount0Total = amount0Out.plus(amount0In);
+    const amount1Total = amount1Out.plus(amount1In);
 
-  const bundle = Bundle.load("1") as Bundle;
+    const bundle = Bundle.load("1") as Bundle;
 
-  const derivedAmountETH = token1.derivedETH!.times(amount1Total).plus(token0.derivedETH!.times(amount0Total)).div(BigDecimal.fromString("2"));
-  const derivedAmountUSD = derivedAmountETH!.times(bundle.ethPrice);
+    const derivedAmountETH = token1.derivedETH!.times(amount1Total).plus(token0.derivedETH!.times(amount0Total)).div(BigDecimal.fromString("2"));
+    const derivedAmountUSD = derivedAmountETH!.times(bundle.ethPrice);
 
-  const trackedAmountUSD = getTrackedVolumeInUSD(bundle, amount0Total, token0, amount1Total, token1);
+    const trackedAmountUSD = getTrackedVolumeInUSD(bundle, amount0Total, token0, amount1Total, token1);
 
-  let trackedAmountETH: BigDecimal;
-  if (bundle.ethPrice.equals(ZERO_BD)) {
-    trackedAmountETH = ZERO_BD;
-  } else {
-    trackedAmountETH = trackedAmountUSD.div(bundle.ethPrice);
-  }
+    let trackedAmountETH: BigDecimal;
+    if (bundle.ethPrice.equals(ZERO_BD)) {
+        trackedAmountETH = ZERO_BD;
+    } else {
+        trackedAmountETH = trackedAmountUSD.div(bundle.ethPrice);
+    }
 
-  token0.tradeVolume = token0.tradeVolume.plus(amount0In.plus(amount0Out));
-  token0.tradeVolumeUSD = token0.tradeVolumeUSD.plus(trackedAmountUSD);
-  token0.untrackedVolumeUSD = token0.untrackedVolumeUSD.plus(derivedAmountUSD);
+    token0.tradeVolume = token0.tradeVolume.plus(amount0In.plus(amount0Out));
+    token0.tradeVolumeUSD = token0.tradeVolumeUSD.plus(trackedAmountUSD);
+    token0.untrackedVolumeUSD = token0.untrackedVolumeUSD.plus(derivedAmountUSD);
 
-  token1.tradeVolume = token1.tradeVolume.plus(amount1In.plus(amount1Out));
-  token1.tradeVolumeUSD = token1.tradeVolumeUSD.plus(trackedAmountUSD);
-  token1.untrackedVolumeUSD = token1.untrackedVolumeUSD.plus(derivedAmountUSD);
+    token1.tradeVolume = token1.tradeVolume.plus(amount1In.plus(amount1Out));
+    token1.tradeVolumeUSD = token1.tradeVolumeUSD.plus(trackedAmountUSD);
+    token1.untrackedVolumeUSD = token1.untrackedVolumeUSD.plus(derivedAmountUSD);
 
-  token0.txCount = token0.txCount.plus(ONE_BI);
-  token1.txCount = token1.txCount.plus(ONE_BI);
+    token0.txCount = token0.txCount.plus(ONE_BI);
+    token1.txCount = token1.txCount.plus(ONE_BI);
 
-  pair.volumeUSD = pair.volumeUSD.plus(trackedAmountUSD);
-  pair.volumeToken0 = pair.volumeToken0.plus(amount0Total);
-  pair.volumeToken1 = pair.volumeToken1.plus(amount1Total);
-  pair.untrackedVolumeUSD = pair.untrackedVolumeUSD.plus(derivedAmountUSD);
-  pair.txCount = pair.txCount.plus(ONE_BI);
-  pair.save();
+    pair.volumeUSD = pair.volumeUSD.plus(trackedAmountUSD);
+    pair.volumeToken0 = pair.volumeToken0.plus(amount0Total);
+    pair.volumeToken1 = pair.volumeToken1.plus(amount1Total);
+    pair.untrackedVolumeUSD = pair.untrackedVolumeUSD.plus(derivedAmountUSD);
+    pair.txCount = pair.txCount.plus(ONE_BI);
+    pair.save();
 
-  const factory = PoolFactory.load(FACTORY_ADDRESS.get(dataSource.network()) as string) as PoolFactory;
-  factory.totalVolumeUSD = factory.totalVolumeUSD.plus(trackedAmountUSD);
-  factory.totalVolumeETH = factory.totalVolumeETH.plus(trackedAmountETH);
-  factory.untrackedVolumeUSD = factory.untrackedVolumeUSD.plus(derivedAmountUSD);
-  factory.txCount = factory.txCount.plus(ONE_BI);
+    const factory = PoolFactory.load(FACTORY_ADDRESS.get(dataSource.network()) as string) as PoolFactory;
+    factory.totalVolumeUSD = factory.totalVolumeUSD.plus(trackedAmountUSD);
+    factory.totalVolumeETH = factory.totalVolumeETH.plus(trackedAmountETH);
+    factory.untrackedVolumeUSD = factory.untrackedVolumeUSD.plus(derivedAmountUSD);
+    factory.txCount = factory.txCount.plus(ONE_BI);
 
-  pair.save();
-  token0.save();
-  token1.save();
-  factory.save();
+    pair.save();
+    token0.save();
+    token1.save();
+    factory.save();
 
-  let transaction = Transaction.load(event.transaction.hash.toHex());
-  if (transaction === null) {
-    transaction = new Transaction(event.transaction.hash.toHex());
-    transaction.block = event.block.number;
-    transaction.timestamp = event.block.timestamp;
-    transaction.mints = [];
-    transaction.swaps = [];
-    transaction.burns = [];
-  }
-  let swaps = transaction.swaps;
-  const swap = new SwapEvent(event.transaction.hash.toHex().concat("-").concat(BigInt.fromI32(swaps.length).toString()));
+    let transaction = Transaction.load(event.transaction.hash.toHex());
+    if (transaction === null) {
+        transaction = new Transaction(event.transaction.hash.toHex());
+        transaction.block = event.block.number;
+        transaction.timestamp = event.block.timestamp;
+        transaction.mints = [];
+        transaction.swaps = [];
+        transaction.burns = [];
+    }
+    let swaps = transaction.swaps;
+    const swap = new SwapEvent(event.transaction.hash.toHex().concat("-").concat(BigInt.fromI32(swaps.length).toString()));
 
-  swap.transaction = transaction.id;
-  swap.pair = pair.id;
-  swap.timestamp = transaction.timestamp;
-  swap.transaction = transaction.id;
-  swap.sender = event.params.sender;
-  swap.amount0In = amount0In;
-  swap.amount1In = amount1In;
-  swap.amount0Out = amount0Out;
-  swap.amount1Out = amount1Out;
-  swap.to = event.params.to;
-  swap.from = event.transaction.from;
-  swap.logIndex = event.logIndex;
-  swap.amountUSD = trackedAmountUSD === ZERO_BD ? derivedAmountUSD : trackedAmountUSD;
-  swap.save();
+    swap.transaction = transaction.id;
+    swap.pair = pair.id;
+    swap.timestamp = transaction.timestamp;
+    swap.transaction = transaction.id;
+    swap.sender = event.params.sender;
+    swap.amount0In = amount0In;
+    swap.amount1In = amount1In;
+    swap.amount0Out = amount0Out;
+    swap.amount1Out = amount1Out;
+    swap.to = event.params.to;
+    swap.from = event.transaction.from;
+    swap.logIndex = event.logIndex;
+    swap.amountUSD = trackedAmountUSD === ZERO_BD ? derivedAmountUSD : trackedAmountUSD;
+    swap.save();
 
-  swaps = swaps.concat([swap.id]);
-  transaction.swaps = swaps;
-  transaction.save();
+    swaps = swaps.concat([swap.id]);
+    transaction.swaps = swaps;
+    transaction.save();
 
-  const pairDayData = updatePairDayData(event);
-  const pairHourData = updatePairHourData(event);
-  const factoryDayData = updateFactoryDayData(event);
-  const token0DayData = updateTokenDayData(token0 as Token, event);
-  const token1DayData = updateTokenDayData(token1 as Token, event);
+    const pairDayData = updatePairDayData(event);
+    const pairHourData = updatePairHourData(event);
+    const factoryDayData = updateFactoryDayData(event);
+    const token0DayData = updateTokenDayData(token0 as Token, event);
+    const token1DayData = updateTokenDayData(token1 as Token, event);
 
-  factoryDayData.dailyVolumeUSD = factoryDayData.dailyVolumeUSD.plus(trackedAmountUSD);
-  factoryDayData.dailyVolumeETH = factoryDayData.dailyVolumeETH.plus(trackedAmountETH);
-  factoryDayData.dailyVolumeUntracked = factoryDayData.dailyVolumeUntracked.plus(derivedAmountUSD);
-  factoryDayData.save();
+    factoryDayData.dailyVolumeUSD = factoryDayData.dailyVolumeUSD.plus(trackedAmountUSD);
+    factoryDayData.dailyVolumeETH = factoryDayData.dailyVolumeETH.plus(trackedAmountETH);
+    factoryDayData.dailyVolumeUntracked = factoryDayData.dailyVolumeUntracked.plus(derivedAmountUSD);
+    factoryDayData.save();
 
-  pairDayData.dailyVolumeToken0 = pairDayData.dailyVolumeToken0.plus(amount0Total);
-  pairDayData.dailyVolumeToken1 = pairDayData.dailyVolumeToken1.plus(amount1Total);
-  pairDayData.dailyVolumeUSD = pairDayData.dailyVolumeUSD.plus(trackedAmountUSD);
-  pairDayData.save();
+    pairDayData.dailyVolumeToken0 = pairDayData.dailyVolumeToken0.plus(amount0Total);
+    pairDayData.dailyVolumeToken1 = pairDayData.dailyVolumeToken1.plus(amount1Total);
+    pairDayData.dailyVolumeUSD = pairDayData.dailyVolumeUSD.plus(trackedAmountUSD);
+    pairDayData.save();
 
-  pairHourData.hourlyVolumeToken0 = pairHourData.hourlyVolumeToken0.plus(amount0Total);
-  pairHourData.hourlyVolumeToken1 = pairHourData.hourlyVolumeToken1.plus(amount1Total);
-  pairHourData.hourlyVolumeUSD = pairHourData.hourlyVolumeUSD.plus(trackedAmountUSD);
-  pairHourData.save();
+    pairHourData.hourlyVolumeToken0 = pairHourData.hourlyVolumeToken0.plus(amount0Total);
+    pairHourData.hourlyVolumeToken1 = pairHourData.hourlyVolumeToken1.plus(amount1Total);
+    pairHourData.hourlyVolumeUSD = pairHourData.hourlyVolumeUSD.plus(trackedAmountUSD);
+    pairHourData.save();
 
-  token0DayData.dailyVolumeToken = token0DayData.dailyVolumeToken.plus(amount0Total);
-  token0DayData.dailyVolumeETH = token0DayData.dailyVolumeETH.plus(amount0Total.times(token0.derivedETH as BigDecimal));
-  token0DayData.dailyVolumeUSD = token0DayData.dailyVolumeUSD.plus(amount0Total.times(token0.derivedETH as BigDecimal).times(bundle.ethPrice));
-  token0DayData.save();
+    token0DayData.dailyVolumeToken = token0DayData.dailyVolumeToken.plus(amount0Total);
+    token0DayData.dailyVolumeETH = token0DayData.dailyVolumeETH.plus(amount0Total.times(token0.derivedETH as BigDecimal));
+    token0DayData.dailyVolumeUSD = token0DayData.dailyVolumeUSD.plus(amount0Total.times(token0.derivedETH as BigDecimal).times(bundle.ethPrice));
+    token0DayData.save();
 
-  // swap specific updating
-  token1DayData.dailyVolumeToken = token1DayData.dailyVolumeToken.plus(amount1Total);
-  token1DayData.dailyVolumeETH = token1DayData.dailyVolumeETH.plus(amount1Total.times(token1.derivedETH as BigDecimal));
-  token1DayData.dailyVolumeUSD = token1DayData.dailyVolumeUSD.plus(amount1Total.times(token1.derivedETH as BigDecimal).times(bundle.ethPrice));
-  token1DayData.save();
+    // swap specific updating
+    token1DayData.dailyVolumeToken = token1DayData.dailyVolumeToken.plus(amount1Total);
+    token1DayData.dailyVolumeETH = token1DayData.dailyVolumeETH.plus(amount1Total.times(token1.derivedETH as BigDecimal));
+    token1DayData.dailyVolumeUSD = token1DayData.dailyVolumeUSD.plus(amount1Total.times(token1.derivedETH as BigDecimal).times(bundle.ethPrice));
+    token1DayData.save();
 }

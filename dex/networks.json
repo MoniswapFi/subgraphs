@@ -1,20 +1,20 @@
 {
-  "bscTestnet": {
-    "PoolFactory": {
-      "address": "0x0542fd4b76074eD67d3031D197119e87c4C7d1FA",
-      "startBlock": 39260923
+    "bscTestnet": {
+        "PoolFactory": {
+            "address": "0x0542fd4b76074eD67d3031D197119e87c4C7d1FA",
+            "startBlock": 39260923
+        }
+    },
+    "chapel": {
+        "PoolFactory": {
+            "address": "0x0542fd4b76074eD67d3031D197119e87c4C7d1FA",
+            "startBlock": 39260923
+        }
+    },
+    "berachain-bartio": {
+        "PoolFactory": {
+            "address": "0xa933091dd8b94D07cE68DF5eA96822A45e3EA819",
+            "startBlock": 1886789
+        }
     }
-  },
-  "chapel": {
-    "PoolFactory": {
-      "address": "0x0542fd4b76074eD67d3031D197119e87c4C7d1FA",
-      "startBlock": 39260923
-    }
-  },
-  "berachain-bartio": {
-    "PoolFactory": {
-      "address": "0xa933091dd8b94D07cE68DF5eA96822A45e3EA819",
-      "startBlock": 1886789
-    }
-  }
 }

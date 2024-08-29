@@ -1,20 +1,20 @@
 {
-  "name": "token-sales",
-  "license": "UNLICENSED",
-  "scripts": {
-    "codegen": "graph codegen",
-    "build": "graph build",
-    "deploy-remote": "graph deploy --ipfs https://graphs.sparkfi.xyz/ipfs/api/v0 --node https://graphs.sparkfi.xyz/base/admin/ sparkfi/launchpadv1",
-    "create-remote": "graph create --node https://graphs.sparkfi.xyz/base/admin/ sparkfi/launchpadv1",
-    "remove-local": "graph remove --node http://localhost:8020/ vefi/token-sales",
-    "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 vefi/token-sales",
-    "test": "graph test"
-  },
-  "dependencies": {
-    "@graphprotocol/graph-cli": "^0.56.0",
-    "@graphprotocol/graph-ts": "^0.31.0"
-  },
-  "devDependencies": {
-    "matchstick-as": "0.5.0"
-  }
+    "name": "token-sales",
+    "license": "UNLICENSED",
+    "scripts": {
+        "codegen": "graph codegen",
+        "build": "graph build",
+        "deploy-remote": "graph deploy --ipfs https://graphs.sparkfi.xyz/ipfs/api/v0 --node https://graphs.sparkfi.xyz/base/admin/ sparkfi/launchpadv1",
+        "create-remote": "graph create --node https://graphs.sparkfi.xyz/base/admin/ sparkfi/launchpadv1",
+        "remove-local": "graph remove --node http://localhost:8020/ vefi/token-sales",
+        "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 vefi/token-sales",
+        "test": "graph test"
+    },
+    "dependencies": {
+        "@graphprotocol/graph-cli": "^0.56.0",
+        "@graphprotocol/graph-ts": "^0.31.0"
+    },
+    "devDependencies": {
+        "matchstick-as": "0.5.0"
+    }
 }
