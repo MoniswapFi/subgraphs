@@ -1,6 +1,7 @@
 import { Address, dataSource } from "@graphprotocol/graph-ts";
 import { GaugeCreated as GaugeCreatedEvent, GaugeKilled as GaugeKilledEvent, GaugeRevived as GaugeRevivedEvent } from "../generated/Voter/Voter";
 import { Gauge, Pair, Token, Voter } from "../generated/schema";
+import { Gauge as GaugeTemplate } from "../generated/templates";
 import { BD_ZERO, VOTER_FACTORY } from "./constants";
 import { loadDecimals, loadName, loadSymbol } from "./utils/erc20";
 import { loadToken0, loadToken1 } from "./utils/pair";
@@ -75,6 +76,8 @@ export function handleGaugeCreated(event: GaugeCreatedEvent): void {
     voter.gaugesAlive += 1;
     voter.gaugesCount += 1;
     voter.save();
+
+    GaugeTemplate.create(event.params.gauge);
 }
 
 export function handleGaugeKilled(event: GaugeKilledEvent): void {

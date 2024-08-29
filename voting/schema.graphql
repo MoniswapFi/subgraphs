@@ -34,7 +34,7 @@ type Gauge @entity {
     blockNumber: BigInt!
     blockTimestamp: BigInt!
     alive: Boolean!
-    positions: [GaugePosition!] @deriveFrom(field: "gauge")
+    positions: [GaugePosition!] @derivedFrom(field: "gauge")
     availableRewards: BigDecimal!
     totalDeposits: BigDecimal!
 }
