@@ -1,8 +1,14 @@
 import { Address, dataSource } from "@graphprotocol/graph-ts";
-import { GaugeCreated as GaugeCreatedEvent, GaugeKilled as GaugeKilledEvent, GaugeRevived as GaugeRevivedEvent } from "../generated/Voter/Voter";
-import { Gauge, Pair, Token, Voter } from "../generated/schema";
+import {
+    GaugeCreated as GaugeCreatedEvent,
+    GaugeKilled as GaugeKilledEvent,
+    GaugeRevived as GaugeRevivedEvent,
+    Voted as VotedEvent,
+    Abstained as AbstainedEvent,
+} from "../generated/Voter/Voter";
+import { Gauge, LP, Token, Voter, VotePosition } from "../generated/schema";
 import { Gauge as GaugeTemplate } from "../generated/templates";
-import { BD_ZERO, VOTER_FACTORY } from "./constants";
+import { BD_ZERO, VOTER_FACTORY, ZERO_ADDRESS } from "./constants";
 import { loadDecimals, loadName, loadSymbol } from "./utils/erc20";
 import { loadToken0, loadToken1 } from "./utils/pair";
 
@@ -10,7 +16,7 @@ export function handleGaugeCreated(event: GaugeCreatedEvent): void {
     const voterId = VOTER_FACTORY.get(dataSource.network()) as string;
     const poolId = event.params.pool.toHex();
     let voter = Voter.load(voterId);
-    let pair = Pair.load(poolId);
+    let pair = LP.load(poolId);
 
     if (voter === null) {
         voter = new Voter(voterId);
@@ -21,7 +27,7 @@ export function handleGaugeCreated(event: GaugeCreatedEvent): void {
     }
 
     if (pair === null) {
-        pair = new Pair(poolId);
+        pair = new LP(poolId);
 
         pair.name = loadName(Address.fromString(poolId));
         pair.symbol = loadSymbol(Address.fromString(poolId));
@@ -108,4 +114,35 @@ export function handleGaugeRevived(event: GaugeRevivedEvent): void {
 
     gauge.alive = true;
     gauge.save();
+}
+
+export function handleVoted(event: VotedEvent): void {
+    const voterId = VOTER_FACTORY.get(dataSource.network()) as string;
+    const lockId = event.params.tokenId;
+    const votePositionId = voterId + "-" + lockId.toHex();
+    const pairId = event.params.pool.toHex();
+    const pair = LP.load(pairId) as LP;
+    let votePosition = VotePosition.load(votePositionId);
+
+    if (votePosition === null) {
+        votePosition = new VotePosition(votePositionId);
+    }
+
+    votePosition.lockId = lockId;
+    votePosition.account = event.params.voter;
+    votePosition.blockTimestamp = event.params.timestamp;
+    votePosition.pair = pair.id;
+    votePosition.save();
+}
+
+export function handleAbstained(event: AbstainedEvent): void {
+    const voterId = VOTER_FACTORY.get(dataSource.network()) as string;
+    const lockId = event.params.tokenId;
+    const votePositionId = voterId + "-" + lockId.toHex();
+    const votePosition = VotePosition.load(votePositionId) as VotePosition;
+
+    votePosition.lockId = null;
+    votePosition.account = Address.fromString(ZERO_ADDRESS);
+    votePosition.pair = null;
+    votePosition.save();
 }

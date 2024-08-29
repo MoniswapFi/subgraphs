@@ -10,11 +10,11 @@ type Token @entity {
     name: String!
     symbol: String!
     decimals: Int!
-    pairBase: [Pair!] @derivedFrom(field: "token0")
-    pairQuote: [Pair!] @derivedFrom(field: "token1")
+    pairBase: [LP!] @derivedFrom(field: "token0")
+    pairQuote: [LP!] @derivedFrom(field: "token1")
 }
 
-type Pair @entity {
+type LP @entity {
     id: ID!
     name: String!
     symbol: String!
@@ -27,7 +27,7 @@ type Gauge @entity {
     poolFactory: Bytes! # address
     votingRewardsFactory: Bytes! # address
     gaugeFactory: Bytes! # address
-    pair: Pair!
+    pair: LP!
     bribeVotingReward: Bytes! # address
     feeVotingReward: Bytes! # address
     creator: Bytes! # address
@@ -44,4 +44,12 @@ type GaugePosition @entity {
     owner: Bytes!
     gauge: Gauge!
     amount: BigDecimal!
+}
+
+type VotePosition @entity {
+    id: ID!
+    lockId: BigInt
+    pair: LP
+    blockTimestamp: BigInt!
+    account: Bytes!
 }

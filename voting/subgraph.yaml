@@ -35,6 +35,12 @@ dataSources:
                 handler: handleGaugeKilled
               - event: GaugeRevived(indexed address)
                 handler: handleGaugeRevived
+              - event: Voted(indexed address,indexed address,indexed
+                    uint256,uint256,uint256,uint256)
+                handler: handleVoted
+              - event: Abstained(indexed address,indexed address,indexed
+                    uint256,uint256,uint256,uint256)
+                handler: handleAbstained
           file: ./mappings/voter.ts
 templates:
     - kind: ethereum
