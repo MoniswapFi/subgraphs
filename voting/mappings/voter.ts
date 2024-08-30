@@ -6,7 +6,7 @@ import {
     Voted as VotedEvent,
     Abstained as AbstainedEvent,
 } from "../generated/Voter/Voter";
-import { Gauge, LP, Token, Voter, VotePosition } from "../generated/schema";
+import { Gauge, LP, LPToken, Voter, VotePosition } from "../generated/schema";
 import { Gauge as GaugeTemplate } from "../generated/templates";
 import { BD_ZERO, VOTER_FACTORY, ZERO_ADDRESS } from "./constants";
 import { loadDecimals, loadName, loadSymbol } from "./utils/erc20";
@@ -36,11 +36,11 @@ export function handleGaugeCreated(event: GaugeCreatedEvent): void {
     const token0Id = loadToken0(Address.fromString(poolId)).toHex();
     const token1Id = loadToken1(Address.fromString(poolId)).toHex();
 
-    let token0 = Token.load(token0Id);
-    let token1 = Token.load(token1Id);
+    let token0 = LPToken.load(token0Id);
+    let token1 = LPToken.load(token1Id);
 
     if (token0 === null) {
-        token0 = new Token(token0Id);
+        token0 = new LPToken(token0Id);
         token0.decimals = loadDecimals(Address.fromString(token0Id));
         token0.symbol = loadSymbol(Address.fromString(token0Id));
         token0.name = loadName(Address.fromString(token0Id));
@@ -49,7 +49,7 @@ export function handleGaugeCreated(event: GaugeCreatedEvent): void {
     }
 
     if (token1 === null) {
-        token1 = new Token(token1Id);
+        token1 = new LPToken(token1Id);
         token1.decimals = loadDecimals(Address.fromString(token1Id));
         token1.symbol = loadSymbol(Address.fromString(token1Id));
         token1.name = loadName(Address.fromString(token1Id));

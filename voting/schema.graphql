@@ -5,7 +5,7 @@ type Voter @entity {
     gaugesDead: Int!
 }
 
-type Token @entity {
+type LPToken @entity {
     id: ID!
     name: String!
     symbol: String!
@@ -18,8 +18,8 @@ type LP @entity {
     id: ID!
     name: String!
     symbol: String!
-    token0: Token!
-    token1: Token!
+    token0: LPToken!
+    token1: LPToken!
 }
 
 type Gauge @entity {
