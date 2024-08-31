@@ -1,0 +1,195 @@
+type Approval @entity(immutable: true) {
+  id: Bytes!
+  owner: Bytes! # address
+  approved: Bytes! # address
+  tokenId: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type ApprovalForAll @entity(immutable: true) {
+  id: Bytes!
+  owner: Bytes! # address
+  operator: Bytes! # address
+  approved: Boolean! # bool
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type BatchMetadataUpdate @entity(immutable: true) {
+  id: Bytes!
+  _fromTokenId: BigInt! # uint256
+  _toTokenId: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type CreateManaged @entity(immutable: true) {
+  id: Bytes!
+  _to: Bytes! # address
+  _mTokenId: BigInt! # uint256
+  _from: Bytes! # address
+  _lockedManagedReward: Bytes! # address
+  _freeManagedReward: Bytes! # address
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type DelegateChanged @entity(immutable: true) {
+  id: Bytes!
+  delegator: Bytes! # address
+  fromDelegate: BigInt! # uint256
+  toDelegate: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type DelegateVotesChanged @entity(immutable: true) {
+  id: Bytes!
+  delegate: Bytes! # address
+  previousBalance: BigInt! # uint256
+  newBalance: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type Deposit @entity(immutable: true) {
+  id: Bytes!
+  provider: Bytes! # address
+  tokenId: BigInt! # uint256
+  depositType: Int! # uint8
+  value: BigInt! # uint256
+  locktime: BigInt! # uint256
+  ts: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type DepositManaged @entity(immutable: true) {
+  id: Bytes!
+  _owner: Bytes! # address
+  _tokenId: BigInt! # uint256
+  _mTokenId: BigInt! # uint256
+  _weight: BigInt! # uint256
+  _ts: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type LockPermanent @entity(immutable: true) {
+  id: Bytes!
+  _owner: Bytes! # address
+  _tokenId: BigInt! # uint256
+  amount: BigInt! # uint256
+  _ts: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type Merge @entity(immutable: true) {
+  id: Bytes!
+  _sender: Bytes! # address
+  _from: BigInt! # uint256
+  _to: BigInt! # uint256
+  _amountFrom: BigInt! # uint256
+  _amountTo: BigInt! # uint256
+  _amountFinal: BigInt! # uint256
+  _locktime: BigInt! # uint256
+  _ts: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type MetadataUpdate @entity(immutable: true) {
+  id: Bytes!
+  _tokenId: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type SetAllowedManager @entity(immutable: true) {
+  id: Bytes!
+  _allowedManager: Bytes! # address
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type Split @entity(immutable: true) {
+  id: Bytes!
+  _from: BigInt! # uint256
+  _tokenId1: BigInt! # uint256
+  _tokenId2: BigInt! # uint256
+  _sender: Bytes! # address
+  _splitAmount1: BigInt! # uint256
+  _splitAmount2: BigInt! # uint256
+  _locktime: BigInt! # uint256
+  _ts: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type Supply @entity(immutable: true) {
+  id: Bytes!
+  prevSupply: BigInt! # uint256
+  supply: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type Transfer @entity(immutable: true) {
+  id: Bytes!
+  from: Bytes! # address
+  to: Bytes! # address
+  tokenId: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type UnlockPermanent @entity(immutable: true) {
+  id: Bytes!
+  _owner: Bytes! # address
+  _tokenId: BigInt! # uint256
+  amount: BigInt! # uint256
+  _ts: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type Withdraw @entity(immutable: true) {
+  id: Bytes!
+  provider: Bytes! # address
+  tokenId: BigInt! # uint256
+  value: BigInt! # uint256
+  ts: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type WithdrawManaged @entity(immutable: true) {
+  id: Bytes!
+  _owner: Bytes! # address
+  _tokenId: BigInt! # uint256
+  _mTokenId: BigInt! # uint256
+  _weight: BigInt! # uint256
+  _ts: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}

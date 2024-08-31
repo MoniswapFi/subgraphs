@@ -1,0 +1,77 @@
+specVersion: 1.0.0
+indexerHints:
+  prune: auto
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum
+    name: VotingEscrow
+    network: berachain-bartio
+    source:
+      address: "0xd11163343Ca6a4e5feADdbB979567A7853e6F20a"
+      abi: VotingEscrow
+      startBlock: 1886821
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Approval
+        - ApprovalForAll
+        - BatchMetadataUpdate
+        - CreateManaged
+        - DelegateChanged
+        - DelegateVotesChanged
+        - Deposit
+        - DepositManaged
+        - LockPermanent
+        - Merge
+        - MetadataUpdate
+        - SetAllowedManager
+        - Split
+        - Supply
+        - Transfer
+        - UnlockPermanent
+        - Withdraw
+        - WithdrawManaged
+      abis:
+        - name: VotingEscrow
+          file: ./abis/VotingEscrow.json
+      eventHandlers:
+        - event: Approval(indexed address,indexed address,indexed uint256)
+          handler: handleApproval
+        - event: ApprovalForAll(indexed address,indexed address,bool)
+          handler: handleApprovalForAll
+        - event: BatchMetadataUpdate(uint256,uint256)
+          handler: handleBatchMetadataUpdate
+        - event: CreateManaged(indexed address,indexed uint256,indexed address,address,address)
+          handler: handleCreateManaged
+        - event: DelegateChanged(indexed address,indexed uint256,indexed uint256)
+          handler: handleDelegateChanged
+        - event: DelegateVotesChanged(indexed address,uint256,uint256)
+          handler: handleDelegateVotesChanged
+        - event: Deposit(indexed address,indexed uint256,indexed uint8,uint256,uint256,uint256)
+          handler: handleDeposit
+        - event: DepositManaged(indexed address,indexed uint256,indexed uint256,uint256,uint256)
+          handler: handleDepositManaged
+        - event: LockPermanent(indexed address,indexed uint256,uint256,uint256)
+          handler: handleLockPermanent
+        - event: Merge(indexed address,indexed uint256,indexed uint256,uint256,uint256,uint256,uint256,uint256)
+          handler: handleMerge
+        - event: MetadataUpdate(uint256)
+          handler: handleMetadataUpdate
+        - event: SetAllowedManager(indexed address)
+          handler: handleSetAllowedManager
+        - event: Split(indexed uint256,indexed uint256,indexed uint256,address,uint256,uint256,uint256,uint256)
+          handler: handleSplit
+        - event: Supply(uint256,uint256)
+          handler: handleSupply
+        - event: Transfer(indexed address,indexed address,indexed uint256)
+          handler: handleTransfer
+        - event: UnlockPermanent(indexed address,indexed uint256,uint256,uint256)
+          handler: handleUnlockPermanent
+        - event: Withdraw(indexed address,indexed uint256,uint256,uint256)
+          handler: handleWithdraw
+        - event: WithdrawManaged(indexed address,indexed uint256,indexed uint256,uint256,uint256)
+          handler: handleWithdrawManaged
+      file: ./src/voting-escrow.ts
