@@ -147,7 +147,12 @@ export function handleTransfer(event: TransferEvent): void {
 
     lock.save();
 
-    escrow.lockCount = event.params.to.toHex() !== ZERO_ADDRESS ? escrow.lockCount + 1 : escrow.lockCount - 1;
+    escrow.lockCount =
+        event.params.from.toHex() === ZERO_ADDRESS
+            ? escrow.lockCount + 1
+            : event.params.to.toHex() === ZERO_ADDRESS
+            ? escrow.lockCount - 1
+            : escrow.lockCount;
     escrow.save();
 }
 
