@@ -147,9 +147,9 @@ export function handleTransfer(event: TransferEvent): void {
 
     lock.save();
 
-    if (event.params.from.toHex() === ZERO_ADDRESS) {
+    if (event.params.from.toHex() == ZERO_ADDRESS) {
         escrow.lockCount += 1;
-    } else if (event.params.to.toHex() === ZERO_ADDRESS) {
+    } else if (event.params.to.toHex() == ZERO_ADDRESS) {
         escrow.lockCount -= 1;
     }
 
