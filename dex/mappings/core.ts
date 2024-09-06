@@ -10,7 +10,7 @@ import {
     AccountPosition,
     Fee,
 } from "../generated/schema";
-import { Burn, Mint, Pool, Swap, Sync, Transfer, Fees, Claim } from "../generated/templates/Pool/Pool";
+import { Burn, Mint, Pool, Swap, Sync, Transfer, Fees } from "../generated/templates/Pool/Pool";
 import { ADDRESS_ZERO, BI_18, FACTORY_ADDRESS, ONE_BI, ZERO_BD } from "./constants";
 import { Address, BigDecimal, BigInt, dataSource, store } from "@graphprotocol/graph-ts";
 import { convertTokenToDecimal } from "./utils";
@@ -193,32 +193,6 @@ export function handleFees(event: Fees): void {
         .plus(convertTokenToDecimal(event.params.amount1, token1.decimals).times(token1.derivedUSD!));
     pair.totalAmount0Claimable = pair.totalAmount0Claimable.plus(convertTokenToDecimal(event.params.amount0, token0.decimals));
     pair.totalAmount1Claimable = pair.totalAmount1Claimable.plus(convertTokenToDecimal(event.params.amount1, token1.decimals));
-    pair.save();
-}
-
-export function handleClaim(event: Claim): void {
-    const factory = PoolFactory.load(FACTORY_ADDRESS.get(dataSource.network()) as string) as PoolFactory;
-    const pair = Pair.load(event.address.toHex()) as Pair;
-    const token0 = Token.load(pair.token0) as Token;
-    const token1 = Token.load(pair.token1) as Token;
-    const feeId = pair.id + ":" + event.params.sender.toHex();
-    const fee = Fee.load(feeId) as Fee;
-
-    fee.amount0Claimable = fee.amount0Claimable.minus(convertTokenToDecimal(event.params.amount0, token0.decimals));
-    fee.amount1Claimable = fee.amount1Claimable.minus(convertTokenToDecimal(event.params.amount1, token1.decimals));
-    fee.amountClaimableUSD = fee.amount0Claimable.times(token0.derivedUSD!).plus(fee.amount1Claimable.times(token1.derivedUSD!));
-    fee.save();
-
-    const eventAmount0USD = convertTokenToDecimal(event.params.amount0, token0.decimals).times(token0.derivedUSD!);
-    const eventAmount1USD = convertTokenToDecimal(event.params.amount1, token1.decimals).times(token1.derivedUSD!);
-    const feesToBeSubracted = eventAmount0USD.plus(eventAmount1USD);
-
-    factory.feesUSD = factory.feesUSD.minus(feesToBeSubracted);
-    factory.save();
-
-    pair.feesUSD = pair.feesUSD.minus(feesToBeSubracted);
-    pair.totalAmount0Claimable = pair.totalAmount0Claimable.minus(convertTokenToDecimal(event.params.amount0, token0.decimals));
-    pair.totalAmount1Claimable = pair.totalAmount1Claimable.minus(convertTokenToDecimal(event.params.amount1, token1.decimals));
     pair.save();
 }
 

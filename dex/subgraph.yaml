@@ -59,5 +59,3 @@ templates:
                 handler: handleSync
               - event: Fees(indexed address,uint256,uint256)
                 handler: handleFees
-              - event: Claim(indexed address,indexed address,uint256,uint256)
-                handler: handleClaim

@@ -1,47 +1,47 @@
 specVersion: 1.0.0
 indexerHints:
-  prune: auto
+    prune: auto
 schema:
-  file: ./schema.graphql
+    file: ./schema.graphql
 dataSources:
-  - kind: ethereum
-    name: VotingEscrow
-    network: berachain-bartio
-    source:
-      address: "0xd11163343Ca6a4e5feADdbB979567A7853e6F20a"
-      abi: VotingEscrow
-      startBlock: 1886821
-    mapping:
-      kind: ethereum/events
-      apiVersion: 0.0.7
-      language: wasm/assemblyscript
-      entities:
-        - VotingEscrow
-        - EscrowToken
-        - Lock
-      abis:
-        - name: VotingEscrow
-          file: ./abis/VotingEscrow.json
-        - name: ERC20
-          file: ./abis/ERC20.json
-      eventHandlers:
-        - event: Deposit(indexed address,indexed uint256,indexed
-            uint8,uint256,uint256,uint256)
-          handler: handleDeposit
-        - event: DepositManaged(indexed address,indexed uint256,indexed
-            uint256,uint256,uint256)
-          handler: handleDepositManaged
-        - event: Merge(indexed address,indexed uint256,indexed
-            uint256,uint256,uint256,uint256,uint256,uint256)
-          handler: handleMerge
-        - event: Split(indexed uint256,indexed uint256,indexed
-            uint256,address,uint256,uint256,uint256,uint256)
-          handler: handleSplit
-        - event: Transfer(indexed address,indexed address,indexed uint256)
-          handler: handleTransfer
-        - event: Withdraw(indexed address,indexed uint256,uint256,uint256)
-          handler: handleWithdraw
-        - event: WithdrawManaged(indexed address,indexed uint256,indexed
-            uint256,uint256,uint256)
-          handler: handleWithdrawManaged
-      file: ./mappings/voting-escrow.ts
+    - kind: ethereum
+      name: VotingEscrow
+      network: berachain-bartio
+      source:
+          address: "0xd11163343Ca6a4e5feADdbB979567A7853e6F20a"
+          abi: VotingEscrow
+          startBlock: 1886821
+      mapping:
+          kind: ethereum/events
+          apiVersion: 0.0.7
+          language: wasm/assemblyscript
+          entities:
+              - VotingEscrow
+              - EscrowToken
+              - Lock
+          abis:
+              - name: VotingEscrow
+                file: ./abis/VotingEscrow.json
+              - name: ERC20
+                file: ./abis/ERC20.json
+          eventHandlers:
+              - event: Deposit(indexed address,indexed uint256,indexed
+                    uint8,uint256,uint256,uint256)
+                handler: handleDeposit
+              - event: DepositManaged(indexed address,indexed uint256,indexed
+                    uint256,uint256,uint256)
+                handler: handleDepositManaged
+              - event: Merge(indexed address,indexed uint256,indexed
+                    uint256,uint256,uint256,uint256,uint256,uint256)
+                handler: handleMerge
+              - event: Split(indexed uint256,indexed uint256,indexed
+                    uint256,address,uint256,uint256,uint256,uint256)
+                handler: handleSplit
+              - event: Transfer(indexed address,indexed address,indexed uint256)
+                handler: handleTransfer
+              - event: Withdraw(indexed address,indexed uint256,uint256,uint256)
+                handler: handleWithdraw
+              - event: WithdrawManaged(indexed address,indexed uint256,indexed
+                    uint256,uint256,uint256)
+                handler: handleWithdrawManaged
+          file: ./mappings/voting-escrow.ts
