@@ -138,7 +138,7 @@ export function handleVoted(event: VotedEvent): void {
 export function handleAbstained(event: AbstainedEvent): void {
     const voterId = VOTER_FACTORY.get(dataSource.network()) as string;
     const lockId = event.params.tokenId;
-    const votePositionId = voterId + "-" + lockId.toHex();
+    const votePositionId = voterId + "-" + lockId.toHex() + "-" + event.params.pool.toHex() + "-" + event.params.voter.toHex();
     const votePosition = VotePosition.load(votePositionId) as VotePosition;
 
     votePosition.lockId = null;
