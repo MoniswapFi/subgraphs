@@ -119,8 +119,8 @@ export function handleGaugeRevived(event: GaugeRevivedEvent): void {
 export function handleVoted(event: VotedEvent): void {
     const voterId = VOTER_FACTORY.get(dataSource.network()) as string;
     const lockId = event.params.tokenId;
-    const votePositionId = voterId + "-" + lockId.toHex();
     const pairId = event.params.pool.toHex();
+    const votePositionId = voterId + "-" + lockId.toHex() + "-" + pairId + "-" + event.params.voter.toHex();
     const pair = LP.load(pairId) as LP;
     let votePosition = VotePosition.load(votePositionId);
 
