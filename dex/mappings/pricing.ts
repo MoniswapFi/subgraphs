@@ -4,21 +4,21 @@ import { ADDRESS_ZERO, ONE_BD, USDC, USDT, WETH, WETH_USDC_PAIR, WETH_USDT_PAIR,
 import { factoryContract } from "./utils";
 
 export const getETHPriceInUSD = (): BigDecimal => {
-    const usdtPair = Pair.load(WETH_USDT_PAIR.get(dataSource.network()) as string); // usdt is token1;
-    const usdcPair = Pair.load(WETH_USDC_PAIR.get(dataSource.network()) as string); // usdc is token0;
+    const usdtPair = Pair.load(WETH_USDT_PAIR.get(dataSource.network()) as string); // usdt is token0;
+    const usdcPair = Pair.load(WETH_USDC_PAIR.get(dataSource.network()) as string); // usdc is token1;
 
     if (usdtPair !== null && usdcPair !== null) {
-        const totalLiquidityETH = usdtPair.reserve0.plus(usdcPair.reserve1);
+        const totalLiquidityETH = usdtPair.reserve1.plus(usdcPair.reserve0);
         if (totalLiquidityETH.notEqual(ZERO_BD)) {
-            const usdtWeight = usdtPair.reserve0.div(totalLiquidityETH);
-            const usdcWeight = usdcPair.reserve1.div(totalLiquidityETH);
-            return usdtPair.token1Price.times(usdtWeight).plus(usdcPair.token0Price.times(usdcWeight));
+            const usdtWeight = usdtPair.reserve1.div(totalLiquidityETH);
+            const usdcWeight = usdcPair.reserve0.div(totalLiquidityETH);
+            return usdtPair.token0Price.times(usdtWeight).plus(usdcPair.token1Price.times(usdcWeight));
         }
         return ZERO_BD;
     } else if (usdtPair !== null) {
-        return usdtPair.token1Price;
+        return usdtPair.token0Price;
     } else if (usdcPair !== null) {
-        return usdcPair.token0Price;
+        return usdcPair.token1Price;
     }
     return ZERO_BD;
 };
