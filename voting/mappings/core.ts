@@ -26,7 +26,9 @@ export function handleDeposit(event: DepositEvent): void {
 export function handleWithdraw(event: WithdrawEvent): void {
     const gaugeId = event.address.toHex();
     const gaugePositionId = gaugeId + "-" + event.params.from.toHex();
-    const gaugePosition = GaugePosition.load(gaugePositionId) as GaugePosition;
+    const gaugePosition = GaugePosition.load(gaugePositionId);
+
+    if (gaugePosition === null) return;
 
     const amountWithdrawn = event.params.amount.toBigDecimal().div(BigInt.fromU64(1e18 as u64).toBigDecimal());
     gaugePosition.amount = gaugePosition.amount.minus(amountWithdrawn);
