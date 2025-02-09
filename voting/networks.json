@@ -4,5 +4,11 @@
             "address": "0x6399081084Aff4A927E8704E77bC939703bd892c",
             "startBlock": 1886842
         }
+    },
+    "berachain-mainnet": {
+        "Voter": {
+            "address": "0x8160C59218be97F301a857cD8E72e5d3446621df",
+            "startBlock": 835802
+        }
     }
 }
