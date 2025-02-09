@@ -4,23 +4,58 @@ import { ADDRESS_ZERO, ONE_BD, USDC, USDT, WETH, WETH_USDC_PAIR, WETH_USDT_PAIR,
 import { factoryContract } from "./utils";
 
 export const getETHPriceInUSD = (): BigDecimal => {
-    const usdtPair = Pair.load(WETH_USDT_PAIR.get(dataSource.network()) as string); // usdt is token0;
-    const usdcPair = Pair.load(WETH_USDC_PAIR.get(dataSource.network()) as string); // usdc is token1;
+    // get network
+    const network = dataSource.network();
+    // get weth
+    const _WETH = WETH.get(network) as string;
+    // weth must exist
+    if (_WETH == null) return ZERO_BD;
+    // get pairs addresses
+    const _WETH_USDC_PAIR = WETH_USDC_PAIR.get(network);
+    const _WETH_USDT_PAIR = WETH_USDT_PAIR.get(network);
+    // fetch eth prices for each stablecoin
+    let usdcPair: Pair | null = null;
+    let usdtPair: Pair | null = null;
 
-    if (usdtPair !== null && usdcPair !== null) {
-        const totalLiquidityETH = usdtPair.reserve1.plus(usdcPair.reserve0);
-        if (totalLiquidityETH.notEqual(ZERO_BD)) {
-            const usdtWeight = usdtPair.reserve1.div(totalLiquidityETH);
-            const usdcWeight = usdcPair.reserve0.div(totalLiquidityETH);
-            return usdtPair.token0Price.times(usdtWeight).plus(usdcPair.token1Price.times(usdcWeight));
+    if (_WETH_USDC_PAIR !== null) usdcPair = Pair.load(_WETH_USDC_PAIR);
+    if (_WETH_USDT_PAIR !== null) usdtPair = Pair.load(_WETH_USDT_PAIR);
+
+    // tracked reserves, weights, and prices
+
+    let usdcTrackedReserve: BigDecimal = ZERO_BD;
+    let usdcWeight: BigDecimal = ZERO_BD;
+    let usdcPrice: BigDecimal = ZERO_BD;
+
+    let usdtTrackedReserve: BigDecimal = ZERO_BD;
+    let usdtWeight: BigDecimal = ZERO_BD;
+    let usdtPrice: BigDecimal = ZERO_BD;
+
+    if (usdcPair !== null) {
+        if (usdcPair.token0.toLowerCase() == _WETH.toLowerCase()) {
+            usdcTrackedReserve = usdcPair.reserve0;
+            usdcPrice = usdcPair.token1Price;
+        } else {
+            usdcTrackedReserve = usdcPair.reserve1;
+            usdcPrice = usdcPair.token0Price;
         }
-        return ZERO_BD;
-    } else if (usdtPair !== null) {
-        return usdtPair.token0Price;
-    } else if (usdcPair !== null) {
-        return usdcPair.token1Price;
     }
-    return ZERO_BD;
+
+    if (usdtPair !== null) {
+        if (usdtPair.token0.toLowerCase() == _WETH.toLowerCase()) {
+            usdtTrackedReserve = usdtPair.reserve0;
+            usdtPrice = usdtPair.token1Price;
+        } else {
+            usdtTrackedReserve = usdtPair.reserve1;
+            usdtPrice = usdtPair.token0Price;
+        }
+    }
+
+    const totalLiquidityETH = usdcTrackedReserve.plus(usdtTrackedReserve);
+
+    usdcWeight = usdcTrackedReserve.div(totalLiquidityETH);
+    usdtWeight = usdtTrackedReserve.div(totalLiquidityETH);
+
+    return usdcPrice.times(usdcWeight).plus(usdtPrice.times(usdtWeight));
 };
 
 const MINIMUM_LIQUIDITY_THRESHOLD_ETH = BigDecimal.fromString("10");
